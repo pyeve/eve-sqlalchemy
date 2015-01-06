@@ -12,9 +12,8 @@ with open('LICENSE') as f:
 
 install_requires = [
     'Eve',
-    'simplejson',
     'sqlalchemy>=0.8',
-    'Flask-SQLAlchemy>=1.0,<2.999'
+    'Flask-SQLAlchemy>=1.0,<2.999',
 ]
 
 

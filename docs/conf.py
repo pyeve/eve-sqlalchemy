@@ -160,7 +160,6 @@ html_theme_options = {
     'github_user': 'redturtle',
     'github_repo': 'eve-sqlalchemy',
     'github_banner': True,
-    'github_banner_image': 'forkme_right_green_007200.png',
     'travis_button': True,
     'show_powered_by': False,
 }

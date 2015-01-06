@@ -1,5 +1,0 @@
-.. _changelog:
-
-.. include:: ../CHANGES
-
-
