@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-    eve.io.sql.utils
-    ~~~~~~~~~~~~
+    Helpers and utils functions
+
+    :copyright: (c) 2013 by Andrew Mleczko and Tomasz Jezierski (Tefnet)
+    :license: BSD, see LICENSE for more details.
 
 """
 

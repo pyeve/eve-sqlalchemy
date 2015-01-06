@@ -2,7 +2,7 @@ import simplejson as json
 from datetime import datetime
 
 from eve import STATUS_OK, LAST_UPDATED, ID_FIELD, ISSUES, STATUS, ETAG
-from eve.tests import TestBaseSQL
+from eve_sqlalchemy.tests import TestBaseSQL
 from eve.tests.utils import DummyEvent
 
 

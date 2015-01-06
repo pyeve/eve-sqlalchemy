@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-    eve.io.sql.structures
-    ~~~~~~~~~~~~
-
     These classes provide a middle layer to transform a SQLAlchemy query into
     a series of object that Eve understands and can be rendered as JSON.
+
+    :copyright: (c) 2013 by Andrew Mleczko and Tomasz Jezierski (Tefnet)
+    :license: BSD, see LICENSE for more details.
 
 """
 import collections

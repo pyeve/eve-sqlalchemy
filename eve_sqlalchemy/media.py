@@ -2,12 +2,9 @@
 from io import BytesIO
 
 """
-    eve.io.sql.media
-    ~~~~~~~~~~~~
+    Media storage for sqlalchemy extenstion.
 
-    Media storage for Eve-powered APIs.
-
-    :copyright: (c) 2014 by Nicola Iarocci.
+    :copyright: (c) 2014 by Andrew Mleczko
     :license: BSD, see LICENSE for more details.
 """
 

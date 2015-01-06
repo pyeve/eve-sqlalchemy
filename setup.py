@@ -11,10 +11,10 @@ with open('LICENSE') as f:
     LICENSE = f.read()
 
 install_requires = [
-    'Eve>=0.5-dev',
-    'simplejson>=3.6.5,<4.0',
-    'itsdangerous>=0.22,<1.0',
+    'Eve',
+    'simplejson',
     'sqlalchemy>=0.8',
+    'Flask-SQLAlchemy>=1.0,<2.999'
 ]
 
 

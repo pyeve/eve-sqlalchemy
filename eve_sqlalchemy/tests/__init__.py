@@ -10,12 +10,14 @@ from eve import ETAG
 from eve.tests import TestMinimal
 from eve.utils import date_to_str
 
-from eve_sqlalchemy.tests import test_sql_tables; test_sql_tables
+from eve_sqlalchemy.tests import test_sql_tables
 from eve_sqlalchemy.validation import ValidatorSQL
 from eve_sqlalchemy import SQL
 
 
 class TestBaseSQL(TestMinimal):
+
+    test_sql_tables = test_sql_tables
 
     def setUp(self, settings_file=None, url_converters=None):
         self.connection = None

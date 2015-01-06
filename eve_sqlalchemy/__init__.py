@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
-
 """
-    eve.io.sql.sql (eve.io.sql)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     The actual implementation of the SQLAlchemy data layer.
 
-    :copyright: (c) 2013 by Tomasz Jezierski (Tefnet)
+    :copyright: (c) 2013 by Andrew Mleczko and Tomasz Jezierski (Tefnet)
     :license: BSD, see LICENSE for more details.
 """
 
+__version__ = '0.1-dev'
+
 import ast
 import simplejson as json
+import flask.ext.sqlalchemy as flask_sqlalchemy
 
 from flask import abort
 from datetime import datetime
 from copy import copy
-
 from sqlalchemy.orm.collections import InstrumentedList
 
 from eve.io.base import DataLayer, ConnectionException, BaseJSONEncoder
@@ -25,6 +23,8 @@ from .parser import parse, parse_dictionary, ParseError, sqla_op
 from .structures import SQLAResult, SQLAResultCollection
 from .utils import dict_update, validate_filters
 
+
+db = flask_sqlalchemy.SQLAlchemy()
 
 try:
     string_type = basestring
@@ -57,6 +57,7 @@ class SQL(DataLayer):
     """
     json_decoder_cls = SQLAJSONDecoder
     json_encoder_class = SQLAJSONEncoder
+    driver = db
     serializers = {'datetime': str_to_date}
 
     def init_app(self, app):
@@ -197,8 +198,9 @@ class SQL(DataLayer):
 
         if hasattr(lookup.get(config.ID_FIELD), '_sa_instance_state') \
                 or isinstance(lookup.get(config.ID_FIELD), InstrumentedList):
-            document = lookup.get(config.ID_FIELD)
-            return SQLAResult(document, fields) if document else None
+            # very dummy way to get the related object
+            # that commes from embeddable parameter
+            return lookup.get(config.ID_FIELD)
         else:
             filter_ = self.combine_queries(filter_,
                                            parse_dictionary(lookup, model))

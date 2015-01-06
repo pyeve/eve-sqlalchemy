@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import os
+#import os
 
-db_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                           'test.db')
-SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % db_filename
+#db_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+#                           'test.db')
+SQLALCHEMY_DATABASE_URI = 'sqlite:///'#%s' % db_filename
 
 # SQLALCHEMY_ECHO = True
 # SQLALCHEMY_RECORD_QUERIES = True

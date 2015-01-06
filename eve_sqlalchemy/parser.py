@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-    eve.io.sql.parser
-    ~~~~~~~~~~~~~~~~~~~
-
     This module implements a Python-to-SQLAlchemy syntax parser.
     Allows the SQLAlchemy data-layer to seamlessy respond to a
     Python-like query.
 
-    :copyright: (c) 2013 by Nicola Iarocci, Tomasz Jezierski (Tefnet).
+    :copyright: (c) 2013 by Andrew Mleczko and Tomasz Jezierski (Tefnet)
     :license: BSD, see LICENSE for more details.
 """
 import re

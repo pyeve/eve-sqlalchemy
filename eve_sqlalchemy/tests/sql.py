@@ -9,7 +9,7 @@ from unittest import TestCase
 from sqlalchemy.sql.elements import BooleanClauseList
 from operator import and_, or_
 from eve.utils import str_to_date
-from eve.tests.test_sql_tables import People
+from eve_sqlalchemy.tests.test_sql_tables import People
 from eve_sqlalchemy.parser import parse, parse_dictionary, ParseError, sqla_op
 from eve_sqlalchemy.structures import SQLAResultCollection, SQLAResult
 from eve_sqlalchemy import SQL
@@ -200,7 +200,7 @@ class TestSQLStructures(TestCase):
     def setupDB(self):
         self.this_directory = os.path.dirname(os.path.realpath(__file__))
         self.settings_file = os.path.join(self.this_directory,
-                                          '../test_settings_sql.py')
+                                          'test_settings_sql.py')
         self.app = eve.Eve(settings=self.settings_file, data=SQL)
         self.connection = SQL.driver
         self.connection.drop_all()

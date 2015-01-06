@@ -1,7 +1,7 @@
 import simplejson as json
 from datetime import datetime
 from eve.tests.utils import DummyEvent
-from eve.tests import TestBaseSQL
+from eve_sqlalchemy.tests import TestBaseSQL
 from eve.utils import date_to_str, str_to_date
 
 

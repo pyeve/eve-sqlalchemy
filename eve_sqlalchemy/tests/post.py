@@ -3,7 +3,7 @@ import random
 # from unittest import skip
 from sqlalchemy.schema import ColumnDefault
 
-from eve.tests import TestBaseSQL
+from eve_sqlalchemy.tests import TestBaseSQL
 from eve.tests.utils import DummyEvent
 
 from eve import STATUS_OK, LAST_UPDATED, ID_FIELD, DATE_CREATED, ISSUES, \

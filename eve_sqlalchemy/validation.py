@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
 """
-    eve.io.sql.validation
-    ~~~~~~~~~~~~~~~~~~~~~~~
-
     This module implements the SQLAlchemy Validator class,
     used to validate that objects incoming via POST/PATCH requests
     conform to the API domain.
     An extension of Cerberus Validator.
 
-    :copyright: (c) 2013 by Nicola Iarocci, Tomasz Jezierski (Tefnet).
+    :copyright: (c) 2013 by Nicola Iarocci, Andrew Mleczko and Tomasz Jezierski (Tefnet)
     :license: BSD, see LICENSE for more details.
 """
 

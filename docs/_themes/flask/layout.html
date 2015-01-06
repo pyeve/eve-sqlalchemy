@@ -1,0 +1,26 @@
+{%- extends "basic/layout.html" %}
+{%- block extrahead %}
+  {{ super() }}
+  {% if theme_touch_icon %}
+  <link rel="apple-touch-icon" href="{{ pathto('_static/' ~ theme_touch_icon, 1) }}" />
+  {% endif %}
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+{% endblock %}
+{%- block relbar2 %}{% endblock %}
+{% block header %}
+  {{ super() }}
+  {% if pagename == 'index' %}
+  <div class=indexwrapper>
+  {% endif %}
+{% endblock %}
+{%- block footer %}
+  <div class="footer">
+    &copy; Copyright {{ copyright }}.
+  </div>
+  <a href="https://github.com/nicolaiarocci/eve" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="{{ pathto('_static/forkme_right_green_007200.png', 1) }}" alt="Fork me on GitHub"  class="github"/>
+  </a>
+  {% if pagename == 'index' %}
+  </div>
+  {% endif %}
+{%- endblock %}

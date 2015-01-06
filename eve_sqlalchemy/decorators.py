@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+    Decorators for schema registering
+
+    :copyright: (c) 2013 by Andrew Mleczko
+    :license: BSD, see LICENSE for more details.
+"""
+
 from sqlalchemy.sql import expression
 from sqlalchemy.ext import hybrid
 from sqlalchemy.orm.attributes import InstrumentedAttribute

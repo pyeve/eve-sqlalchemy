@@ -10,8 +10,10 @@ from sqlalchemy import (
     ForeignKey,
     DateTime)
 from eve_sqlalchemy.decorators import registerSchema
-Base = declarative_base()
+from eve_sqlalchemy import db
 
+Base = declarative_base()
+db.Model = Base
 
 class CommonColumns(Base):
     """
