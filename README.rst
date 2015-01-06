@@ -28,4 +28,7 @@ configuring and fine-tuning your API is a very simple process.
 
 Eve is thoroughly tested under Python 2.6, 2.7, 3.3, 3.4 and PyPy.
 
-`Check out the Eve Website <http://python-eve.org/>`_
+Make sure you check both these websites:
+
+- `Official Eve Website <http://python-eve.org/>`_
+- `Eve-SQLAlchemy Tutorials and Howtos <http://eve-sqlalchemy.readthedocs.org/>`_
