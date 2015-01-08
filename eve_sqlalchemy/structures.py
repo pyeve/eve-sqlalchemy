@@ -45,7 +45,7 @@ class SQLAResult(collections.MutableMapping):
     def __setitem__(self, key, value):
         if isinstance(value, SQLAResult):
             return
-        if isinstance(value, list) and isinstance(value[0], SQLAResult):
+        if isinstance(value, list) and value and isinstance(value[0], SQLAResult):
             return
         setattr(self._result, key, value)
         if key not in self._fields:
