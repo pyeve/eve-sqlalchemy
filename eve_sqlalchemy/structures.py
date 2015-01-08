@@ -11,6 +11,7 @@
 import collections
 import copy
 
+from datetime import datetime
 from eve.utils import config
 
 
@@ -36,6 +37,8 @@ class SQLAResult(collections.MutableMapping):
 
     def __getitem__(self, key):
         # TODO: composite primary key
+        if key == config.LAST_UPDATED and not getattr(self._result, key, None):
+            return datetime.now()
         try:
             return getattr(self._result, key)
         except AttributeError:
