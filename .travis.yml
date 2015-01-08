@@ -1,8 +1,14 @@
 language: python
 python: 2.7
-install: pip install pytest
+env:
+  - TOX_ENV=py26
+  - TOX_ENV=py27
+  - TOX_ENV=py33
+  - TOX_ENV=py34
+  - TOX_ENV=pypy
+install: pip install tox
 script: 
-  - py.test 
+  - tox -e $TOX_ENV
 services: 
   - sqlite3
 branches:

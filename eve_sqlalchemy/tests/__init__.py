@@ -14,6 +14,8 @@ from eve_sqlalchemy.tests import test_sql_tables
 from eve_sqlalchemy.validation import ValidatorSQL
 from eve_sqlalchemy import SQL
 
+EVE = 4
+
 
 class TestBaseSQL(TestMinimal):
 
@@ -97,6 +99,15 @@ class TestBaseSQL(TestMinimal):
         self.connection.create_all()
         self.bulk_insert()
 
+    def tearDown(self):
+        self.dropDB()
+        del self.app
+
+    def dropDB(self):
+        self.connection = self.app.data.driver
+        self.connection.session.remove()
+        self.connection.drop_all()
+
     def bulk_insert(self):
         sql_tables = self.test_sql_tables
         if not self.connection.session.query(sql_tables.People).count():
@@ -138,7 +149,8 @@ class TestBaseSQL(TestMinimal):
             people.append((self.random_string(6), self.random_string(6), i))
         return people
 
-    def dropDB(self):
-        self.connection = self.app.data.driver
-        self.connection.session.remove()
-        self.connection.drop_all()
+    def response_item(self, response, i=0):
+        if self.app.config['HATEOAS']:
+            return response['_items'][i]
+        else:
+            return response[i]

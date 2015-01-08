@@ -1,9 +1,10 @@
 import simplejson as json
+import pytest
 from datetime import datetime
 
 from eve import STATUS_OK, LAST_UPDATED, ID_FIELD, ISSUES, STATUS, ETAG
-from eve_sqlalchemy.tests import TestBaseSQL
 from eve.tests.utils import DummyEvent
+from eve_sqlalchemy.tests import TestBaseSQL, EVE
 
 
 class TestPatch(TestBaseSQL):
@@ -210,6 +211,7 @@ class TestPatch(TestBaseSQL):
                                data=changes, headers=[('If-Match', etag)])
         self.assertEqual(status, 422)
 
+    @pytest.mark.xfail(EVE<5, run=False, reason='features not released yet')
     def test_patch_subresource(self):
         _db = self.app.data.driver
 

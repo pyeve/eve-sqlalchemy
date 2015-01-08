@@ -1,7 +1,9 @@
+import pytest
+
 from datetime import datetime
-from eve_sqlalchemy.tests import TestBaseSQL
 from eve.tests.utils import DummyEvent
 from eve import ETAG
+from eve_sqlalchemy.tests import TestBaseSQL, EVE
 
 
 class TestDeleteSQL(TestBaseSQL):
@@ -138,6 +140,7 @@ class TestDeleteSQL(TestBaseSQL):
         response, status = self.get('invoices')
         self.assertEqual(len(response['_items']), invoices - 2)
 
+    @pytest.mark.xfail(EVE<5, run=False, reason='features not released yet')
     def test_delete_subresource_item(self):
         _db = self.app.data.driver
 

@@ -70,6 +70,8 @@ class SQL(DataLayer):
         except Exception as e:
             raise ConnectionException(e)
 
+        self.register_schema(app)
+
     @classmethod
     def lookup_model(cls, model_name):
         """
@@ -79,18 +81,18 @@ class SQL(DataLayer):
         """
         return cls.driver.Model._decl_class_registry[model_name]
 
-    @classmethod
-    def register_schema(cls, app, model_name=None):
+#    @classmethod
+    def register_schema(self, app, model_name=None):
         """Register eve schema for SQLAlchemy model(s)
         :param app: Flask application instance.
         :param model_name: Name of SQLAlchemy model
             (register all models if not provided)
         """
         if model_name:
-            models = {model_name.capitalize(): cls.driver.
+            models = {model_name.capitalize(): self.driver.
                       Model._decl_class_registry[model_name.capitalize()]}
         else:
-            models = cls.driver.Model._decl_class_registry
+            models = self.driver.Model._decl_class_registry
 
         for model_name, model_cls in models.items():
             if model_name.startswith('_'):

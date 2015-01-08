@@ -8,6 +8,7 @@ from sqlalchemy import (
     Integer,
     String,
     ForeignKey,
+    func,
     DateTime)
 from eve_sqlalchemy.decorators import registerSchema
 from eve_sqlalchemy import db
@@ -25,8 +26,8 @@ class CommonColumns(Base):
     ID_FIELD.
     """
     __abstract__ = True
-    _created = Column(DateTime)
-    _updated = Column(DateTime)
+    _created = Column(DateTime,  default=func.now())
+    _updated = Column(DateTime,  default=func.now(), onupdate=func.now())
     _etag = Column(String)
     # TODO: make this comply to Eve's custom ID_FIELD setting
     _id = Column(Integer, primary_key=True)

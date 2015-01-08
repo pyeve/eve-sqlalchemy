@@ -7,25 +7,24 @@ DESCRIPTION = ("REST API framework powered by Flask, SQLAlchemy and good "
 with open('README.rst') as f:
     LONG_DESCRIPTION = f.read()
 
-with open('LICENSE') as f:
-    LICENSE = f.read()
-
 install_requires = [
-    'Eve',
+    'Eve>=0.5-dev',
     'sqlalchemy>=0.8',
     'Flask-SQLAlchemy>=1.0,<2.999',
 ]
-
 
 setup(
     name='Eve-SQLAlchemy',
     version='0.1-dev',
     description=DESCRIPTION,
+    dependency_links=[
+        "git+https://github.com/nicolaiarocci/eve.git@0.5-dev#egg=Eve-0.5-dev"
+        ],
     long_description=LONG_DESCRIPTION,
     author='Andrew Mleczko',
     author_email='amleczko@redturtle.it',
     url='http://github.com/redturtle/eve-sqlachemy',
-    license=LICENSE,
+    license='GPL',
     platforms=["any"],
     packages=['eve_sqlalchemy'],
     test_suite="eve_sqlalchemy.tests",
