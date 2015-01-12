@@ -1,11 +1,7 @@
-Eve SQLAlchemy Changelog
-========================
+Changelog
+=========
 
-Here you can see the full list of changes between each Eve SQLAlchemy release.
+0.1 (unreleased)
+----------------
 
-Version 0.1
------------
-
-Not released yet.
-
-- First public preview release.
+- First public preview release. [amleczko]

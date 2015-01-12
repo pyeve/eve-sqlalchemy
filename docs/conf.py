@@ -157,7 +157,7 @@ html_sidebars = {
 
 html_theme_options = {
     'logo': 'eve-sidebar.png',
-    'github_user': 'redturtle',
+    'github_user': 'RedTurtle',
     'github_repo': 'eve-sqlalchemy',
     'github_banner': True,
     'travis_button': True,

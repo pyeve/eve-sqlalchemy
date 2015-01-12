@@ -8,18 +8,15 @@ with open('README.rst') as f:
     LONG_DESCRIPTION = f.read()
 
 install_requires = [
-    'Eve>=0.5-dev',
+    'Eve>=0.5',
     'sqlalchemy>=0.8',
     'Flask-SQLAlchemy>=1.0,<2.999',
 ]
 
 setup(
     name='Eve-SQLAlchemy',
-    version='0.1-dev',
+    version='0.1',
     description=DESCRIPTION,
-    dependency_links=[
-        "git+https://github.com/nicolaiarocci/eve.git@0.5-dev#egg=Eve-0.5-dev"
-        ],
     long_description=LONG_DESCRIPTION,
     author='Andrew Mleczko',
     author_email='amleczko@redturtle.it',
