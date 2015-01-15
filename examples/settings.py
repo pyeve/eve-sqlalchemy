@@ -6,7 +6,7 @@
     we need to define the schema using the registerSchema decorator.
 
 """
-from eve.io.sql.decorators import registerSchema
+from eve_sqlalchemy.decorators import registerSchema
 from tables import People, Invoices
 
 registerSchema('people')(People)
