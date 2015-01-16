@@ -280,7 +280,7 @@ and check that everything is working like expected, by trying requesting `people
 SQLAlchemy expressions
 ----------------------
 With this version of Eve you can use `SQLAlchemy`_ expressions such as: `like`,
-`in_`, etc. For more examples please check `SQLAlchemy internals`_.
+`in_`, `any`, etc. For more examples please check `SQLAlchemy internals`_.
 
 Using those expresssion is straightforward (you can use them only with dictionary
 where filter):
@@ -307,6 +307,17 @@ which produces where closure:
 
    people.firstname IN ("John", "Fred")
 
+and if you have postgresql ARRAY column you can use `any`:
+
+.. code-block:: console
+
+    http://127.0.0.1:5000/documents?where={"keywords":"any(\"critical\")"}
+
+which produces where closure:
+
+.. code-block:: sql
+
+   "critical" = ANY(documents.keywords)
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _SQLAlchemy internals: http://docs.sqlalchemy.org/en/latest/orm/internals.html
