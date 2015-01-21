@@ -91,7 +91,12 @@ def parse(expression, model):
     (==, <=, >=, !=, >, <) are supported.
     """
     v = SQLAVisitor(model)
-    v.visit(ast.parse(expression))
+    try:
+        parsed_expr = ast.parse(expression)
+    except SyntaxError:
+        raise ParseError("Can't parse expression '{}'".format(expression))
+
+    v.visit(parsed_expr)
     return v.sqla_query
 
 
