@@ -100,6 +100,28 @@ def parse(expression, model):
     return v.sqla_query
 
 
+def parse_sorting(model, query, key, order=1, expression=None):
+    """
+    Sorting parser that works with embedded resources and sql expressions
+    Moved out from the query (find) method.
+    """
+    if '.' in key:  # sort by related mapper class
+        rel, sort_attr = key.split('.')
+        rel_class = getattr(model, rel).property.mapper.class_
+        query = query.outerjoin(rel_class)
+        base_sort = getattr(rel_class, sort_attr)
+    else:
+        base_sort = getattr(model, key)
+
+    if order == -1:
+        base_sort = base_sort.desc()
+
+    if expression: # sql expressions
+        expression = getattr(base_sort, expression)
+        base_sort = expression()
+    return base_sort
+
+
 class SQLAVisitor(ast.NodeVisitor):
     """Implements the python-to-sql parser. Only Python conditional
     statements are supported, however nested, combined with most common compare

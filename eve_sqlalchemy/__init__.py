@@ -19,7 +19,7 @@ from sqlalchemy.orm.collections import InstrumentedList
 
 from eve.io.base import DataLayer, ConnectionException, BaseJSONEncoder
 from eve.utils import config, debug_error_message, str_to_date
-from .parser import parse, parse_dictionary, ParseError, sqla_op
+from .parser import parse, parse_dictionary, ParseError, sqla_op, parse_sorting
 from .structures import SQLAResult, SQLAResultCollection
 from .utils import dict_update, validate_filters
 
@@ -171,17 +171,7 @@ class SQL(DataLayer):
         if args['sort']:
             ql = []
             for sort_item in args['sort']:
-                if '.' in sort_item[0]:  # sort by related mapper class
-                    rel, sort_attr = sort_item[0].split('.')
-                    rel_class = getattr(model, rel).property.mapper.class_
-                    query = query.outerjoin(rel_class)
-                    ql.append(getattr(rel_class, sort_attr)
-                              if sort_item[1] == 1
-                              else getattr(rel_class, sort_attr).desc())
-                else:
-                    ql.append(getattr(model, sort_item[0])
-                              if sort_item[1] == 1
-                              else getattr(model, sort_item[0]).desc())
+                ql.append(parse_sorting(model, query, *sort_item))
             args['sort'] = ql
 
         if req.max_results:

@@ -10,7 +10,8 @@ from sqlalchemy.sql.elements import BooleanClauseList
 from operator import and_, or_
 from eve.utils import str_to_date
 from eve_sqlalchemy.tests.test_sql_tables import People
-from eve_sqlalchemy.parser import parse, parse_dictionary, ParseError, sqla_op
+from eve_sqlalchemy.parser import parse, parse_dictionary, ParseError, sqla_op,\
+        parse_sorting
 from eve_sqlalchemy.structures import SQLAResultCollection, SQLAResult
 from eve_sqlalchemy import SQL
 
@@ -196,6 +197,21 @@ class TestSQLStructures(TestCase):
         results = [p for p in c]
         self.assertEqual(len(results), self.max_results)
         self.dropDB()
+
+    def test_base_sorting(self):
+        self.setupDB()
+        self.assertEqual(str(
+            parse_sorting(People, self.query, 'lastname', -1)).lower(),
+            'people.lastname desc')
+        self.assertEqual(str(
+            parse_sorting(People, self.query, 'lastname', 1)).lower(),
+            'people.lastname')
+        self.assertEqual(str(
+            parse_sorting(People, self.query, 'lastname', -1, 'nullslast')).lower(),
+            'people.lastname desc nulls last')
+        self.assertEqual(str(
+            parse_sorting(People, self.query, 'lastname', -1, 'nullsfirst')).lower(),
+            'people.lastname desc nulls first')
 
     def setupDB(self):
         self.this_directory = os.path.dirname(os.path.realpath(__file__))

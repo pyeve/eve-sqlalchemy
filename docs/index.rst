@@ -319,6 +319,24 @@ which produces where closure:
 
    "critical" = ANY(documents.keywords)
 
+SQLAlchemy sorting
+------------------
+Starting from version 0.2 you can use `SQLAlchemy ORDER BY`_ expressions such as: `nullsfirst`,
+`nullslast`, etc.
+
+Using those expresssion is straightforward, just pass it as 3 argument to sorting:
+
+.. code-block:: console
+
+    http://127.0.0.1:5000/people?sort=[("lastname", -1, "nullslast")]
+
+which produces order by expression:
+
+.. code-block:: sql
+
+   people.lastname DESC NULLS LAST
+
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _SQLAlchemy internals: http://docs.sqlalchemy.org/en/latest/orm/internals.html
+.. _SQLAlchemy ORDER BY: http://docs.sqlalchemy.org/en/latest/core/sqlelement.html#sqlalchemy.sql.expression.nullsfirst
 .. _`Eve Authentication`: http://python-eve.org/authentication.html#token-based-authentication
