@@ -192,7 +192,7 @@ class SQL(DataLayer):
                 or isinstance(lookup.get(config.ID_FIELD), InstrumentedList):
             # very dummy way to get the related object
             # that commes from embeddable parameter
-            return lookup.get(config.ID_FIELD)
+            return SQLAResult(lookup.get(config.ID_FIELD), fields)
         else:
             filter_ = self.combine_queries(filter_,
                                            parse_dictionary(lookup, model))
