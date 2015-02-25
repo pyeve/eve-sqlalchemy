@@ -15,7 +15,7 @@ install_requires = [
 
 setup(
     name='Eve-SQLAlchemy',
-    version='0.3.dev0',
+    version='0.2.1',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     author='Andrew Mleczko',
