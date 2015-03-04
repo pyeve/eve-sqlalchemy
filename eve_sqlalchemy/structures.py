@@ -8,73 +8,8 @@
     :license: BSD, see LICENSE for more details.
 
 """
-import collections
-import copy
 
-from datetime import datetime
-from eve.utils import config
-
-
-class SQLAResult(collections.MutableMapping):
-    """
-    Represents a particular item to be returned by Eve. Eve expects a
-    dictionary while SQLAlchemy gives us an object. This class provides an
-    interface between the two requirements.
-
-    :param result: the item to be rendered, as a SQLAlchemy object
-    :param fields: the fields to be rendered, as a list of strings
-    """
-    def __init__(self, result, fields):
-        self._result = result
-        self._fields = fields
-        if config.LAST_UPDATED not in self._fields:
-            self._fields.append(config.LAST_UPDATED)
-        if config.DATE_CREATED not in self._fields:
-            self._fields.append(config.DATE_CREATED)
-        if config.ETAG not in self._fields \
-                and getattr(config, 'IF_MATCH', True):
-            self._fields.append(config.ETAG)
-
-    def __getitem__(self, key):
-        # TODO: composite primary key
-        if key == config.LAST_UPDATED and not getattr(self._result, key, None):
-            return datetime.now()
-        try:
-            return getattr(self._result, key)
-        except AttributeError:
-            if key not in self.keys():
-                raise KeyError(key)
-
-    def __setitem__(self, key, value):
-        if isinstance(value, SQLAResult):
-            return
-        if isinstance(value, list) and value and isinstance(value[0], SQLAResult):
-            return
-        setattr(self._result, key, value)
-        if key not in self._fields:
-            self._fields.append(key)
-
-    def __contains__(self, key):
-        return key in self.keys()
-
-    def __delitem__(self, key):
-        pass
-
-    def __iter__(self):
-        for k in self.keys():
-            yield k
-
-    def __len__(self):
-        return len(self.keys())
-
-    def keys(self):
-        return self._fields
-
-    def _asdict(self):
-        return dict(self)
-
-    def copy(self):
-        return copy.copy(self)
+from .utils import sqla_object_to_dict
 
 
 class SQLAResultCollection(object):
@@ -112,7 +47,7 @@ class SQLAResultCollection(object):
 
     def __iter__(self):
         for i in self._query:
-            yield SQLAResult(i, self._fields)
+            yield sqla_object_to_dict(i, self._fields)
 
     def count(self, **kwargs):
         return self._count

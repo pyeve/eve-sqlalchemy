@@ -124,7 +124,7 @@ class TestDeleteSQL(TestBaseSQL):
         # verify that the only document retrieved is referencing the correct
         # parent document
         response, status = self.get('users/%s/invoices' % fake_person_id)
-        person_id = response[self.app.config['ITEMS']][1]['people']['_id']
+        person_id = response[self.app.config['ITEMS']][1]['people']
         self.assertEqual(person_id, fake_person_id)
 
         # delete all documents at the sub-resource endpoint

@@ -20,8 +20,8 @@ from sqlalchemy.orm.collections import InstrumentedList
 from eve.io.base import DataLayer, ConnectionException, BaseJSONEncoder
 from eve.utils import config, debug_error_message, str_to_date
 from .parser import parse, parse_dictionary, ParseError, sqla_op, parse_sorting
-from .structures import SQLAResult, SQLAResultCollection
-from .utils import dict_update, validate_filters
+from .structures import SQLAResultCollection
+from .utils import dict_update, validate_filters, sqla_object_to_dict
 
 
 db = flask_sqlalchemy.SQLAlchemy()
@@ -192,14 +192,14 @@ class SQL(DataLayer):
                 or isinstance(lookup.get(config.ID_FIELD), InstrumentedList):
             # very dummy way to get the related object
             # that commes from embeddable parameter
-            return SQLAResult(lookup.get(config.ID_FIELD), fields)
+            return sqla_object_to_dict(lookup.get(config.ID_FIELD), fields)
         else:
             filter_ = self.combine_queries(filter_,
                                            parse_dictionary(lookup, model))
             query = self.driver.session.query(model)
             document = query.filter(*filter_).first()
 
-        return SQLAResult(document, fields) if document else None
+        return sqla_object_to_dict(document, fields) if document else None
 
     def find_one_raw(self, resource, _id):
         raise NotImplementedError
