@@ -240,7 +240,7 @@ class SQL(DataLayer):
         self.driver.session.add(model_instance)
         self.driver.session.commit()
 
-    def update(self, resource, id_, updates):
+    def update(self, resource, id_, updates, original):
         model, filter_, _, _ = self._datasource_ex(resource, [])
         # TODO: respect eve ID_FIELD
         filter_ = self.combine_queries(filter_,
