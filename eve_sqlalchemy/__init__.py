@@ -220,7 +220,7 @@ class SQL(DataLayer):
             rv.append(id_)
         return rv
 
-    def replace(self, resource, id_, document):
+    def replace(self, resource, id_, document, original):
         model, filter_, fields_, _ = self._datasource_ex(resource, [])
         # TODO: respect eve ID_FIELD
         filter_ = self.combine_queries(filter_,
