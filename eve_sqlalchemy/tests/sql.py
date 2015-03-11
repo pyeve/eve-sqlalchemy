@@ -12,7 +12,7 @@ from eve.utils import str_to_date
 from eve_sqlalchemy.tests.test_sql_tables import People
 from eve_sqlalchemy.parser import parse, parse_dictionary, ParseError, sqla_op,\
         parse_sorting
-from eve_sqlalchemy.structures import SQLAResultCollection, SQLAResult
+from eve_sqlalchemy.structures import SQLAResultCollection
 from eve_sqlalchemy import SQL
 
 
@@ -164,24 +164,6 @@ class TestSQLStructures(TestCase):
                        'prog', '_etag']
         self.known_resource_count = 101
         self.max_results = 25
-
-    def test_sql_result_keys(self):
-        r = SQLAResult(self.person, self.fields)
-        self.assertEqual(r.keys(), self.fields)
-        self.assertEqual(len(r), len(self.fields))
-        self.assertTrue('prog' in r.keys())
-
-    def test_sql_result_get(self):
-        r = SQLAResult(self.person, self.fields)
-        self.assertEqual(r['firstname'], 'douglas')
-        self.assertRaises(KeyError, lambda r: r['shouldNotExist'], r)
-
-    def test_sql_result_set(self):
-        r = SQLAResult(self.person, self.fields)
-        r['dummy'] = 5
-        self.assertTrue('dummy' in r.keys())
-        self.assertEqual(len(r), len(self.fields))
-        self.assertEqual(r['dummy'], 5)
 
     def test_sql_collection(self):
         self.setupDB()

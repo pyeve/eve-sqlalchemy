@@ -530,7 +530,7 @@ class TestGetSQL(TestBaseSQL):
         self.assertEqual(len(response['_items']), 2)
         self.assertEqual(len(response['_links']), 2)
         # which links to the right contact
-        self.assertEqual(response['_items'][1]['people']['_id'],
+        self.assertEqual(response['_items'][1]['people'],
                          fake_person._id)
 
         _db.session.rollback()
@@ -816,7 +816,7 @@ class TestGetItem(TestBaseSQL):
         response, status = self.get('users/%s/invoices/%s' %
                                     (fake_person._id, fake_invoice._id))
         self.assert200(status)
-        self.assertEqual(response['people']['_id'], fake_person._id)
+        self.assertEqual(response['people'], fake_person._id)
         self.assertEqual(response['_id'], fake_invoice._id)
 
         _db.session.rollback()
