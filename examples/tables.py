@@ -31,18 +31,6 @@ class CommonColumns(Base):
         """
         return self.id
 
-    def jsonify(self):
-        """
-        Used to dump related objects to json
-        """
-        relationships = inspect(self.__class__).relationships.keys()
-        mapper = inspect(self)
-        attrs = [a.key for a in mapper.attrs if \
-                a.key not in relationships \
-                and not a.key in mapper.expired_attributes]
-        attrs += [a.__name__ for a in inspect(self.__class__).all_orm_descriptors if a.extension_type is hybrid.HYBRID_PROPERTY]
-        return dict([(c, getattr(self, c, None)) for c in attrs])
-
 
 class People(CommonColumns):
     __tablename__ = 'people'
