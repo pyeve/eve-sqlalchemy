@@ -37,14 +37,6 @@ class CommonColumns(Base):
         self._etag = h.hexdigest()
         super(CommonColumns, self).__init__(*args, **kwargs)
 
-    def jsonify(self):
-        relationships = inspect(self.__class__).relationships.keys()
-        mapper = inspect(self)
-        attrs = [a.key for a in mapper.attrs if
-                 a.key not in relationships
-                 and a.key not in mapper.expired_attributes]
-        return dict([(c, getattr(self, c, None)) for c in attrs])
-
 
 @registerSchema('people')
 class People(CommonColumns):

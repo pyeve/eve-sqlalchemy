@@ -44,19 +44,11 @@ class SQLAJSONDecoder(json.JSONDecoder):
             return rv
 
 
-class SQLAJSONEncoder(BaseJSONEncoder):
-    def default(self, obj):
-        if hasattr(obj, 'jsonify'):  # probably relationship
-            return obj.jsonify()
-        return super(SQLAJSONEncoder, self).default(obj)
-
-
 class SQL(DataLayer):
     """
     SQLAlchemy data access layer for Eve REST API.
     """
     json_decoder_cls = SQLAJSONDecoder
-    json_encoder_class = SQLAJSONEncoder
     driver = db
     serializers = {'datetime': str_to_date}
 
