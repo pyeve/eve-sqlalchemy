@@ -36,7 +36,7 @@ class ValidatorSQL(Validator):
         self._original_document = original_document
         return super(ValidatorSQL, self).validate_update(document)
 
-    def validate_replace(self, document, _id):
+    def validate_replace(self, document, _id, original):
         self._id = _id
         return self.validate(document)
 
