@@ -277,6 +277,25 @@ and check that everything is working like expected, by trying requesting `people
         },
     }
 
+Using Flask-SQLAlchemy
+----------------------
+If you are using `Flask-SQLAlchemy`_, you can use your existing ``db``
+object in the ``SQL`` class driver, rather than the empty one it creates.
+
+You can do this by subclassing ``SQL`` and overriding the driver.
+
+.. code-block:: python
+
+   from eve_sqlalchemy import SQL as _SQL
+   from flask_sqlalchemy import SQLAlchemy
+   
+   db = SQLAlchemy(app)
+   
+   class SQL(_SQL):
+      driver = db
+   
+   app = Eve(validator=ValidatorSQL, data=SQL)
+
 SQLAlchemy expressions
 ----------------------
 With this version of Eve you can use `SQLAlchemy`_ expressions such as: `like`,
@@ -337,6 +356,7 @@ which produces order by expression:
    people.lastname DESC NULLS LAST
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
+.. _Flask-SQLAlchemy: http://flask-sqlalchemy.pocoo.org/
 .. _SQLAlchemy internals: http://docs.sqlalchemy.org/en/latest/orm/internals.html
 .. _SQLAlchemy ORDER BY: http://docs.sqlalchemy.org/en/latest/core/sqlelement.html#sqlalchemy.sql.expression.nullsfirst
 .. _`Eve Authentication`: http://python-eve.org/authentication.html#token-based-authentication
