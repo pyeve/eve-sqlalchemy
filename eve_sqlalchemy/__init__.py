@@ -206,17 +206,16 @@ class SQL(DataLayer):
             model_instance = model(**document)
             self.driver.session.add(model_instance)
             self.driver.session.commit()
-            # TODO: respect eve ID_FIELD
-            id_ = getattr(model_instance, '_id')
-            document['_id'] = id_
-            rv.append(id_)
+            id_field = getattr(model_instance, self.driver.app.config['ID_FIELD'])
+            document['_id'] = id_field
+            rv.append(id_field)
         return rv
 
     def replace(self, resource, id_, document, original):
         model, filter_, fields_, _ = self._datasource_ex(resource, [])
-        # TODO: respect eve ID_FIELD
+        id_field = self.driver.app.config['ID_FIELD']
         filter_ = self.combine_queries(filter_,
-                                       parse_dictionary({'_id': id_}, model))
+                                       parse_dictionary({id_field: id_}, model))
         query = self.driver.session.query(model)
 
         # Find and delete the old object
@@ -234,9 +233,9 @@ class SQL(DataLayer):
 
     def update(self, resource, id_, updates, original):
         model, filter_, _, _ = self._datasource_ex(resource, [])
-        # TODO: respect eve ID_FIELD
+        id_field = self.driver.app.config['ID_FIELD']
         filter_ = self.combine_queries(filter_,
-                                       parse_dictionary({'_id': id_}, model))
+                                       parse_dictionary({id_field: id_}, model))
         query = self.driver.session.query(model)
         model_instance = query.filter(*filter_).first()
         if model_instance is None:

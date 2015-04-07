@@ -360,3 +360,48 @@ which produces order by expression:
 .. _SQLAlchemy internals: http://docs.sqlalchemy.org/en/latest/orm/internals.html
 .. _SQLAlchemy ORDER BY: http://docs.sqlalchemy.org/en/latest/core/sqlelement.html#sqlalchemy.sql.expression.nullsfirst
 .. _`Eve Authentication`: http://python-eve.org/authentication.html#token-based-authentication
+
+How to adjust the primary column name
+----------------------
+
+Eve use the `_id` column as primary id field. This is the default value of the MongoDB database.
+In SQL, it much more common to call this column just `id`. You can do that with the following
+change in your `settings.py`:
+
+.. code-block:: python
+
+    # -*- coding: utf-8 -*-
+
+    ID_FIELD = 'id'
+    ITEM_LOOKUP_FIELD = ID_FIELD
+
+    registerSchema('people')(People)
+
+    DOMAIN = {
+        'people': People._eve_schema['people'],
+    }
+
+    DOMAIN[table].update({
+        'id_field': ID_FIELD,
+	'item_lookup_field': ID_FIELD,
+    }
+
+ It's also possible to overwrite Eve default setting directly:
+
+ .. code-block:: python
+
+
+    # -*- coding: utf-8 -*-
+
+    from eve.utils import config
+
+    ID_FIELD = 'id'
+    ITEM_LOOKUP_FIELD = ID_FIELD
+    config.ID_FIELD = ID_FIELD
+    config.ITEM_LOOKUP_FIELD = ID_FIELD
+
+    registerSchema('people')(People)
+
+    DOMAIN = {
+        'people': People._eve_schema['people'],
+    }
