@@ -3,9 +3,7 @@
     This is a typical declarative usage of sqlalchemy,
     It has no dependency on flask or eve iself. Pure sqlalchemy.
 """
-from sqlalchemy import inspect
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext import hybrid
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import column_property, relationship
 from sqlalchemy import func

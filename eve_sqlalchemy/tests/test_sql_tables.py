@@ -2,19 +2,18 @@ import hashlib
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import column_property, relationship
-from sqlalchemy import (
-    Column,
-    inspect,
-    Integer,
-    String,
-    ForeignKey,
-    func,
-    DateTime)
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import func
+from sqlalchemy import Integer
+from sqlalchemy import String
 from eve_sqlalchemy.decorators import registerSchema
 from eve_sqlalchemy import db
 
 Base = declarative_base()
 db.Model = Base
+
 
 class CommonColumns(Base):
     """

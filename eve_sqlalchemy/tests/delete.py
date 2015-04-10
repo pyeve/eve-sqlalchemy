@@ -140,7 +140,7 @@ class TestDeleteSQL(TestBaseSQL):
         response, status = self.get('invoices')
         self.assertEqual(len(response['_items']), invoices - 2)
 
-    @pytest.mark.xfail(EVE<5, run=False, reason='features not released yet')
+    @pytest.mark.xfail(EVE < 5, run=False, reason='features not released yet')
     def test_delete_subresource_item(self):
         _db = self.app.data.driver
 

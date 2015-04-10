@@ -10,8 +10,12 @@ from sqlalchemy.sql.elements import BooleanClauseList
 from operator import and_, or_
 from eve.utils import str_to_date
 from eve_sqlalchemy.tests.test_sql_tables import People
-from eve_sqlalchemy.parser import parse, parse_dictionary, ParseError, sqla_op,\
-        parse_sorting
+from eve_sqlalchemy.parser import parse
+from eve_sqlalchemy.parser import parse_dictionary
+from eve_sqlalchemy.parser import parse_sorting
+from eve_sqlalchemy.parser import ParseError
+from eve_sqlalchemy.parser import sqla_op
+
 from eve_sqlalchemy.structures import SQLAResultCollection
 from eve_sqlalchemy import SQL
 

@@ -17,7 +17,8 @@ from datetime import datetime
 from copy import copy
 from sqlalchemy.orm.collections import InstrumentedList
 
-from eve.io.base import DataLayer, ConnectionException, BaseJSONEncoder
+from eve.io.base import ConnectionException
+from eve.io.base import DataLayer
 from eve.utils import config, debug_error_message, str_to_date
 from .parser import parse, parse_dictionary, ParseError, sqla_op, parse_sorting
 from .structures import SQLAResultCollection

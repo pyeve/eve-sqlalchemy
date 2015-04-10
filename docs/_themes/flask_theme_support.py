@@ -1,7 +1,17 @@
 # flasky extensions.  flasky pygments style based on tango style
 from pygments.style import Style
-from pygments.token import Keyword, Name, Comment, String, Error, \
-     Number, Operator, Generic, Whitespace, Punctuation, Other, Literal
+from pygments.token import Keyword
+from pygments.token import Name
+from pygments.token import Comment
+from pygments.token import String
+from pygments.token import Error
+from pygments.token import Number
+from pygments.token import Operator
+from pygments.token import Generic
+from pygments.token import Whitespace
+from pygments.token import Punctuation
+from pygments.token import Other
+from pygments.token import Literal
 
 
 class FlaskyStyle(Style):
@@ -10,13 +20,13 @@ class FlaskyStyle(Style):
 
     styles = {
         # No corresponding class for the following:
-        #Text:                     "", # class:  ''
-        Whitespace:                "underline #f8f8f8",      # class: 'w'
-        Error:                     "#a40000 border:#ef2929", # class: 'err'
-        Other:                     "#000000",                # class 'x'
+        # Text:                     "", # class:  ''
+        Whitespace:                "underline #f8f8f8",       # class: 'w'
+        Error:                     "#a40000 border:#ef2929",  # class: 'err'
+        Other:                     "#000000",                 # class 'x'
 
-        Comment:                   "italic #8f5902", # class: 'c'
-        Comment.Preproc:           "noitalic",       # class: 'cp'
+        Comment:                   "italic #8f5902",  # class: 'c'
+        Comment.Preproc:           "noitalic",        # class: 'cp'
 
         Keyword:                   "bold #004461",   # class: 'k'
         Keyword.Constant:          "bold #004461",   # class: 'kc'
@@ -27,7 +37,8 @@ class FlaskyStyle(Style):
         Keyword.Type:              "bold #004461",   # class: 'kt'
 
         Operator:                  "#582800",   # class: 'o'
-        Operator.Word:             "bold #004461",   # class: 'ow' - like keywords
+        Operator.Word:             "bold #004461",  # class: 'ow' -
+                                                    #  like keywords
 
         Punctuation:               "bold #000000",   # class: 'p'
 
@@ -62,7 +73,7 @@ class FlaskyStyle(Style):
         String:                    "#4e9a06",        # class: 's'
         String.Backtick:           "#4e9a06",        # class: 'sb'
         String.Char:               "#4e9a06",        # class: 'sc'
-        String.Doc:                "italic #8f5902", # class: 'sd' - like a comment
+        String.Doc:                "italic #8f5902",  # class: 'sd' - like a comment
         String.Double:             "#4e9a06",        # class: 's2'
         String.Escape:             "#4e9a06",        # class: 'se'
         String.Heredoc:            "#4e9a06",        # class: 'sh'
@@ -74,7 +85,7 @@ class FlaskyStyle(Style):
 
         Generic:                   "#000000",        # class: 'g'
         Generic.Deleted:           "#a40000",        # class: 'gd'
-        Generic.Emph:              "italic #000000", # class: 'ge'
+        Generic.Emph:              "italic #000000",  # class: 'ge'
         Generic.Error:             "#ef2929",        # class: 'gr'
         Generic.Heading:           "bold #000080",   # class: 'gh'
         Generic.Inserted:          "#00A000",        # class: 'gi'

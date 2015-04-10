@@ -116,7 +116,7 @@ def parse_sorting(model, query, key, order=1, expression=None):
     if order == -1:
         base_sort = base_sort.desc()
 
-    if expression: # sql expressions
+    if expression:  # sql expressions
         expression = getattr(base_sort, expression)
         base_sort = expression()
     return base_sort
