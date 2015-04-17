@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.3 (unreleased)
+0.3 (2015-04-17)
 ~~~~~~~~~~~~~~~~
 
 - return everything as dicts instead of SQLAResult, remove SQLAResult [Leonidaz0r]
