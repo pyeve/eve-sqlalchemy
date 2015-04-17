@@ -18,6 +18,7 @@ from eve_sqlalchemy.decorators import registerSchema
 
 Base = declarative_base()
 
+
 class People(Base):
     __tablename__ = 'people'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -34,7 +35,7 @@ registerSchema('people')(People)
 
 SETTINGS = {
     'DEBUG': True,
-    'SQLALCHEMY_DATABASE_URI':'sqlite://',
+    'SQLALCHEMY_DATABASE_URI': 'sqlite://',
     'DOMAIN': {
         'people': People._eve_schema['people'],
         }
@@ -51,9 +52,9 @@ db.create_all()
 # Insert some example data in the db
 
 test_data = [
-(u'George', u'Washington'),
-(u'John', u'Adams'),
-(u'Thomas', u'Jefferson'),
+    (u'George', u'Washington'),
+    (u'John', u'Adams'),
+    (u'Thomas', u'Jefferson'),
 ]
 
 if not db.session.query(People).count():
@@ -61,4 +62,5 @@ if not db.session.query(People).count():
         db.session.add(People.from_tuple(item))
     db.session.commit()
 
-app.run(debug=True, use_reloader=False) # using reloaded will destory in-memory sqlite db
+app.run(debug=True, use_reloader=False)
+# using reloaded will destory in-memory sqlite db

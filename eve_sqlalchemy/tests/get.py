@@ -246,7 +246,7 @@ class TestGetSQL(TestBaseSQL):
         response, _ = self.get(self.known_resource)
         self.assertTrue('_navigation' in response and '_links' not in response)
 
-    @pytest.mark.xfail(EVE<5, run=False, reason='features not released yet')
+    @pytest.mark.xfail(EVE < 5, run=False, reason='features not released yet')
     def test_get_custom_auto_document_fields(self):
         self.app.config['LAST_UPDATED'] = '_updated_on'
         self.app.config['DATE_CREATED'] = '_created_on'
@@ -670,7 +670,7 @@ class TestGetItem(TestBaseSQL):
         r = self.test_client.get(self.item_id_url, headers=header)
         self.assert304(r.status_code)
 
-    @pytest.mark.xfail(EVE<5, run=False, reason='features not released yet')
+    @pytest.mark.xfail(EVE < 5, run=False, reason='features not released yet')
     def test_getitem_custom_auto_document_fields(self):
         self.app.config['LAST_UPDATED'] = '_updated_on'
         self.app.config['DATE_CREATED'] = '_created_on'
