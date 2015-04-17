@@ -10,6 +10,7 @@ from sqlalchemy.sql import expression
 from sqlalchemy.ext import hybrid
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy import types, inspect
+import sqlalchemy.dialects.postgresql
 from sqlalchemy import schema as sqla_schema
 from eve.utils import config
 
@@ -24,7 +25,8 @@ sqla_type_mapping = {types.Integer: 'integer',
                      types.Boolean: 'boolean',
                      types.Date: 'datetime',
                      types.DateTime: 'datetime',
-                     types.DATETIME: 'datetime'}
+                     types.DATETIME: 'datetime',
+                     sqlalchemy.dialects.postgresql.JSON: 'json'}
 # TODO: Add the remaining sensible SQL types
 
 

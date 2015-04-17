@@ -94,3 +94,11 @@ class ValidatorSQL(Validator):
         This field doesn't have a meaning in SQL
         """
         pass
+
+    def _validate_type_json(self, field, value):
+        """ Enables validation for `json` schema attribute.
+
+        :param field: field name.
+        :param value: field value.
+        """
+        pass
