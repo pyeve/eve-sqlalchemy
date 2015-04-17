@@ -7,6 +7,9 @@ DESCRIPTION = ("REST API framework powered by Flask, SQLAlchemy and good "
 with open('README.rst') as f:
     LONG_DESCRIPTION = f.read()
 
+with open('CHANGES') as f:
+    LONG_DESCRIPTION += f.read()
+
 install_requires = [
     'Eve>=0.5',
     'sqlalchemy>=0.8',
