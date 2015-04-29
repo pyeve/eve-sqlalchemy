@@ -72,10 +72,10 @@ def parse_dictionary(filter_dict, model):
 def parse_sqla_operators(expression):
     """
     Parse expressions like:
-        like('%john%')
-        ilike('john%')
-        similar to('%(ohn|acob)')
-        in_(['a','b'])
+        like("%john%")
+        ilike("john%")
+        similar to("%(ohn|acob)")
+        in("('a','b')")
     """
     m = re.match(r"(?P<operator>[\w\s]+)\(+(?P<value>.+)\)+", expression)
     if m:

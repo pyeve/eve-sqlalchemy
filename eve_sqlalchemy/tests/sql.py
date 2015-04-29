@@ -145,16 +145,25 @@ class TestSQLParser(TestCase):
     def test_parse_sqla_operators(self):
         r = parse_dictionary({'firstname': 'ilike("john%")'}, self.model)
         self.assertEqual(str(r[0]),
-                         'lower(people.firstname) LIKE lower(:firstname_1)')
+                         'people.firstname ilike :firstname_1')
 
         r = parse_dictionary({'firstname': 'like("john%")'}, self.model)
         self.assertEqual(str(r[0]),
-                         'people.firstname LIKE :firstname_1')
+                         'people.firstname like :firstname_1')
 
-        r = parse_dictionary({'firstname': 'in_(["john","mark"])'},
+        r = parse_dictionary({'firstname': 'in("(\'john\',\'mark\')")'},
                              self.model)
         self.assertEqual(str(r[0]),
-                         'people.firstname IN (:firstname_1, :firstname_2)')
+                         'people.firstname in :firstname_1')
+        self.assertEqual(r[0].right.value,
+                         "('john','mark')")
+
+        r = parse_dictionary({'firstname': 'similar to("(\'john%\'|\'mark%\')")'},
+                             self.model)
+        self.assertEqual(str(r[0]),
+                         'people.firstname similar to :firstname_1')
+        self.assertEqual(r[0].right.value,
+                         "('john%'|'mark%')")
 
 
 class TestSQLStructures(TestCase):

@@ -295,7 +295,7 @@ You can do this by subclassing ``SQL`` and overriding the driver.
 SQLAlchemy expressions
 ----------------------
 With this version of Eve you can use `SQLAlchemy`_ expressions such as: `like`,
-`in_`, `any`, etc. For more examples please check `SQLAlchemy internals`_.
+`in`, `any`, etc. For more examples please check `SQLAlchemy internals`_.
 
 Using those expresssion is straightforward (you can use them only with dictionary
 where filter):
@@ -310,17 +310,29 @@ which produces where closure:
 
    people.lastname LIKE "Smi%"
 
-Another examples using `in_`:
+Another examples using `in`:
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/people?where={"firstname":"in_([\"John\",\"Fred\"])"}
+    http://127.0.0.1:5000/people?where={"firstname":"in(\"(\'John\',\'Fred\'\"))"}
 
 which produces where closure:
 
 .. code-block:: sql
 
    people.firstname IN ("John", "Fred")
+
+Another examples using `similar to`:
+
+.. code-block:: console
+
+    http://127.0.0.1:5000/people?where={"firstname":"similar to(\"(\'%ohn\'|\'%acob\'\"))"}
+
+which produces where closure:
+
+.. code-block:: sql
+
+   people.firstname SIMILAR TO '("%ohn"|"%acob")'
 
 and if you have postgresql ARRAY column you can use `any`:
 
