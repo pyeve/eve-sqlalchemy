@@ -58,15 +58,14 @@ def parse_dictionary(filter_dict, model):
 
         else:
             try:
-                new_o, v = parse_sqla_operators(v)
-                new_filter = getattr(attr, new_o)(v)
+                new_op, v = parse_sqla_operators(v)
+                new_filter = attr.op(new_op)(v)
             except (TypeError, ValueError):  # json/sql parse error
                 if isinstance(v, list):  # we have an array
                     new_filter = attr.in_(v)
                 else:
                     new_filter = sqla_op.eq(attr, v)
             conditions.append(new_filter)
-
     return conditions
 
 
@@ -75,9 +74,10 @@ def parse_sqla_operators(expression):
     Parse expressions like:
         like('%john%')
         ilike('john%')
+        similar to('%(ohn|acob)')
         in_(['a','b'])
     """
-    m = re.match(r"(?P<operator>\w+)\((?P<value>.+)\)", expression)
+    m = re.match(r"(?P<operator>[\w\s]+)\(+(?P<value>.+)\)+", expression)
     if m:
         o = m.group('operator')
         v = json.loads(m.group('value'))
