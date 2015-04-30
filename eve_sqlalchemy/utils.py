@@ -50,6 +50,13 @@ def sqla_object_to_dict(obj, fields):
     for field in fields:
         try:
             val = obj.__getattribute__(field)
+
+            # If association proxies are embedded, their values must be copied
+            # since they are garbage collected when Eve try to encode the
+            # response.
+            if getattr(val, 'copy', None) is not None:
+                val = val.copy()
+
             # is this field another SQLalchemy object, or a list of SQLalchemy objects?
             if isinstance(val.__class__, DeclarativeMeta):
                 result[field] = getattr(val, config.ID_FIELD)
