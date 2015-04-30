@@ -1,7 +1,8 @@
 import hashlib
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import column_property, relationship
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.orm import column_property, relationship, backref
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
@@ -65,3 +66,42 @@ class Payments(CommonColumns):
     __tablename__ = 'payments'
     number = Column(Integer)
     string = Column(String(80))
+
+
+class Products(CommonColumns):
+    __tablename__ = 'products'
+    name = Column(String(80))
+
+    keywords = association_proxy(
+        'products_keywords_assoc', 'keyword',
+        creator=lambda keyword_id: ProductsKeywords(keyword_id=keyword_id)
+    )
+
+
+class Keywords(CommonColumns):
+    __tablename__ = 'keywords'
+
+    kw = Column(String(80))
+
+
+class ProductsKeywords(Base):
+    __tablename__ = 'products_keywords'
+    product_id = Column(Integer, ForeignKey('products._id'), primary_key=True)
+    keyword_id = Column(Integer, ForeignKey('keywords._id'), primary_key=True)
+
+    product = relationship(
+        'Products',
+        backref=backref('products_keywords_assoc',
+                        cascade="all,delete-orphan")
+    )
+    keyword = relationship('Keywords')
+
+# Since the corresponding mappers of the following classes are not yet fully
+# configured, we need to make a direct call the registerSchema() decorator.
+
+# Note(Kevin Roy): Maybe we should use mapper.configure_mappers() and the
+# decorator registerSchema should be triggered for each model class on the
+# Mappers event 'after_configured'.
+
+registerSchema('products')(Products)
+registerSchema('keywords')(Keywords)
