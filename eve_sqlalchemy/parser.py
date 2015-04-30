@@ -49,7 +49,12 @@ def parse_dictionary(filter_dict, model):
         attr = getattr(model, k)
 
         if isinstance(attr, AssociationProxy):
-            conditions.append(attr.contains(v))
+            # If the condition is a dict, we must use 'any' method to match
+            # objects' attributes.
+            if isinstance(v, dict):
+                conditions.append(attr.any(**v))
+            else:
+                conditions.append(attr.contains(v))
 
         elif hasattr(attr, 'property') and \
                 hasattr(attr.property, 'remote_side'):  # a relation
