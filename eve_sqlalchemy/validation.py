@@ -24,7 +24,7 @@ class ValidatorSQL(Validator):
     Cerberus standard validation. For documentation please refer to the
     Validator class of the eve.io.mongo package.
     """
-    def __init__(self, schema, resource=None):
+    def __init__(self, schema, resource=None, allow_unknown=False):
         self.resource = resource
         self._id = None
         super(ValidatorSQL, self).__init__(schema,
