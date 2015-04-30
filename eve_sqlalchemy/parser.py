@@ -59,7 +59,15 @@ def parse_dictionary(filter_dict, model):
         else:
             try:
                 new_op, v = parse_sqla_operators(v)
-                new_filter = attr.op(new_op)(v)
+                attr_op = getattr(attr, new_op,None)
+                if attr_op is not None:
+                    # try a direct call to named operator on attribute class.
+                    new_filter = attr_op(v)
+                else:
+                    # try to call custom operator also called "generic"
+                    # operator in SQLAlchemy documentation.
+                    # cf. sqlalchemy.sql.operators.Operators.op()
+                    new_filter = attr.op(new_op)(v)
             except (TypeError, ValueError):  # json/sql parse error
                 if isinstance(v, list):  # we have an array
                     new_filter = attr.in_(v)

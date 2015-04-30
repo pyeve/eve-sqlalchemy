@@ -229,6 +229,33 @@ class TestGetSQL(TestBaseSQL):
                                            '?where=%s' % where))
         self.assert200(r.status_code)
 
+    def test_get_where_like(self):
+        r = self.test_client.get("{0}{1}".format(
+            self.known_resource_url,
+            '?where={0}'.format(json.dumps({
+                'firstname': 'like("john%")'
+            }))
+        ))
+        self.assert200(r.status_code)
+
+    def test_get_where_ilike(self):
+        r = self.test_client.get("{0}{1}".format(
+            self.known_resource_url,
+            '?where={0}'.format(json.dumps({
+                'firstname': 'ilike("john%")'
+            }))
+        ))
+        self.assert200(r.status_code)
+
+    def test_get_where_startswith(self):
+        r = self.test_client.get("{0}{1}".format(
+            self.known_resource_url,
+            '?where={0}'.format(json.dumps({
+                'firstname': 'startswith("john")'
+            }))
+        ))
+        self.assert200(r.status_code)
+
     def test_get_with_post_override(self):
         # POST request with GET override turns into a GET
         headers = [('X-HTTP-Method-Override', 'GET')]
