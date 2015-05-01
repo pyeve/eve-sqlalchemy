@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.3.2 (unreleased)
+0.3.2 (2015-05-01)
 ~~~~~~~~~~~~~~~~~~
 
 - add fallback on attr.op if the operator doesn't exists in the `ColumnProperty` [Kevin Roy]
