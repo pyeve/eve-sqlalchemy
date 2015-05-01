@@ -59,7 +59,7 @@ def parse_dictionary(filter_dict, model):
         else:
             try:
                 new_op, v = parse_sqla_operators(v)
-                attr_op = getattr(attr, new_op,None)
+                attr_op = getattr(attr, new_op, None)
                 if attr_op is not None:
                     # try a direct call to named operator on attribute class.
                     new_filter = attr_op(v)
