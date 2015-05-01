@@ -4,7 +4,7 @@ Changelog
 0.3.2 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-- Nothing changed yet.
+- add fallback on attr.op if the operator doesn't exists in the `ColumnProperty` [kiniou]
 
 
 0.3.1 (2015-04-29)

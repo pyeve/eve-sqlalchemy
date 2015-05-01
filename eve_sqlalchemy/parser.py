@@ -102,7 +102,7 @@ def parse(expression, model):
     try:
         parsed_expr = ast.parse(expression)
     except SyntaxError:
-        raise ParseError("Can't parse expression '{}'".format(expression))
+        raise ParseError("Can't parse expression '{0}'".format(expression))
 
     v.visit(parsed_expr)
     return v.sqla_query
