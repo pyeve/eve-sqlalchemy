@@ -4,7 +4,8 @@ Changelog
 0.3.2 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-- add fallback on attr.op if the operator doesn't exists in the `ColumnProperty` [kiniou]
+- add fallback on attr.op if the operator doesn't exists in the `ColumnProperty` [Kevin Roy]
+- add support for PostgreSQL JSON type [Goneri Le Bouder]
 
 
 0.3.1 (2015-04-29)
