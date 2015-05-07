@@ -1,51 +1,55 @@
 import simplejson as json
-# import pytest
-import random
-from pprint import pprint
 
 from eve_sqlalchemy.tests import TestBaseSQL
-
-import logging
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
 
 
 class TestAssociationProxy(TestBaseSQL):
 
     def test_many_to_many(self):
         """ Simple test case that associates 2 keywords to each product.
-        The first keyword is shared by all products and the second is selected
-        randomly.
+        The first keyword is shared by all products and the second keyword is
+        not shared.
         """
         id_field = self.app.config['ID_FIELD']
-        for keyword in ["kw_{:d}".format(i) for i in range(11)]:
-            response, status = self.post(
-                '/keywords', data={'kw': keyword}
+        keywords_data = []
+        for i in range(11):
+            keywords_data.append(
+                {'kw': "kw_{:d}".format(i)}
             )
-            pprint(response)
+        response, status = self.post('/keywords', data=keywords_data)
+        self.assertEquals(status, 201)
+
         response, status = self.get('keywords')
-        pprint(response)
         self.assertTrue('_items' in response)
         self.assertEquals(len(response['_items']), 11)
-        keywords = [a[id_field] for a in response['_items']]
 
-        for product in ["product_{:d}".format(i) for i in range(10)]:
-            response, status = self.post(
-                '/products',
-                data={
+        keywords = [a[id_field] for a in response['_items']]
+        common_keyword = keywords[0]
+        products_data = []
+        for i in range(10):
+            product = "product_{:d}".format(i)
+            extra_keyword = keywords[i+1]
+            products_data.append(
+                {
                     'name': product,
                     'keywords': [
-                        keywords[0],
-                        keywords[random.choice(range(11))]
+                        common_keyword,
+                        extra_keyword
                     ]
                 }
             )
-            pprint(response)
 
-        response, status = self.get('products')
-        pprint(response)
-        response, status = self.get('products', "?embedded={}".format(json.dumps({'keywords': 1})))
-        pprint(response)
+        response, status = self.post('/products', data=products_data)
+        self.assertEquals(status, 201)
+
+        response, status = self.get(
+            'products',
+            "?embedded={}".format(json.dumps({'keywords': 1}))
+        )
+        self.assertEquals(status, 200)
         self.assertTrue('_items' in response)
-        self.assertEquals(len(response['_items']), 10)
-        # products = [a[id_field] for a in response['_items']]
+        _items = response['_items']
+        self.assertEquals(len(_items), 10)
+        for item in _items:
+            self.assertTrue('keywords' in item)
+            self.assertEquals(len(item['keywords']), 2)
