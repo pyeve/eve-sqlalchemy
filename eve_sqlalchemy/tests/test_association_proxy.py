@@ -14,7 +14,7 @@ class TestAssociationProxy(TestBaseSQL):
         keywords_data = []
         for i in range(11):
             keywords_data.append(
-                {'kw': "kw_{:d}".format(i)}
+                {'kw': "kw_{0}".format(i)}
             )
         response, status = self.post('/keywords', data=keywords_data)
         self.assertEquals(status, 201)
@@ -27,7 +27,7 @@ class TestAssociationProxy(TestBaseSQL):
         common_keyword = keywords[0]
         products_data = []
         for i in range(10):
-            product = "product_{:d}".format(i)
+            product = "product_{0}".format(i)
             extra_keyword = keywords[i+1]
             products_data.append(
                 {
@@ -44,7 +44,7 @@ class TestAssociationProxy(TestBaseSQL):
 
         response, status = self.get(
             'products',
-            "?embedded={}".format(json.dumps({'keywords': 1}))
+            "?embedded={0}".format(json.dumps({'keywords': 1}))
         )
         self.assertEquals(status, 200)
         self.assertTrue('_items' in response)
