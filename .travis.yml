@@ -6,11 +6,16 @@ env:
   - TOX_ENV=py34
   - TOX_ENV=pypy
   - TOX_ENV=pep8
-install: pip install tox
+install: 
+  - pip install tox
+  - pip install coveralls
 script:
   - tox -e $TOX_ENV
+  - coverage run --source=eve_sqlalchemy setup.py test
 services:
   - sqlite3
 branches:
   only:
     - master
+after_success:
+  coveralls

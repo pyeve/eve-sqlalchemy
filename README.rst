@@ -1,6 +1,19 @@
 Eve SQLAlchemy extension
 ========================
 
+.. image:: https://travis-ci.org/RedTurtle/eve-sqlalchemy.svg?branch=master
+   :target: https://travis-ci.org/RedTurtle/eve-sqlalchemy
+
+
+.. image:: https://coveralls.io/repos/RedTurtle/eve-sqlalchemy/badge.svg?branch=master
+   :target: https://coveralls.io/r/RedTurtle/eve-sqlalchemy?branch=master
+
+
+.. image:: https://landscape.io/github/RedTurtle/eve-sqlalchemy/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/RedTurtle/eve-sqlalchemy/master
+
+
+
 Powered by Eve, SQLAlchemy and good intentions this extenstion allows to 
 effortlessly build and deploy highly customizable, fully featured RESTful Web 
 Services with SQL-based backends.
