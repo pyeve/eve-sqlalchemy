@@ -107,7 +107,7 @@ class registerSchema(object):
             # association_proxy.
 
             desc.__get__(None, cls_)
-            if hasattr(desc.remote_attr.property,'target'):
+            if hasattr(desc.remote_attr.property, 'target'):
                 r = desc.remote_attr.property.target.name
             else:
                 r = desc.remote_attr.property.key
