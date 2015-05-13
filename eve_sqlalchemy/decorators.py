@@ -105,13 +105,19 @@ class registerSchema(object):
             # to set the 'owning_class' attribute and getting 'remote_attr'
             # else we get an error according to corresponding source of
             # association_proxy.
+
             desc.__get__(None, cls_)
+            if hasattr(desc.remote_attr.property,'target'):
+                r = desc.remote_attr.property.target.name
+            else:
+                r = desc.remote_attr.property.key
+
             schema = domain[resource]['schema'][name] = {}
             schema['type'] = 'list'
             schema['schema'] = {
                 'type': 'objectid',
                 'data_relation': {
-                    'resource': desc.remote_attr.property.target.name,
+                    'resource': r,
                     'embeddable': True
                 }
             }

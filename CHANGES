@@ -5,6 +5,7 @@ Changelog
 ~~~~~~~~~~~~~~~~~~
 
 - added support of SA association proxy [Kevin Roy]
+- make sure relationships are generated properly [amleczko]
 
 
 0.3.2 (2015-05-01)
