@@ -15,7 +15,6 @@ import flask.ext.sqlalchemy as flask_sqlalchemy
 from flask import abort
 from datetime import datetime
 from copy import copy
-from sqlalchemy.orm.collections import InstrumentedList
 
 from eve.io.base import ConnectionException
 from eve.io.base import DataLayer
