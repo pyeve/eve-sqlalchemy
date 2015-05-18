@@ -4,7 +4,8 @@ Changelog
 0.3.4 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-- Nothing changed yet.
+- fix setup.py metadata
+- fix how embedded documents are resolved [amleczko]
 
 
 0.3.3 (2015-05-13)

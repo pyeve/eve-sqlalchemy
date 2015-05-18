@@ -59,10 +59,20 @@ def sqla_object_to_dict(obj, fields):
 
             # is this field another SQLalchemy object, or a list of SQLalchemy objects?
             if isinstance(val.__class__, DeclarativeMeta):
-                result[field] = getattr(val, config.ID_FIELD)
+                if field in config.DOMAIN:
+                    # we have embedded document in schema, let's resolve it:
+                    result[field] = sqla_object_to_dict(val, config.DOMAIN[field]['schema'].keys())
+                else:
+                    result[field] = getattr(val, config.ID_FIELD)
+
             elif isinstance(val, list) and len(val) > 0 \
                     and isinstance(val[0].__class__, DeclarativeMeta):
-                result[field] = [getattr(x, config.ID_FIELD) for x in val]
+                if field in config.DOMAIN:
+                    # we have embedded document in schema, let's resolve it:
+                    result[field] = [sqla_object_to_dict(x, config.DOMAIN[field]['schema'].keys()) for x in val]
+                else:
+                    result[field] = [getattr(x, config.ID_FIELD) for x in val]
+
             else:
                 # If integral type, just copy it
                 result[field] = copy.copy(val)

@@ -171,7 +171,6 @@ class SQL(DataLayer):
             args['max_results'] = req.max_results
         if req.page > 1:
             args['page'] = req.page
-
         return SQLAResultCollection(query, fields, **args)
 
     def find_one(self, resource, req, **lookup):
@@ -181,11 +180,11 @@ class SQL(DataLayer):
             self._datasource_ex(resource, [], client_projection, None,
                                 client_embedded)
 
-        if hasattr(lookup.get(config.ID_FIELD), '_sa_instance_state') \
-                or isinstance(lookup.get(config.ID_FIELD), InstrumentedList):
+        if isinstance(lookup.get(config.ID_FIELD), dict) \
+                or isinstance(lookup.get(config.ID_FIELD), list):
             # very dummy way to get the related object
             # that commes from embeddable parameter
-            return sqla_object_to_dict(lookup.get(config.ID_FIELD), fields)
+            return lookup
         else:
             filter_ = self.combine_queries(filter_,
                                            parse_dictionary(lookup, model))

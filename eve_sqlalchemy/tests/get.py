@@ -303,6 +303,7 @@ class TestGetSQL(TestBaseSQL):
                 break
         self.assertTrue(found)
 
+    @pytest.mark.xfail(EVE < 6, run=False, reason='features not released yet')
     def test_get_ifmatch_disabled(self):
         # when IF_MATCH is disabled no etag is present in payload
         self.app.config['IF_MATCH'] = False
@@ -557,7 +558,7 @@ class TestGetSQL(TestBaseSQL):
         self.assertEqual(len(response['_items']), 2)
         self.assertEqual(len(response['_links']), 2)
         # which links to the right contact
-        self.assertEqual(response['_items'][1]['people'],
+        self.assertEqual(response['_items'][1]['people']['_id'],
                          fake_person._id)
 
         _db.session.rollback()
@@ -678,6 +679,7 @@ class TestGetItem(TestBaseSQL):
         self.assertTrue(r[self.app.config['LAST_UPDATED']] != self.epoch)
         self.assertTrue(r[self.app.config['DATE_CREATED']] != self.epoch)
 
+    @pytest.mark.xfail(EVE < 5, run=False, reason='features not released yet')
     def test_getitem_ifmatch_disabled(self):
         # when IF_MATCH is disabled no etag is present in payload
         self.app.config['IF_MATCH'] = False
@@ -843,7 +845,7 @@ class TestGetItem(TestBaseSQL):
         response, status = self.get('users/%s/invoices/%s' %
                                     (fake_person._id, fake_invoice._id))
         self.assert200(status)
-        self.assertEqual(response['people'], fake_person._id)
+        self.assertEqual(response['people']['_id'], fake_person._id)
         self.assertEqual(response['_id'], fake_invoice._id)
 
         _db.session.rollback()
