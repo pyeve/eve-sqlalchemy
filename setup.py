@@ -23,7 +23,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     author='Andrew Mleczko',
     author_email='amleczko@redturtle.it',
-    url='http://github.com/redturtle/eve-sqlachemy',
+    url='https://github.com/RedTurtle/eve-sqlalchemy',
     license='GPL',
     platforms=["any"],
     packages=['eve_sqlalchemy'],
