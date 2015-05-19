@@ -8,7 +8,6 @@
 
 __version__ = '0.1-dev'
 
-import ast
 import simplejson as json
 import flask.ext.sqlalchemy as flask_sqlalchemy
 
@@ -21,7 +20,7 @@ from eve.io.base import DataLayer
 from eve.utils import config, debug_error_message, str_to_date
 from .parser import parse, parse_dictionary, ParseError, sqla_op, parse_sorting
 from .structures import SQLAResultCollection
-from .utils import dict_update, validate_filters, sqla_object_to_dict
+from .utils import dict_update, validate_filters, sqla_object_to_dict, extract_sort_arg
 
 
 db = flask_sqlalchemy.SQLAlchemy()
@@ -120,9 +119,7 @@ class SQL(DataLayer):
         :param req: a :class:`ParsedRequest`instance.
         :param sub_resource_lookup: sub-resource lookup from the endpoint url.
         """
-        args = {
-            'sort': ast.literal_eval(req.sort) if req.sort else None
-        }
+        args = {'sort': extract_sort_arg(req)}
 
         client_projection = self._client_projection(req)
         client_embedded = self._client_embedded(req)
