@@ -363,6 +363,12 @@ which produces order by expression:
 
    people.lastname DESC NULLS LAST
 
+You can also support the following python-Eve syntax:
+
+.. code-block:: console
+
+    http://127.0.0.1:5000/people?sort=lastname,-created_at
+
 How to adjust the primary column name
 -------------------------------------
 

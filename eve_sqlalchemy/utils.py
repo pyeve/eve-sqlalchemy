@@ -8,8 +8,11 @@
 
 """
 
-import copy
+import ast
 import collections
+import copy
+import re
+
 from eve.utils import config
 from sqlalchemy.ext.declarative.api import DeclarativeMeta
 
@@ -82,3 +85,19 @@ def sqla_object_to_dict(obj, fields):
             pass
 
     return result
+
+
+def extract_sort_arg(req):
+    if req.sort:
+        if re.match('^[-,\w]+$', req.sort):
+            arg = []
+            for s in req.sort.split(','):
+                if s.startswith('-'):
+                    arg.append([s[1:], -1])
+                else:
+                    arg.append([s])
+            return arg
+        else:
+            return ast.literal_eval(req.sort)
+    else:
+        return None
