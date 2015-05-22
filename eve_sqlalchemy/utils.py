@@ -54,9 +54,11 @@ def sqla_object_to_dict(obj, fields, resource):
         try:
             data_relation = config.DOMAIN[resource]['schema'][field]['data_relation']
             foreign_resource = data_relation['resource']
+            foreign_embeddable = data_relation['embeddable']
             foreign_fields = list(config.DOMAIN[foreign_resource]['schema'].keys())
         except KeyError:
             foreign_resource = None
+            foreign_embeddable = False
             foreign_fields = []
 
         try:
@@ -70,7 +72,7 @@ def sqla_object_to_dict(obj, fields, resource):
 
             # is this field another SQLalchemy object, or a list of SQLalchemy objects?
             if isinstance(val.__class__, DeclarativeMeta):
-                if foreign_fields:
+                if foreign_embeddable and foreign_fields:
                     # we have embedded document in schema, let's resolve it:
                     result[field] = sqla_object_to_dict(val, foreign_fields, foreign_resource)
                 else:
@@ -78,7 +80,7 @@ def sqla_object_to_dict(obj, fields, resource):
 
             elif isinstance(val, list) and len(val) > 0 \
                     and isinstance(val[0].__class__, DeclarativeMeta):
-                if foreign_fields:
+                if foreign_embeddable and foreign_fields:
                     # we have embedded document in schema, let's resolve it:
                     result[field] = [sqla_object_to_dict(x, foreign_fields, foreign_resource) for x in val]
                 else:
