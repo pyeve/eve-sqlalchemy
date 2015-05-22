@@ -106,7 +106,8 @@ class SQL(DataLayer):
         :param req: a :class:`ParsedRequest`instance.
         :param sub_resource_lookup: sub-resource lookup from the endpoint url.
         """
-        args = {'sort': extract_sort_arg(req)}
+        args = {'sort': extract_sort_arg(req),
+                'resource': resource}
 
         client_projection = self._client_projection(req)
         client_embedded = self._client_embedded(req)

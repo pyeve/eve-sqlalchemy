@@ -58,7 +58,7 @@ class Invoices(CommonColumns):
     __tablename__ = 'invoices'
     number = Column(Integer)
     people_id = Column(Integer, ForeignKey('people._id'))
-    people = relationship(People)
+    people = relationship(People, backref='invoices_collection')
 
 
 @registerSchema('payments')
