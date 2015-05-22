@@ -38,6 +38,26 @@ def validate_filters(where, resource):
     return None
 
 
+def lookup_foreign_resource(field, fields, resource):
+
+    foreign_resource = None
+    foreign_fields = []
+    try:
+        data_relation = config.DOMAIN[resource]['schema'][field]['data_relation']
+        if data_relation['embeddable']:
+            foreign_resource = data_relation['resource']
+            foreign_fields = list(config.DOMAIN[foreign_resource]['schema'].keys())
+            # Subkey
+            for f in fields:
+                a = f.split('.')
+                if len(a) > 2 and (a[0] == foreign_resource):
+                    foreign_fields.append(a[1:].join('.'))
+    except KeyError:
+        # NOTE(Gonéri): Probably a missing key in the config.DOMAIN structure
+        pass
+    return foreign_resource, foreign_fields
+
+
 def sqla_object_to_dict(obj, fields, resource):
     """ Creates a dict containing copies of the requested fields from the
     SQLAlchemy query result """
@@ -51,15 +71,8 @@ def sqla_object_to_dict(obj, fields, resource):
 
     result = {}
     for field in fields:
-        try:
-            data_relation = config.DOMAIN[resource]['schema'][field]['data_relation']
-            foreign_resource = data_relation['resource']
-            foreign_embeddable = data_relation['embeddable']
-            foreign_fields = list(config.DOMAIN[foreign_resource]['schema'].keys())
-        except KeyError:
-            foreign_resource = None
-            foreign_embeddable = False
-            foreign_fields = []
+        foreign_resource, foreign_fields = lookup_foreign_resource(
+            field, fields, resource)
 
         try:
             val = obj.__getattribute__(field)
@@ -72,7 +85,7 @@ def sqla_object_to_dict(obj, fields, resource):
 
             # is this field another SQLalchemy object, or a list of SQLalchemy objects?
             if isinstance(val.__class__, DeclarativeMeta):
-                if foreign_embeddable and foreign_fields:
+                if foreign_fields:
                     # we have embedded document in schema, let's resolve it:
                     result[field] = sqla_object_to_dict(val, foreign_fields, foreign_resource)
                 else:
@@ -80,7 +93,7 @@ def sqla_object_to_dict(obj, fields, resource):
 
             elif isinstance(val, list) and len(val) > 0 \
                     and isinstance(val[0].__class__, DeclarativeMeta):
-                if foreign_embeddable and foreign_fields:
+                if foreign_fields:
                     # we have embedded document in schema, let's resolve it:
                     result[field] = [sqla_object_to_dict(x, foreign_fields, foreign_resource) for x in val]
                 else:
