@@ -407,6 +407,7 @@ class TestGetSQL(TestBaseSQL):
         _db.session.flush()
 
         invoices = self.domain['invoices']
+        people = self.domain['people']
 
         # Test that we get 400 if can't parse dict
         embedded = 'not-a-dict'
@@ -457,6 +458,24 @@ class TestGetSQL(TestBaseSQL):
         self.assert200(r.status_code)
         content = json.loads(r.get_data())
         self.assertTrue('people_id' in content)
+
+        # Test that invoices_collection relationship are correctly embedded in a
+        # list of resources. Even if invoices_collection is not a resource name.
+        r = self.test_client.get('%s/%s' % (people['url'],
+                                 '?embedded={"invoices_collection":1}'))
+        content = json.loads(r.get_data())
+        self.assertTrue('invoices_collection' in content['_items'][0])
+        # Ensure only the fields with projection=1 are in the embedded resource
+        self.assertTrue('people_id' in content['_items'][0]['invoices_collection'][0])
+        self.assertTrue('people' not in content['_items'][0]['invoices_collection'][0])
+
+        # Test invoices_collection is embedded without the people relation because projection
+        # is disabled for this field
+        r = self.test_client.get('%s/1/%s' % (people['url'],
+                                              '?embedded={"invoices_collection":1}'))
+        content = json.loads(r.get_data())
+        self.assertTrue('number' in content['invoices_collection'][0])
+        self.assertTrue('people' not in content['invoices_collection'][0])
 
         _db.session.rollback()
 

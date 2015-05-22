@@ -106,7 +106,8 @@ class SQL(DataLayer):
         :param req: a :class:`ParsedRequest`instance.
         :param sub_resource_lookup: sub-resource lookup from the endpoint url.
         """
-        args = {'sort': extract_sort_arg(req)}
+        args = {'sort': extract_sort_arg(req),
+                'resource': resource}
 
         client_projection = self._client_projection(req)
         client_embedded = self._client_embedded(req)
@@ -174,7 +175,7 @@ class SQL(DataLayer):
             query = self.driver.session.query(model)
             document = query.filter(*filter_).first()
 
-        return sqla_object_to_dict(document, fields) if document else None
+        return sqla_object_to_dict(document, fields, resource) if document else None
 
     def find_one_raw(self, resource, _id):
         raise NotImplementedError

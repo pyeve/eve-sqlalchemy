@@ -31,6 +31,7 @@ class SQLAResultCollection(object):
         self._sort = kwargs.get('sort')
         self._max_results = kwargs.get('max_results')
         self._page = kwargs.get('page')
+        self._resource = kwargs.get('resource')
         if self._spec:
             self._query = self._query.filter(*self._spec)
         if self._sort:
@@ -47,7 +48,7 @@ class SQLAResultCollection(object):
 
     def __iter__(self):
         for i in self._query:
-            yield sqla_object_to_dict(i, self._fields)
+            yield sqla_object_to_dict(i, self._fields, self._resource)
 
     def count(self, **kwargs):
         return self._count

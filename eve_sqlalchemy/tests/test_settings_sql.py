@@ -24,8 +24,12 @@ people = {'item_title': 'person',
           },
           'cache_control': 'max-age=10,must-revalidate',
           'cache_expires': 10,
-          'resource_methods': ['GET', 'POST', 'DELETE']
-          }
+          'resource_methods': ['GET', 'POST', 'DELETE'],
+          'schema': {
+              'invoices_collection': {
+                  'data_relation': {
+                      'embeddable': True,
+                      'resource': 'invoices'}}}}
 
 import copy
 users = copy.deepcopy(people)
