@@ -18,6 +18,7 @@ from eve_sqlalchemy.parser import sqla_op
 
 from eve_sqlalchemy.structures import SQLAResultCollection
 from eve_sqlalchemy import SQL
+import eve_sqlalchemy.utils
 
 
 class TestSQLParser(TestCase):
@@ -177,6 +178,7 @@ class TestSQLStructures(TestCase):
                        'prog', '_etag']
         self.known_resource_count = 101
         self.max_results = 25
+        eve_sqlalchemy.utils.config.DOMAIN = {}
 
     def test_sql_collection(self):
         self.setupDB()
