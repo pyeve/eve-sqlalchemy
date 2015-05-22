@@ -12,7 +12,6 @@ import simplejson as json
 import flask.ext.sqlalchemy as flask_sqlalchemy
 
 from flask import abort
-from datetime import datetime
 from copy import copy
 
 from eve.io.base import ConnectionException
@@ -32,22 +31,10 @@ except NameError:
     string_type = str
 
 
-class SQLAJSONDecoder(json.JSONDecoder):
-    def decode(self, s):
-        # Turn RFC-1123 strings into datetime values.
-        rv = super(SQLAJSONDecoder, self).decode(s)
-        try:
-            key, val = rv.iteritems().next()
-            return dict(key=datetime.strptime(val, config.DATE_FORMAT))
-        except ValueError:
-            return rv
-
-
 class SQL(DataLayer):
     """
     SQLAlchemy data access layer for Eve REST API.
     """
-    json_decoder_cls = SQLAJSONDecoder
     driver = db
     serializers = {'datetime': str_to_date}
 
