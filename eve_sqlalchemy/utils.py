@@ -58,7 +58,7 @@ def lookup_foreign_resource(field, fields, resource):
     return foreign_resource, foreign_fields
 
 
-def sqla_object_to_dict(obj, fields, resource):
+def sqla_object_to_dict(obj, fields, resource, max_depth=2):
     """ Creates a dict containing copies of the requested fields from the
     SQLAlchemy query result """
     if config.LAST_UPDATED not in fields:
@@ -85,17 +85,20 @@ def sqla_object_to_dict(obj, fields, resource):
 
             # is this field another SQLalchemy object, or a list of SQLalchemy objects?
             if isinstance(val.__class__, DeclarativeMeta):
-                if foreign_fields:
+                if foreign_fields and max_depth:
                     # we have embedded document in schema, let's resolve it:
-                    result[field] = sqla_object_to_dict(val, foreign_fields, foreign_resource)
+                    result[field] = sqla_object_to_dict(val, foreign_fields,
+                                                        foreign_resource, max_depth - 1)
                 else:
                     result[field] = getattr(val, config.ID_FIELD)
 
             elif isinstance(val, list) and len(val) > 0 \
                     and isinstance(val[0].__class__, DeclarativeMeta):
-                if foreign_fields:
+                if foreign_fields and max_depth and max:
                     # we have embedded document in schema, let's resolve it:
-                    result[field] = [sqla_object_to_dict(x, foreign_fields, foreign_resource) for x in val]
+                    result[field] = [sqla_object_to_dict(x, foreign_fields,
+                                                         foreign_resource, max_depth - 1)
+                                     for x in val]
                 else:
                     result[field] = [getattr(x, config.ID_FIELD) for x in val]
 
