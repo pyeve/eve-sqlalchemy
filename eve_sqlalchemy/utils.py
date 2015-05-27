@@ -38,7 +38,23 @@ def validate_filters(where, resource):
     return None
 
 
-def sqla_object_to_dict(obj, fields):
+def lookup_foreign_resource(field, fields, resource):
+
+    foreign_resource = None
+    foreign_fields = []
+    try:
+        data_relation = config.DOMAIN[resource]['schema'][field]['data_relation']
+        if data_relation['embeddable']:
+            foreign_resource = data_relation['resource']
+            projection = config.DOMAIN[foreign_resource]['datasource']['projection']
+            foreign_fields = [k for k in projection if projection[k] == 1]
+    except KeyError:
+        # NOTE(Gonéri): Probably a missing key in the config.DOMAIN structure
+        pass
+    return foreign_resource, foreign_fields
+
+
+def sqla_object_to_dict(obj, fields, resource):
     """ Creates a dict containing copies of the requested fields from the
     SQLAlchemy query result """
     if config.LAST_UPDATED not in fields:
@@ -51,6 +67,9 @@ def sqla_object_to_dict(obj, fields):
 
     result = {}
     for field in fields:
+        foreign_resource, foreign_fields = lookup_foreign_resource(
+            field, fields, resource)
+
         try:
             val = obj.__getattribute__(field)
 
@@ -62,17 +81,20 @@ def sqla_object_to_dict(obj, fields):
 
             # is this field another SQLalchemy object, or a list of SQLalchemy objects?
             if isinstance(val.__class__, DeclarativeMeta):
-                if field in config.DOMAIN:
+                if foreign_fields:
                     # we have embedded document in schema, let's resolve it:
-                    result[field] = sqla_object_to_dict(val, list(config.DOMAIN[field]['schema'].keys()))
+                    result[field] = sqla_object_to_dict(val, foreign_fields,
+                                                        foreign_resource)
                 else:
                     result[field] = getattr(val, config.ID_FIELD)
 
             elif isinstance(val, list) and len(val) > 0 \
                     and isinstance(val[0].__class__, DeclarativeMeta):
-                if field in config.DOMAIN:
+                if foreign_fields:
                     # we have embedded document in schema, let's resolve it:
-                    result[field] = [sqla_object_to_dict(x, list(config.DOMAIN[field]['schema'].keys())) for x in val]
+                    result[field] = [sqla_object_to_dict(x, foreign_fields,
+                                                         foreign_resource)
+                                     for x in val]
                 else:
                     result[field] = [getattr(x, config.ID_FIELD) for x in val]
 

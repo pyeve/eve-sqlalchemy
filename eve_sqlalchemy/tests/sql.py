@@ -186,11 +186,12 @@ class TestSQLStructures(TestCase):
 
     def test_sql_collection_pagination(self):
         self.setupDB()
-        c = SQLAResultCollection(self.query, self.fields,
-                                 max_results=self.max_results)
-        self.assertEqual(c.count(), self.known_resource_count)
-        results = [p for p in c]
-        self.assertEqual(len(results), self.max_results)
+        with self.app.app_context():
+            c = SQLAResultCollection(self.query, self.fields,
+                                     max_results=self.max_results)
+            self.assertEqual(c.count(), self.known_resource_count)
+            results = [p for p in c]
+            self.assertEqual(len(results), self.max_results)
         self.dropDB()
 
     def test_base_sorting(self):
