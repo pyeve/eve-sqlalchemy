@@ -260,7 +260,7 @@ class SQL(DataLayer):
             filter = []
         return filter
 
-    def _datasource(self, resource):
+    def datasource(self, resource):
         """
         Overridden from super to return the actual model class of the database
         table instead of the name of it. We also parse the filter coming from
@@ -273,6 +273,12 @@ class SQL(DataLayer):
         projection_ = copy(config.SOURCES[resource]['projection'])
         sort_ = copy(config.SOURCES[resource]['default_sort'])
         return model, filter_, projection_, sort_
+
+    # NOTE(Gonéri): preserve the _datasource method for compatibiliy with
+    # pre 0.6 Eve release (See: commit 87742343fd0362354b9f75c749651f92d6e4a9c8
+    # from the Eve repository)
+    def _datasource(self, resource):
+        return self.datasource(resource)
 
     def _datasource_ex(self, resource, query=None, client_projection=None,
                        client_sort=None, client_embedded=None):
@@ -292,7 +298,7 @@ class SQL(DataLayer):
         return query_a
 
     def is_empty(self, resource):
-        model, filter_, _, _ = self._datasource(resource)
+        model, filter_, _, _ = self.datasource(resource)
         query = self.driver.session.query(model)
         if len(filter_):
             return query.filter_by(*filter_).count() == 0
