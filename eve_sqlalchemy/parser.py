@@ -12,8 +12,10 @@ import re
 import ast
 import operator as sqla_op
 import json
+import itertools
 
 from eve.utils import str_to_date
+import sqlalchemy
 from sqlalchemy.ext.associationproxy import AssociationProxy
 from sqlalchemy.sql import expression as sqla_exp
 
@@ -45,6 +47,18 @@ def parse_dictionary(filter_dict, model):
             pass
         else:
             continue
+
+        if k in ['and_', 'or_']:
+            try:
+                if not isinstance(v, list):
+                    v = json.loads(v)
+                operation = getattr(sqlalchemy, k)
+                _conditions = list(itertools.chain.from_iterable(
+                    [parse_dictionary(sv, model) for sv in v]))
+                conditions.append(operation(*_conditions))
+                continue
+            except (TypeError, ValueError):
+                raise ParseError("Can't parse expression '{0}'".format(v))
 
         attr = getattr(model, k)
 
