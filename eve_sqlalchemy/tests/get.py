@@ -407,6 +407,7 @@ class TestGetSQL(TestBaseSQL):
         _db.session.flush()
 
         invoices = self.domain['invoices']
+        people = self.domain['people']
 
         # Test that we get 400 if can't parse dict
         embedded = 'not-a-dict'
@@ -457,6 +458,28 @@ class TestGetSQL(TestBaseSQL):
         self.assert200(r.status_code)
         content = json.loads(r.get_data())
         self.assertTrue('people_id' in content)
+
+        # Test that invoices_collection relationship are correctly embedded in
+        # a list of resources. Even if invoices_collection is not a resource
+        # name.
+        r = self.test_client.get('%s%s' % (people['url'],
+                                 '?embedded={"invoices_collection":1}'))
+        content = json.loads(r.get_data())
+        self.assertTrue('invoices_collection' in content['_items'][0])
+        # Ensure only the fields with projection=1 are in the embedded
+        # resource['_id']
+        self.assertTrue('people_id' in
+                        content['_items'][0]['invoices_collection'][0])
+        self.assertTrue('people' not in
+                        content['_items'][0]['invoices_collection'][0])
+
+        # Test invoices_collection is embedded without the people relation
+        # because projection is disabled for this field
+        r = self.test_client.get('%s/1%s' % (
+            people['url'], '?embedded={"invoices_collection":1}'))
+        content = json.loads(r.get_data())
+        self.assertTrue('number' in content['invoices_collection'][0])
+        self.assertTrue('people' not in content['invoices_collection'][0])
 
         _db.session.rollback()
 
@@ -558,7 +581,7 @@ class TestGetSQL(TestBaseSQL):
         self.assertEqual(len(response['_items']), 2)
         self.assertEqual(len(response['_links']), 2)
         # which links to the right contact
-        self.assertEqual(response['_items'][1]['people']['_id'],
+        self.assertEqual(response['_items'][1]['people'],
                          fake_person._id)
 
         _db.session.rollback()
@@ -845,7 +868,7 @@ class TestGetItem(TestBaseSQL):
         response, status = self.get('users/%s/invoices/%s' %
                                     (fake_person._id, fake_invoice._id))
         self.assert200(status)
-        self.assertEqual(response['people']['_id'], fake_person._id)
+        self.assertEqual(response['people'], fake_person._id)
         self.assertEqual(response['_id'], fake_invoice._id)
 
         _db.session.rollback()
