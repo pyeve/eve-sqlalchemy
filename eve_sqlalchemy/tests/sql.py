@@ -165,6 +165,29 @@ class TestSQLParser(TestCase):
         self.assertEqual(r[0].right.value,
                          "('john%'|'mark%')")
 
+    def test_parse_sqla_and_or_conjunctions(self):
+        r = parse_dictionary(
+            {'or_': '[{"firstname": "john"}, {"and_": ['
+             '{"firstname": "dylan"},{"lastname": "smith"}]}]'}, self.model)
+        self.assertEqual(str(r[0]),
+                         'people.firstname = :firstname_1 OR '
+                         'people.firstname = :firstname_2 AND '
+                         'people.lastname = :lastname_1')
+        self.assertEqual(type(r), list)
+        self.assertEqual(type(r[0]), BooleanClauseList)
+        self.assertEqual(r[0].operator, or_)
+        self.assertEqual(len(r[0].clauses), 2)
+        expected_expression = sqla_op.eq(self.model.firstname, 'john')
+        self.assertTrue(expected_expression.compare(r[0].clauses[0]))
+        second_op = r[0].clauses[1]
+        self.assertEqual(type(second_op), BooleanClauseList)
+        self.assertEqual(second_op.operator, and_)
+        self.assertEqual(len(second_op.clauses), 2)
+        expected_expression = sqla_op.eq(self.model.firstname, 'dylan')
+        self.assertTrue(expected_expression.compare(second_op.clauses[0]))
+        expected_expression = sqla_op.eq(self.model.lastname, 'smith')
+        self.assertTrue(expected_expression.compare(second_op.clauses[1]))
+
 
 class TestSQLStructures(TestCase):
 
