@@ -402,7 +402,7 @@ Eve-SQLAlchemy support the embedded keyword of python-eve ( `Eve Embedded Resour
 
 For example, the following request will list the people and embedded their addresses.
 
-Starting from version 0.3.5, only the fields that have the projection (`Eve Projections`) enabled are included
+Starting from version 0.4.0a, only the fields that have the projection (`Eve Projections`) enabled are included
 in the associated resource. This was necessary to avoid endless loop when relationship between resources were
 refeering each others.
 

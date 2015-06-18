@@ -1,11 +1,17 @@
 Changelog
 ---------
 
+0.4.0a2 (unreleased)
+~~~~~~~~~~~~~~~~~~~~
+
+- Nothing changed yet.
+
+
 0.4.0a1 (2015-06-18)
 ~~~~~~~~~~~~~~~~~~~~
 
 - support the Python-Eve generic sorting syntax [Goneri Le Bouder]
-- add support for and_ and or_ conjunctions in sqla expressions [toxsick]
+- add support for `and_` and `or_` conjunctions in sqla expressions [toxsick]
 - embedded table: use DOMAIN to look up the resource fields [Goneri Le Bouder]
 
 
