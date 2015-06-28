@@ -206,7 +206,7 @@ And finally a flask login view:
             and password in the request POST. If the username and
             password matches - token is being generated and return.
             """
-            data = json.loads(request.data)
+            data = request.get_json()
             login = data.get('username')
             password = data.get('password')
 
