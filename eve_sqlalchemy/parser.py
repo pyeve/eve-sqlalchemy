@@ -42,7 +42,10 @@ def parse_dictionary(filter_dict, model):
         # firts let's check with the expression parser
 
         try:
-            conditions += parse('{0}{1}'.format(k, v), model)
+            if(type(v) is unicode):
+                conditions += parse('{0}{1}'.format(k, v.encode('utf-8')), model)
+            else:
+                conditions += parse('{0}{1}'.format(k, v), model)
         except ParseError:
             pass
         else:
