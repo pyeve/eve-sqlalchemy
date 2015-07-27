@@ -29,6 +29,13 @@ setup(
     packages=['eve_sqlalchemy'],
     test_suite="eve_sqlalchemy.tests",
     install_requires=install_requires,
+      extras_require={
+        'tests': [
+          'pytest',
+          'mock',
+          'pytest-flakes',
+        ]
+      },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

@@ -2,4 +2,4 @@
 *.pyc
 .eggs/
 *.egg-info/
-
+.cache
