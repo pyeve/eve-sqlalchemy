@@ -11,7 +11,7 @@ with open('CHANGES') as f:
     LONG_DESCRIPTION += f.read()
 
 install_requires = [
-    'Eve>=0.5',
+    'Eve>=0.5,<0.6',
     'sqlalchemy>=0.8',
     'Flask-SQLAlchemy>=1.0,<2.999',
 ]
@@ -29,13 +29,13 @@ setup(
     packages=['eve_sqlalchemy'],
     test_suite="eve_sqlalchemy.tests",
     install_requires=install_requires,
-      extras_require={
+    extras_require={
         'tests': [
-          'pytest',
-          'mock',
-          'pytest-flakes',
-        ]
-      },
+            'pytest',
+            'mock',
+            'pytest-flakes',
+            ]
+        },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
