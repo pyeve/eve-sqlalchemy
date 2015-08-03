@@ -95,6 +95,7 @@ class TestBaseSQL(TestMinimal):
 
     def setupDB(self):
         self.connection = self.app.data.driver
+        self.connection.session.execute('pragma foreign_keys=on')
         self.connection.drop_all()
         self.connection.create_all()
         self.bulk_insert()

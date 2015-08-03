@@ -4,7 +4,7 @@ Changelog
 0.4.0a2 (unreleased)
 ~~~~~~~~~~~~~~~~~~~~
 
-- Nothing changed yet.
+- PUT drops/recreates item in the same transaction [goneri]
 
 
 0.4.0a1 (2015-06-18)
