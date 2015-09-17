@@ -96,6 +96,21 @@ class TestPutSQL(TestBaseSQL):
         db_value = self.compare_put_with_get(field, r)
         self.assertEqual(db_value, test_value)
 
+    def test_put_with_fk_constraint(self):
+        # notes.people_id FK should not block the PUT on
+        # /people/1
+        headers = [('Content-Type', 'application/json')]
+        data = json.dumps([{'people_id': 1, 'content': 'blabla'}])
+        r = self.test_client.post('/notes', data=data,
+                                  headers=headers)
+        self.assert201(r.status_code)
+        field = "firstname"
+        test_value = "Douglas"
+        changes = {field: test_value}
+        _, status = self.put(self.item_id_url, data=changes,
+                             headers=[('If-Match', self.item_etag)])
+        self.assert200(status)
+
     def test_put_with_post_override(self):
         # POST request with PUT override turns into a PUT
         field = "firstname"

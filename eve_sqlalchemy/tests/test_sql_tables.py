@@ -53,6 +53,13 @@ class People(CommonColumns):
         return cls(firstname=data[0], lastname=data[1], prog=data[2])
 
 
+@registerSchema('notes')
+class Notes(CommonColumns):
+    __tablename__ = 'notes'
+    people_id = Column(Integer, ForeignKey('people._id'), nullable=False)
+    content = Column(String(120))
+
+
 @registerSchema('invoices')
 class Invoices(CommonColumns):
     __tablename__ = 'invoices'
