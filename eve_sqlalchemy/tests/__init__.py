@@ -16,6 +16,9 @@ from eve_sqlalchemy import SQL
 
 EVE = 4
 
+THIS_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+SETTINGS_FILE = os.path.join(THIS_DIRECTORY, 'test_settings_sql.py')
+
 
 class TestBaseSQL(TestMinimal):
 
@@ -24,10 +27,7 @@ class TestBaseSQL(TestMinimal):
     def setUp(self, settings_file=None, url_converters=None):
         self.connection = None
         self.known_resource_count = 101
-        self.this_directory = os.path.dirname(os.path.realpath(__file__))
-        self.settings_file = os.path.join(self.this_directory,
-                                          'test_settings_sql.py')
-        self.app = eve.Eve(settings=self.settings_file,
+        self.app = eve.Eve(settings=SETTINGS_FILE,
                            url_converters=url_converters,
                            data=SQL,
                            validator=ValidatorSQL)
