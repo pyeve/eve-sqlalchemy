@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import eve_sqlalchemy.validation
-from eve_sqlalchemy.tests.test_settings_sql import *
+from eve_sqlalchemy.tests.test_settings_sql import DOMAIN
 from eve.utils import config
 
 import unittest
@@ -23,6 +23,3 @@ class TestValidator(unittest.TestCase):
 
     def test_allow_unknown_true(self):
         self.assertTrue(self.validator.allow_unknown)
-
-#    def test_allow_unknown_false(self):
-#        self.assertFalse(self.validator.allow_unknown)
