@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-from eve_sqlalchemy.utils import extract_sort_arg
-
-from eve_sqlalchemy.tests import TestBaseSQL
-
+import unittest
 import mock
 
+from eve_sqlalchemy.utils import extract_sort_arg
 
-class TestUtils(TestBaseSQL):
+
+class TestUtils(unittest.TestCase):
 
     def test_extract_sort_arg_standard(self):
         req = mock.Mock()
