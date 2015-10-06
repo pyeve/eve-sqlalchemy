@@ -274,12 +274,6 @@ class SQL(DataLayer):
         sort_ = copy(config.SOURCES[resource]['default_sort'])
         return model, filter_, projection_, sort_
 
-    # NOTE(Gonéri): preserve the _datasource method for compatibiliy with
-    # pre 0.6 Eve release (See: commit 87742343fd0362354b9f75c749651f92d6e4a9c8
-    # from the Eve repository)
-    def _datasource(self, resource):
-        return self.datasource(resource)
-
     def _datasource_ex(self, resource, query=None, client_projection=None,
                        client_sort=None, client_embedded=None):
         model, filter_, fields_, sort_ = \
@@ -321,22 +315,3 @@ class SQL(DataLayer):
                     'Unable to parse `embedded` clause'
                 ))
         return client_embedded
-
-    def _client_projection(self, req):
-        """ Returns a properly parsed client projection if available.
-
-        :param req: a :class:`ParsedRequest` instance.
-
-        .. versionadded:: 0.4
-        """
-        if hasattr(DataLayer, '_client_projection'):
-            return super(SQL, self)._client_projection(req)
-        client_projection = {}
-        if req and req.projection:
-            try:
-                client_projection = json.loads(req.projection)
-            except:
-                abort(400, description=debug_error_message(
-                    'Unable to parse `projection` clause'
-                ))
-        return client_projection
