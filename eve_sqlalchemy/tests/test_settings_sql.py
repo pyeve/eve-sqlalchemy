@@ -47,7 +47,7 @@ users_overseas['datasource'] = {'source': 'People'}
 invoices = {}
 
 user_invoices = copy.deepcopy(invoices)
-user_invoices['url'] = 'users/<regex("[0-9]+"):people>/invoices'
+user_invoices['url'] = 'users/<int:people_id>/invoices'
 user_invoices['datasource'] = {'source': 'Invoices'}
 
 payments = {

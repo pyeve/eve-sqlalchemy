@@ -11,7 +11,7 @@ with open('CHANGES') as f:
     LONG_DESCRIPTION += f.read()
 
 install_requires = [
-    'Eve>=0.5,<0.6',
+    'Eve>=0.6,<0.7',
     'sqlalchemy>=0.8',
     'Flask-SQLAlchemy>=1.0,<2.999',
 ]

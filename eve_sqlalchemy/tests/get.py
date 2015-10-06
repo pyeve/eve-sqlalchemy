@@ -192,9 +192,9 @@ class TestGetSQL(TestBaseSQL):
 
     def test_get(self):
         response, status = self.get(self.known_resource)
-        self.assert_get(response, status)
+        self.assert_get(response, status, self.known_resource)
 
-    def assert_get(self, response, status, resource=None):
+    def assert_get(self, response, status, resource):
         self.assert200(status)
 
         links = response['_links']
@@ -209,7 +209,7 @@ class TestGetSQL(TestBaseSQL):
         self.assertEqual(len(resource), self.app.config['PAGINATION_DEFAULT'])
 
         for item in resource:
-            self.assertItem(item)
+            self.assertItem(item, self.known_resource)
 
         etag = item.get(self.app.config['ETAG'])
         self.assertTrue(etag is not None)
@@ -261,7 +261,7 @@ class TestGetSQL(TestBaseSQL):
         headers = [('X-HTTP-Method-Override', 'GET')]
         r = self.test_client.post(self.known_resource_url, headers=headers)
         response, status = self.parse_response(r)
-        self.assert_get(response, status)
+        self.assert_get(response, status, self.known_resource)
 
     def test_get_custom_items(self):
         self.app.config['ITEMS'] = '_documents'
@@ -365,7 +365,7 @@ class TestGetSQL(TestBaseSQL):
 
         for item in resource:
             # 'user' title instead of original 'contact'
-            self.assertItem(item)
+            self.assertItem(item, self.different_resource)
 
         etag = item.get(self.app.config['ETAG'])
         self.assertTrue(etag is not None)
@@ -385,7 +385,7 @@ class TestGetSQL(TestBaseSQL):
         self.assert200(status)
         resource = response['_items']
         self.assertEqual(len(resource), 1)
-        self.assertItem(resource[0])
+        self.assertItem(resource[0], self.known_resource)
 
         _db.session.rollback()
 
@@ -578,10 +578,10 @@ class TestGetSQL(TestBaseSQL):
         response, status = self.get('users/%s/invoices' % fake_person._id)
         self.assert200(status)
         # only 2 invoices
-        self.assertEqual(len(response['_items']), 2)
+        self.assertEqual(len(response['_items']), 1)
         self.assertEqual(len(response['_links']), 2)
         # which links to the right contact
-        self.assertEqual(response['_items'][1]['people'],
+        self.assertEqual(response['_items'][0]['people'],
                          fake_person._id)
 
         _db.session.rollback()
@@ -590,14 +590,14 @@ class TestGetSQL(TestBaseSQL):
 class TestGetItem(TestBaseSQL):
 
     def assert_item_response(self, response, status,
-                             resource=None):
+                             resource):
         self.assert200(status)
         self.assertTrue(self.app.config['ETAG'] in response)
         links = response['_links']
         self.assertEqual(len(links), 3)
         self.assertHomeLink(links)
         self.assertCollectionLink(links, resource or self.known_resource)
-        self.assertItem(response)
+        self.assertItem(response, resource)
 
     def test_disallowed_getitem(self):
         _, status = self.get(self.empty_resource, item=self.item_id)
@@ -606,7 +606,7 @@ class TestGetItem(TestBaseSQL):
     def test_getitem_by_id(self):
         response, status = self.get(self.known_resource,
                                     item=self.item_id)
-        self.assert_item_response(response, status)
+        self.assert_item_response(response, status, self.known_resource)
 
         response, status = self.get(self.known_resource,
                                     item=self.unknown_item_id)
@@ -615,12 +615,12 @@ class TestGetItem(TestBaseSQL):
     def test_getitem_noschema(self):
         self.app.config['DOMAIN'][self.known_resource]['schema'] = {}
         response, status = self.get(self.known_resource, item=self.item_id)
-        self.assert_item_response(response, status)
+        self.assert_item_response(response, status, self.known_resource)
 
     def test_getitem_by_name(self):
         response, status = self.get(self.known_resource,
                                     item=self.item_firstname)
-        self.assert_item_response(response, status)
+        self.assert_item_response(response, status, self.known_resource)
         response, status = self.get(self.known_resource,
                                     item=self.unknown_item_name)
         self.assert404(status)
@@ -634,19 +634,6 @@ class TestGetItem(TestBaseSQL):
                                     item=self.item_firstname)
 
         self.assertEqual(self_href, response['_links']['self']['href'])
-
-    def test_getitem_by_integer(self):
-        self.domain[self.known_resource]['additional_lookup'] = {
-            'field': 'prog'
-        }
-        self.app._add_resource_url_rules(self.known_resource,
-                                         self.domain[self.known_resource])
-        response, status = self.get(self.known_resource,
-                                    item=1)
-        self.assert_item_response(response, status)
-        response, status = self.get(self.known_resource,
-                                    item=self.known_resource_count)
-        self.assert404(status)
 
     def test_getitem_if_modified_since(self):
         self.assertIfModifiedSince(self.item_id_url)
@@ -671,7 +658,7 @@ class TestGetItem(TestBaseSQL):
         headers = [('X-HTTP-Method-Override', 'GET')]
         r = self.test_client.post(self.item_id_url, headers=headers)
         response, status = self.parse_response(r)
-        self.assert_item_response(response, status)
+        self.assert_item_response(response, status, self.known_resource)
 
     def test_getitem_projection(self):
         projection = '{"prog": 1}'
@@ -761,7 +748,7 @@ class TestGetItem(TestBaseSQL):
         _db.session.add(person)
         _db.session.flush()
         response, status = self.get(self.known_resource, item=firstname)
-        self.assert_item_response(response, status)
+        self.assert_item_response(response, status, self.known_resource)
 
         _db.session.rollback()
 
