@@ -11,7 +11,7 @@ from sqlalchemy.ext.hybrid import HYBRID_PROPERTY
 from sqlalchemy.ext.associationproxy import ASSOCIATION_PROXY
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy import types, inspect
-import sqlalchemy.dialects.postgresql
+import sqlalchemy.dialects.postgresql as postgresql
 from sqlalchemy import schema as sqla_schema
 from eve.utils import config
 
@@ -21,18 +21,24 @@ from .utils import dict_update
 __all__ = ['registerSchema']
 
 
-sqla_type_mapping = {types.Integer: 'integer',
-                     types.Float: 'float',
-                     types.Boolean: 'boolean',
-                     types.Date: 'datetime',
-                     types.DateTime: 'datetime',
-                     types.DATETIME: 'datetime',
-                     sqlalchemy.dialects.postgresql.JSON: 'json'}
-# TODO: Add the remaining sensible SQL types
+def get_sqla_type_mapping():
+    mapping = {types.Integer: 'integer',
+               types.Float: 'float',
+               types.Boolean: 'boolean',
+               types.Date: 'datetime',
+               types.DateTime: 'datetime',
+               types.DATETIME: 'datetime'}
+    try:
+        mapping[postgresql.JSON] = 'json'
+    except AttributeError:
+        # NOTE(Gonéri): JSON has been introduced in SQLAlchemy 0.9.0.
+        pass
+    # TODO: Add the remaining sensible SQL types
+    return mapping
 
 
 def lookup_column_type(intype):
-    for sqla_type, api_type in sqla_type_mapping.items():
+    for sqla_type, api_type in get_sqla_type_mapping().items():
         if isinstance(intype, sqla_type):
             return api_type
     return 'string'
