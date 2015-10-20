@@ -4,7 +4,7 @@ Changelog
 0.4.0a3 (unreleased)
 ~~~~~~~~~~~~~~~~~~~~
 
-- Nothing changed yet.
+- `hybrid_properties` are now readonly in Eve schema [amleczko]
 
 
 0.4.0a2 (2015-09-17)

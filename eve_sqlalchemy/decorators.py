@@ -20,21 +20,24 @@ from .utils import dict_update
 
 __all__ = ['registerSchema']
 
+sqla_type_mapping ={
+        types.Integer: 'integer',
+        types.Float: 'float',
+        types.Boolean: 'boolean',
+        types.Date: 'datetime',
+        types.DateTime: 'datetime',
+        types.DATETIME: 'datetime'
+}
+
 
 def get_sqla_type_mapping():
-    mapping = {types.Integer: 'integer',
-               types.Float: 'float',
-               types.Boolean: 'boolean',
-               types.Date: 'datetime',
-               types.DateTime: 'datetime',
-               types.DATETIME: 'datetime'}
     try:
-        mapping[postgresql.JSON] = 'json'
+        sqla_type_mapping[postgresql.JSON] = 'json'
     except AttributeError:
         # NOTE(Gonéri): JSON has been introduced in SQLAlchemy 0.9.0.
         pass
     # TODO: Add the remaining sensible SQL types
-    return mapping
+    return sqla_type_mapping
 
 
 def lookup_column_type(intype):
@@ -86,6 +89,7 @@ class registerSchema(object):
                 schema = domain[resource]['schema'][desc.__name__] = {}
                 schema['unique'] = False
                 schema['required'] = False
+                schema['readonly'] = True
                 schema['type'] = 'string'
                 projection[desc.__name__] = 1
 
