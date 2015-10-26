@@ -34,6 +34,9 @@ setup(
             'pytest',
             'mock',
             'pytest-flakes',
+            ],
+        'develop': [                        # pip install -e .[develop]
+            'bumpversion'
             ]
         },
     classifiers=[
