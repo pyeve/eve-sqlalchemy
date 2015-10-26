@@ -24,7 +24,7 @@ from .utils import (
     sqla_object_to_dict, validate_filters,
 )
 
-__version__ = '0.1-dev'
+__version__ = '0.4.2.dev0'
 
 db = flask_sqlalchemy.SQLAlchemy()
 
