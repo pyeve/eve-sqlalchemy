@@ -34,8 +34,8 @@ setup(
             'pytest',
             'mock',
             'pytest-flakes',
-            ]
-        },
+        ]
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

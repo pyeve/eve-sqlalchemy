@@ -26,8 +26,8 @@ class CommonColumns(Base):
     ID_FIELD.
     """
     __abstract__ = True
-    _created = Column(DateTime,  default=func.now())
-    _updated = Column(DateTime,  default=func.now(), onupdate=func.now())
+    _created = Column(DateTime, default=func.now())
+    _updated = Column(DateTime, default=func.now(), onupdate=func.now())
     _etag = Column(String)
     # TODO: make this comply to Eve's custom ID_FIELD setting
     _id = Column(Integer, primary_key=True)
@@ -102,6 +102,7 @@ class ProductsKeywords(Base):
                         cascade="all,delete-orphan")
     )
     keyword = relationship('Keywords')
+
 
 # Since the corresponding mappers of the following classes are not yet fully
 # configured, we need to make a direct call the registerSchema() decorator.

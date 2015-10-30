@@ -1,22 +1,26 @@
 language: python
-env:
-  - TOX_ENV=py26
-  - TOX_ENV=py27
-  - TOX_ENV=py33
-  - TOX_ENV=py34
-  - TOX_ENV=pypy
-  - TOX_ENV=pep8
-install:
-  - pip install tox
-  - pip install coveralls
+install: pip install tox
+matrix:
+  include:
+    - python: 2.7
+      env: TOX_ENV=py26
+    - python: 2.7
+      env: TOX_ENV=py27
+    - python: 2.7
+      env: TOX_ENV=py33
+    - python: 2.7
+      env: TOX_ENV=py34
+    - python: 2.7
+      env: TOX_ENV=pypy
+    - python: 2.7
+      env: TOX_ENV=flake8
+    - python: 3.5
+      env: TOX_ENV=py35
+    - python: 3.6-dev
+      env: TOX_ENV=py36
 script:
   - tox -e $TOX_ENV
-  - coverage run --source=eve_sqlalchemy setup.py test
-services:
-  - sqlite3
 branches:
   only:
     - master
     - develop
-after_success:
-  coveralls
