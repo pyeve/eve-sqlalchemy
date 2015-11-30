@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-
-import eve_sqlalchemy.validation
+from __future__ import unicode_literals
 
 import unittest
+import eve_sqlalchemy.validation
 
 
 class TestValidator(unittest.TestCase):

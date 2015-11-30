@@ -1,14 +1,20 @@
-import hashlib
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
+import hashlib
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.associationproxy import association_proxy
-from sqlalchemy.orm import column_property, relationship, backref
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column
+from sqlalchemy import Boolean
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import func
 from sqlalchemy import Integer
+from sqlalchemy import Float
 from sqlalchemy import String
+from sqlalchemy import LargeBinary
+from sqlalchemy import PickleType
 from eve_sqlalchemy.decorators import registerSchema
 from eve_sqlalchemy import db
 
@@ -29,8 +35,6 @@ class CommonColumns(Base):
     _created = Column(DateTime, default=func.now())
     _updated = Column(DateTime, default=func.now(), onupdate=func.now())
     _etag = Column(String)
-    # TODO: make this comply to Eve's custom ID_FIELD setting
-    _id = Column(Integer, primary_key=True)
 
     def __init__(self, *args, **kwargs):
         h = hashlib.sha1()
@@ -38,78 +42,149 @@ class CommonColumns(Base):
         super(CommonColumns, self).__init__(*args, **kwargs)
 
 
-@registerSchema('people')
-class People(CommonColumns):
-    __tablename__ = 'people'
-    firstname = Column(String(80), unique=True)
-    lastname = Column(String(120))
-    fullname = column_property(firstname + " " + lastname)
+@registerSchema('disabled_bulk')
+class DisabledBulk(CommonColumns):
+    __tablename__ = 'disabled_bulk'
+    _id = Column(Integer, primary_key=True)
+    string_field = Column(String(25))
+
+
+class InvoicingContacts(Base):
+    __tablename__ = 'invoicing_contacts'
+    invoice_id = Column(Integer, ForeignKey('invoices._id'), primary_key=True)
+    contact_id = Column(Integer, ForeignKey('contacts._id'), primary_key=True)
+    contact = relationship('Contacts')
+
+
+@registerSchema('contacts')
+class Contacts(CommonColumns):
+    __tablename__ = 'contacts'
+    _id = Column(Integer, primary_key=True)
+    ref = Column(String(25), unique=True, nullable=False)
+    media = Column(LargeBinary)
     prog = Column(Integer)
+    role = Column(PickleType)
+    rows = Column(PickleType)
+    alist = Column(PickleType)
+    location = Column(PickleType)
     born = Column(DateTime)
+    tid = Column(Integer)
     title = Column(String(20), default='Mr.')
-
-    @classmethod
-    def from_tuple(cls, data):
-        return cls(firstname=data[0], lastname=data[1], prog=data[2])
-
-
-@registerSchema('notes')
-class Notes(CommonColumns):
-    __tablename__ = 'notes'
-    people_id = Column(Integer, ForeignKey('people._id'), nullable=False)
-    content = Column(String(120))
+    # id_list
+    # id_list_of_dict
+    # id_list_fixed_len
+    dependency_field1 = Column(String(25), default='default')
+    dependency_field2 = Column(String(25))
+    dependency_field3 = Column(String(25))
+    read_only_field = Column(String(25), default='default')
+    # dict_with_read_only
+    key1 = Column(String(25))
+    propertyschema_dict = Column(PickleType)
+    valueschema_dict = Column(PickleType)
+    aninteger = Column(Integer)
+    afloat = Column(Float)
+    anumber = Column(Float)
+    username = Column(String(25), default='')
+    # additional fields for Eve-SQLAlchemy tests
+    abool = Column(Boolean)
 
 
 @registerSchema('invoices')
+@registerSchema('required_invoices')
 class Invoices(CommonColumns):
     __tablename__ = 'invoices'
-    number = Column(Integer)
-    people_id = Column(Integer, ForeignKey('people._id'))
-    people = relationship(People, backref='invoices_collection')
+    _id = Column(Integer, primary_key=True)
+    inv_number = Column(String(25))
+    person_id = Column(Integer, ForeignKey('contacts._id'))
+    person = relationship(Contacts)
+    invoicing_contacts = association_proxy(
+        'invoicing_contacts_assoc', 'contact',
+        creator=lambda contact_id: InvoicingContacts(contact_id=contact_id))
+    invoicing_contacts_assoc = relationship('InvoicingContacts')
+
+
+@registerSchema('empty')
+class Empty(CommonColumns):
+    __tablename__ = 'empty'
+    _id = Column(Integer, primary_key=True)
+    inv_number = Column(String(25))
+
+
+class DepartmentsContacts(Base):
+    __tablename__ = 'department_contacts'
+    department_id = Column(Integer, ForeignKey('departments._id'),
+                           primary_key=True)
+    contact_id = Column(Integer, ForeignKey('contacts._id'), primary_key=True)
+    # departments = relationship('Departments',
+    #                            backref=backref('departments_contacts_assoc',
+    #                                            cascade='all,delete-orphan'))
+    contact = relationship('Contacts')
+
+
+class CompaniesDepartments(Base):
+    __tablename__ = 'companies_departments'
+    company_id = Column(Integer, ForeignKey('companies._id'), primary_key=True)
+    department_id = Column(Integer, ForeignKey('departments._id'),
+                           primary_key=True)
+    # companies = relationship('Companies',
+    #                          backref=backref('companies_departments_assoc',
+    #                                          cascade='all,delete-orphan'))
+    department = relationship('Departments')
+
+
+@registerSchema('departments')
+class Departments(CommonColumns):
+    __tablename__ = 'departments'
+    _id = Column(Integer, primary_key=True)
+    title = Column(String(25))
+    members = association_proxy(
+        'departments_contacts_assoc', 'contact',
+        creator=lambda contact_id: DepartmentsContacts(
+            contact_id=contact_id))
+    departments_contacts_assoc = relationship('DepartmentsContacts')
+
+
+@registerSchema('companies')
+class Companies(CommonColumns):
+    __tablename__ = 'companies'
+    _id = Column(Integer, primary_key=True)
+    holding_id = Column(String(16), ForeignKey('companies._id'))
+    holding = relationship('Companies', remote_side=[_id])
+    departments = association_proxy(
+        'companies_departments_assoc', 'department',
+        creator=lambda department_id: CompaniesDepartments(
+            department_id=department_id))
+    companies_departments_assoc = relationship('CompaniesDepartments')
 
 
 @registerSchema('payments')
 class Payments(CommonColumns):
     __tablename__ = 'payments'
-    number = Column(Integer)
-    string = Column(String(80))
+    _id = Column(Integer, primary_key=True)
+    a_string = Column(String(10))
+    a_number = Column(Integer)
 
 
+@registerSchema('internal_transactions')
+class InternalTransactions(CommonColumns):
+    __tablename__ = 'internal_transactions'
+    _id = Column(Integer, primary_key=True)
+    internal_string = Column(String(10))
+    internal_number = Column(Integer)
+
+
+@registerSchema('login')
+class Login(CommonColumns):
+    __tablename__ = 'login'
+    _id = Column(Integer, primary_key=True)
+    email = Column(String(255), nullable=False, unique=True)
+    password = Column(String(32), nullable=False)
+
+
+@registerSchema('products')
 class Products(CommonColumns):
     __tablename__ = 'products'
-    name = Column(String(80))
-
-    keywords = association_proxy(
-        'products_keywords_assoc', 'keyword',
-        creator=lambda keyword_id: ProductsKeywords(keyword_id=keyword_id)
-    )
-
-
-class Keywords(CommonColumns):
-    __tablename__ = 'keywords'
-
-    kw = Column(String(80))
-
-
-class ProductsKeywords(Base):
-    __tablename__ = 'products_keywords'
-    product_id = Column(Integer, ForeignKey('products._id'), primary_key=True)
-    keyword_id = Column(Integer, ForeignKey('keywords._id'), primary_key=True)
-
-    product = relationship(
-        'Products',
-        backref=backref('products_keywords_assoc',
-                        cascade="all,delete-orphan")
-    )
-    keyword = relationship('Keywords')
-
-
-# Since the corresponding mappers of the following classes are not yet fully
-# configured, we need to make a direct call the registerSchema() decorator.
-
-# Note(Kevin Roy): Maybe we should use mapper.configure_mappers() and the
-# decorator registerSchema should be triggered for each model class on the
-# Mappers event 'after_configured'.
-
-registerSchema('products')(Products)
-registerSchema('keywords')(Keywords)
+    sku = Column(String(16), primary_key=True)
+    title = Column(String(32))
+    parent_product_sku = Column(String(16), ForeignKey('products.sku'))
+    parent_product = relationship('Products', remote_side=[sku])

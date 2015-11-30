@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
     These classes provide a middle layer to transform a SQLAlchemy query into
     a series of object that Eve understands and can be rendered as JSON.
@@ -8,6 +7,7 @@
     :license: BSD, see LICENSE for more details.
 
 """
+from __future__ import unicode_literals
 
 from .utils import sqla_object_to_dict
 

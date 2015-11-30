@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
     This module implements a Python-to-SQLAlchemy syntax parser.
     Allows the SQLAlchemy data-layer to seamlessy respond to a
@@ -8,6 +7,8 @@
     :copyright: (c) 2013 by Andrew Mleczko and Tomasz Jezierski (Tefnet)
     :license: BSD, see LICENSE for more details.
 """
+from __future__ import unicode_literals
+
 import re
 import ast
 import operator as sqla_op
@@ -39,12 +40,9 @@ def parse_dictionary(filter_dict, model):
     conditions = []
 
     for k, v in filter_dict.items():
-        # firts let's check with the expression parser
+        # first let's check with the expression parser
         try:
-            if isinstance(v, type(u'')):
-                conditions += parse('{0}{1}'.format(k, v.encode('utf-8')), model)
-            else:
-                conditions += parse('{0}{1}'.format(k, v), model)
+            conditions += parse('{0}{1}'.format(k, v), model)
         except ParseError:
             pass
         else:
