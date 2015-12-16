@@ -40,7 +40,6 @@ def parse_dictionary(filter_dict, model):
 
     for k, v in filter_dict.items():
         # firts let's check with the expression parser
-
         try:
             if(type(v) == type(u'')):
                 conditions += parse('{0}{1}'.format(k, v.encode('utf-8')), model)
@@ -248,7 +247,10 @@ class SQLAVisitor(ast.NodeVisitor):
 
     def visit_Name(self, node):
         """ Names """
-        self.current_value = node.id
+        if node.id.lower() in ['none', 'null']:
+            self.current_value = None
+        else:
+            self.current_value = node.id
 
     def visit_Num(self, node):
         """ Numbers """

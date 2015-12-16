@@ -346,6 +346,18 @@ which produces where closure:
 
    "critical" = ANY(documents.keywords)
 
+and if you want to query using NULL:
+
+.. code-block:: console
+
+    http://127.0.0.1:5000/documents?where={"keywords":"!=null"}
+
+which produces where closure:
+
+.. code-block:: sql
+
+   documents.keywords IS NOT NULL
+
 SQLAlchemy sorting
 ------------------
 Starting from version 0.2 you can use `SQLAlchemy ORDER BY`_ expressions such as: `nullsfirst`,

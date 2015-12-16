@@ -1,10 +1,10 @@
 Changelog
 ---------
 
-0.4.0a4 (unreleased)
+0.4.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~~~
 
-- Nothing changed yet.
+- improve query with null values [amleczko]
 
 
 0.4.0a3 (2015-10-20)

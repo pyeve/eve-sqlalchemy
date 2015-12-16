@@ -20,13 +20,13 @@ from .utils import dict_update
 
 __all__ = ['registerSchema']
 
-sqla_type_mapping ={
-        types.Integer: 'integer',
-        types.Float: 'float',
-        types.Boolean: 'boolean',
-        types.Date: 'datetime',
-        types.DateTime: 'datetime',
-        types.DATETIME: 'datetime'
+sqla_type_mapping = {
+    types.Integer: 'integer',
+    types.Float: 'float',
+    types.Boolean: 'boolean',
+    types.Date: 'datetime',
+    types.DateTime: 'datetime',
+    types.DATETIME: 'datetime'
 }
 
 
