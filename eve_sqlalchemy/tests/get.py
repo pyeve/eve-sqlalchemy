@@ -241,6 +241,27 @@ class TestGet(eve_get_tests.TestGet, TestBase):
         self.assertEqual(response['_items'][0]['parent_product'],
                          parent_product_sku)
 
+    def test_get_where_sqlalchemy_relation(self):
+        # get random contact
+        response, status = self.get('contacts', '?max_results=1')
+        contact_id = response['_items'][0]['_id']
+        # create random invoice to reference the contact
+        fake_invoice = self.random_invoices(1)[0]
+        fake_invoice['person'] = contact_id
+        self.app.data.insert('invoices', [fake_invoice])
+        # test dict syntax
+        response, status = self.get('invoices',
+                                    '?where={"person": %d}' % contact_id)
+        self.assert200(status)
+        self.assertEqual(len(response['_items']), 1)
+        self.assertEqual(response['_items'][0]['person'], contact_id)
+        # test pythonic syntax
+        response, status = self.get('invoices',
+                                    '?where=person==%d' % contact_id)
+        self.assert200(status)
+        self.assertEqual(len(response['_items']), 1)
+        self.assertEqual(response['_items'][0]['person'], contact_id)
+
 
 class TestGetItem(eve_get_tests.TestGetItem, TestBase):
 

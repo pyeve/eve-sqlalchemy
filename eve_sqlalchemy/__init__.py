@@ -20,7 +20,8 @@ from eve.utils import config, debug_error_message, str_to_date
 from .parser import parse, parse_dictionary, ParseError, sqla_op, parse_sorting
 from .structures import SQLAResultCollection
 from .utils import dict_update, validate_filters, sqla_object_to_dict, \
-    extract_sort_arg
+    extract_sort_arg, rename_relationship_fields_in_sort_args, \
+    rename_relationship_fields_in_dict, rename_relationship_fields_in_str
 
 __version__ = '0.1-dev'
 
@@ -138,14 +139,15 @@ class SQL(DataLayer):
                                 args['sort'], client_embedded)
         if req.where:
             try:
+                where = rename_relationship_fields_in_str(model, req.where)
                 args['spec'] = self.combine_queries(args['spec'],
-                                                    parse(req.where, model))
+                                                    parse(where, model))
             except ParseError:
                 try:
-                    spec = json.loads(req.where)
-                    args['spec'] = \
-                        self.combine_queries(args['spec'],
-                                             parse_dictionary(spec, model))
+                    spec = rename_relationship_fields_in_dict(
+                        model, json.loads(req.where))
+                    args['spec'] = self.combine_queries(
+                        args['spec'], parse_dictionary(spec, model))
                 except (AttributeError, TypeError):
                     # if parse failed and json loads fails - raise 400
                     abort(400)
@@ -155,8 +157,8 @@ class SQL(DataLayer):
             abort(400, bad_filter)
 
         if sub_resource_lookup:
-            sub_resource_lookup = self._rewrite_relationship_columns(
-                resource, sub_resource_lookup)
+            sub_resource_lookup = rename_relationship_fields_in_dict(
+                model, sub_resource_lookup)
             args['spec'] = \
                 self.combine_queries(args['spec'],
                                      parse_dictionary(sub_resource_lookup,
@@ -188,7 +190,7 @@ class SQL(DataLayer):
             self._datasource_ex(resource, [], client_projection, None,
                                 client_embedded)
 
-        lookup = self._rewrite_relationship_columns(resource, lookup)
+        lookup = rename_relationship_fields_in_dict(model, lookup)
         id_field = self._id_field(resource)
         if isinstance(lookup.get(id_field), dict) \
                 or isinstance(lookup.get(id_field), list):
@@ -202,19 +204,6 @@ class SQL(DataLayer):
             document = query.filter(*filter_).first()
 
         return sqla_object_to_dict(document, fields) if document else None
-
-    def _rewrite_relationship_columns(self, resource, dict_):
-        result = {}
-        for k, v in dict_.items():
-            result[self._get_local_id_field_if_existent(resource, k)] = v
-        return result
-
-    def _get_local_id_field_if_existent(self, resource, field):
-        schema = self.app.config['DOMAIN'][resource]['schema']
-        try:
-            return schema[field]['local_id_field']
-        except LookupError:
-            return field
 
     def find_one_raw(self, resource, _id):
         model, filter_, fields, _ = \
@@ -306,7 +295,7 @@ class SQL(DataLayer):
         model_instance = query.filter(*filter_).first()
         if model_instance is None:
             abort(500, description=debug_error_message('Object not existent'))
-        updates = self._rewrite_relationship_columns(resource, updates)
+        updates = rename_relationship_fields_in_dict(model, updates)
         self._handle_immutable_id(id_field, model_instance, updates)
         for k, v in updates.items():
             setattr(model_instance, k, v)
@@ -324,7 +313,7 @@ class SQL(DataLayer):
 
     def remove(self, resource, lookup):
         model, filter_, _, _ = self._datasource_ex(resource, [])
-        lookup = self._rewrite_relationship_columns(resource, lookup)
+        lookup = rename_relationship_fields_in_dict(model, lookup)
         filter_ = self.combine_queries(filter_,
                                        parse_dictionary(lookup, model))
         query = self.driver.session.query(model)
@@ -387,17 +376,8 @@ class SQL(DataLayer):
         filter_ = self._parse_filter(model, filter_)
         fields = [field for field in fields_.keys() if fields_[field]]
         if sort_ is not None:
-            sort_ = self._rename_sort_args(resource, sort_)
+            sort_ = rename_relationship_fields_in_sort_args(model, sort_)
         return model, filter_, fields, sort_
-
-    def _rename_sort_args(self, resource, sort):
-        result = []
-        for t in sort:
-            t = list(t)
-            t[0] = self._get_local_id_field_if_existent(resource, t[0])
-            t = tuple(t)
-            result.append(t)
-        return result
 
     def combine_queries(self, query_a, query_b):
         # TODO: dumb concatenation of query lists.

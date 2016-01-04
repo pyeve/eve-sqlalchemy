@@ -106,3 +106,43 @@ def extract_sort_arg(req):
             return ast.literal_eval(req.sort)
     else:
         return None
+
+
+def rename_relationship_fields_in_sort_args(model, sort):
+    result = []
+    rename_mapping = _get_relationship_to_id_field_rename_mapping(model)
+    for t in sort:
+        if t[0] in rename_mapping:
+            t = list(t)
+            t[0] = rename_mapping[t[0]]
+            t = tuple(t)
+        result.append(t)
+    return result
+
+
+def rename_relationship_fields_in_dict(model, dict_):
+    result = {}
+    rename_mapping = _get_relationship_to_id_field_rename_mapping(model)
+    for k, v in dict_.items():
+        if k in rename_mapping:
+            result[rename_mapping[k]] = v
+        else:
+            result[k] = v
+    return result
+
+
+def rename_relationship_fields_in_str(model, str_):
+    rename_mapping = _get_relationship_to_id_field_rename_mapping(model)
+    for k, v in rename_mapping.items():
+        str_ = re.sub(r'\b%s\b' % k, v, str_)
+    return str_
+
+
+def _get_relationship_to_id_field_rename_mapping(model):
+    result = {}
+    resource = list(model._eve_schema.keys())[0]
+    schema = model._eve_schema[resource]['schema']
+    for field, field_schema in schema.items():
+        if 'local_id_field' in field_schema:
+            result[field] = field_schema['local_id_field']
+    return result
