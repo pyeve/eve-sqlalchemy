@@ -38,7 +38,7 @@ DOMAIN = {
 DOMAIN['people'].update({
     'item_title': 'person',
     'additional_lookup': {
-        'url': '[0-9]+',
+        'url': 'regex("[0-9]+")',
         'field': 'id'
     },
     'cache_control': 'max-age=10,must-revalidate',
