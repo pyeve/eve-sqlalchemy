@@ -110,7 +110,7 @@ class SQL(DataLayer):
                 'resource': resource}
 
         client_projection = self._client_projection(req)
-        client_embedded = self._client_embedded(req)
+        client_embedded = self._client_or_config_embedded(req, resource)
         model, args['spec'], fields, args['sort'] = \
             self._datasource_ex(resource, [], client_projection,
                                 args['sort'], client_embedded)
@@ -159,7 +159,7 @@ class SQL(DataLayer):
 
     def find_one(self, resource, req, **lookup):
         client_projection = self._client_projection(req)
-        client_embedded = self._client_embedded(req)
+        client_embedded = self._client_or_config_embedded(req, resource)
         model, filter_, fields, _ = \
             self._datasource_ex(resource, [], client_projection, None,
                                 client_embedded)
@@ -320,6 +320,20 @@ class SQL(DataLayer):
                 abort(400, description=debug_error_message(
                     'Unable to parse `embedded` clause'
                 ))
+        return client_embedded
+
+    def _client_or_config_embedded(self, req, resource):
+        """ Returns a properly parsed client embeddable if available - from request and from app resource config.
+
+        :param req: a :class:`ParsedRequest` instance.
+        :param resource: resource name 
+
+        .. versionadded:: 0.4
+        """
+        client_embedded = self._client_embedded(req)
+        if 'embedded_fields' in config.DOMAIN[resource]:
+            config_embedded = {key: 1 for key in config.DOMAIN[resource]['embedded_fields']}
+            client_embedded.update(config_embedded)
         return client_embedded
 
     def _client_projection(self, req):
