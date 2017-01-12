@@ -86,7 +86,7 @@ class SQL(DataLayer):
                 if source:
                     v['schema'] = source['schema']
                     v['item_lookup_field'] = source['item_lookup_field']
-                    v['item_url'] = source['item_url']
+                    v['item_url'] = source.get('item_url', app.config.get('ITEM_URL'))
 
     def find(self, resource, req, sub_resource_lookup):
         """Retrieves a set of documents matching a given request. Queries can
