@@ -395,7 +395,6 @@ change in your `settings.py`:
     ID_FIELD = 'id'
     ITEM_LOOKUP_FIELD = ID_FIELD
     config.ID_FIELD = ID_FIELD
-    config.ITEM_LOOKUP_FIELD = ID_FIELD
 
     registerSchema('people')(People)
 
