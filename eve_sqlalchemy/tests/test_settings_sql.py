@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # import os
+import copy
 
 # db_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
 #                            'test.db')
@@ -32,7 +33,6 @@ people = {'item_title': 'person',
                       'embeddable': True,
                       'resource': 'invoices'}}}}
 
-import copy
 users = copy.deepcopy(people)
 users['url'] = 'users'
 users['datasource'] = {'source': 'People',

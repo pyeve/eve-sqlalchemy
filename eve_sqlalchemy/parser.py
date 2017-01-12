@@ -41,7 +41,7 @@ def parse_dictionary(filter_dict, model):
     for k, v in filter_dict.items():
         # firts let's check with the expression parser
         try:
-            if(type(v) == type(u'')):
+            if isinstance(v, type(u'')):
                 conditions += parse('{0}{1}'.format(k, v.encode('utf-8')), model)
             else:
                 conditions += parse('{0}{1}'.format(k, v), model)

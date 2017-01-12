@@ -2,11 +2,7 @@
 # SQLAlchemy Imports
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import column_property
-from sqlalchemy import (
-    Column,
-    String,
-    Integer,
-    )
+from sqlalchemy import Column, Integer, String
 
 # Eve imports
 from eve import Eve
@@ -30,6 +26,7 @@ class People(Base):
     def from_tuple(cls, data):
         """Helper method to populate the db"""
         return cls(firstname=data[0], lastname=data[1])
+
 
 registerSchema('people')(People)
 
