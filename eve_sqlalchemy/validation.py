@@ -17,6 +17,7 @@ from eve.versioning import (
     get_data_version_relation_document,
     missing_version_field
     )
+from uuid import UUID
 
 
 class ValidatorSQL(Validator):
@@ -104,3 +105,17 @@ class ValidatorSQL(Validator):
         :param value: field value.
         """
         pass
+    
+    def _validate_type_uuid(self, field, value):
+        """ Enables validation for `UUID` data type
+        Refer : http://python-eve.org/tutorials/custom_idfields.html
+
+        :param field: field name.
+        :param value: field value.
+        """
+
+        try:
+            UUID(value)
+        except ValueError:
+            self._error(field, "value '%s' cannot be converted to a UUID" %
+                        value)
