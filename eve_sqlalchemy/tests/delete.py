@@ -124,7 +124,7 @@ class TestDeleteSQL(TestBaseSQL):
         # verify that the only document retrieved is referencing the correct
         # parent document
         response, status = self.get('users/%s/invoices' % fake_person_id)
-        person_id = response[self.app.config['ITEMS']][1]['people_id']
+        person_id = response[self.app.config['ITEMS']][0]['people_id']
         self.assertEqual(person_id, fake_person_id)
 
         # delete all documents at the sub-resource endpoint
@@ -138,7 +138,7 @@ class TestDeleteSQL(TestBaseSQL):
         # verify that other documents in the invoices collection have not been
         # deleted
         response, status = self.get('invoices')
-        self.assertEqual(len(response['_items']), invoices - 2)
+        self.assertEqual(len(response['_items']), invoices - 1)
 
     @pytest.mark.xfail(EVE < 5, run=False, reason='features not released yet')
     def test_delete_subresource_item(self):
