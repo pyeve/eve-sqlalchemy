@@ -328,6 +328,8 @@ class SQL(DataLayer):
 
         .. versionadded:: 0.4
         """
+        if hasattr(DataLayer, '_client_projection'):
+            return super(SQL, self)._client_projection(req)
         client_projection = {}
         if req and req.projection:
             try:
