@@ -64,8 +64,6 @@ class registerSchema(object):
                 'schema': {},
                 'datasource': {'source': cls_.__name__},
                 'item_lookup': True,
-                'item_lookup_field': config.ID_FIELD,
-                'item_url': 'regex("[0-9]+")'
             }
         }
         projection = domain[resource]['datasource']['projection'] = {}
