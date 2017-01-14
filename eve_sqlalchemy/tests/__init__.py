@@ -1,97 +1,54 @@
 # -*- coding: utf-8 -*-
-import eve
-import string
+"""Base classes for Eve-SQLAlchemy tests.
+
+We try to mimic Eve tests as closely as possible. Therefore we introduce
+derived classes for testing of HTTP methods (get, post, put, patch, delete).
+Those run the same integration tests as are run for Eve, with some
+modifications here and there if the Eve counterparts don't work for us. For
+each overridden method there is a comment stating the changes made to the
+original Eve test code.
+"""
+from __future__ import unicode_literals
+
+import collections
 import random
 import os
-import copy
-
-from datetime import datetime
-from eve import ETAG
-from eve.tests import TestMinimal
-from eve.utils import date_to_str
-
-from eve_sqlalchemy.tests import test_sql_tables
-from eve_sqlalchemy.validation import ValidatorSQL
+import eve
+import eve.tests
+from eve import ISSUES
 from eve_sqlalchemy import SQL
+from eve_sqlalchemy.validation import ValidatorSQL
+import eve_sqlalchemy.tests.test_sql_tables  # noqa
 
-EVE = 4
 
-
-class TestBaseSQL(TestMinimal):
-
-    test_sql_tables = test_sql_tables
+class TestMinimal(eve.tests.TestMinimal):
 
     def setUp(self, settings_file=None, url_converters=None):
-        self.connection = None
-        self.known_resource_count = 101
+        """ Prepare the test fixture
+
+        :param settings_file: the name of the settings file.  Defaults
+                              to `eve/tests/test_settings.py`.
+
+        This is mostly the same as in eve.tests.__init__.py, except the
+        creation of self.app.
+        """
         self.this_directory = os.path.dirname(os.path.realpath(__file__))
-        self.settings_file = os.path.join(self.this_directory,
-                                          'test_settings_sql.py')
+        if settings_file is None:
+            # Load the settings file, using a robust path
+            settings_file = os.path.join(self.this_directory,
+                                         'test_settings.py')
+
+        self.known_resource_count = 101
+
+        self.settings_file = settings_file
         self.app = eve.Eve(settings=self.settings_file,
-                           url_converters=url_converters,
-                           data=SQL,
+                           url_converters=url_converters, data=SQL,
                            validator=ValidatorSQL)
-        self.test_client = self.app.test_client()
-        self.app.config = copy.deepcopy(self.app.config)
-        self.domain = self.app.config['DOMAIN']
         self.setupDB()
 
-        self.known_resource = 'people'
-        self.known_resource_url = \
-            ('/%s' % self.domain[self.known_resource]['url'])
-        self.unknown_resource = 'unknown'
-        self.unknown_resource_url = '/%s' % self.unknown_resource
-        self.unknown_item_id = '83542635967'
-        self.unknown_item_name = 'unknown'
-        self.unknown_item_id_url = \
-            ('/%s/%s' % (self.domain[self.known_resource]['url'],
-                         self.unknown_item_id))
-        response, _ = self.get(self.known_resource, '?max_results=2')
-        person = self.response_item(response)
-        self.item = person
-        self.item_id = self.item[self.app.config['ID_FIELD']]
-        self.item_firstname = self.item['firstname']
-        self.item_etag = self.item[ETAG]
-        self.item_id_url = ('/%s/%s' %
-                            (self.domain[self.known_resource]['url'],
-                             self.item_id))
+        self.test_client = self.app.test_client()
 
-        self.empty_resource = 'empty'
-        self.empty_resource_url = '/%s' % self.empty_resource
-
-        self.different_resource = 'users'
-        self.different_resource_url = \
-            ('/%s' % self.domain[self.different_resource]['url'])
-
-        response, _ = self.get('users')
-        user = self.response_item(response)
-        self.user_id = user[self.app.config['ID_FIELD']]
-        self.user_firstname = user['firstname']
-        self.user_etag = user[ETAG]
-        self.user_id_url = ('/%s/%s' %
-                            (self.domain[self.different_resource]['url'],
-                             self.user_id))
-        self.user_firstname_url = \
-            ('/%s/%s' % (self.domain[self.different_resource]['url'],
-                         self.user_firstname))
-
-        response, _ = self.get('invoices')
-        invoice = self.response_item(response)
-        self.invoice_id = invoice[self.app.config['ID_FIELD']]
-        self.invoice_etag = invoice[ETAG]
-        self.invoice_id_url = ('/%s/%s' % (self.domain['invoices']['url'],
-                                           self.invoice_id))
-
-        self.readonly_resource = 'payments'
-        self.readonly_resource_url = (
-            '/%s' % self.domain[self.readonly_resource]['url'])
-
-        response, _ = self.get('payments', '?max_results=1')
-        self.readonly_id = self.response_item(response)['_id']
-        self.readonly_id_url = ('%s/%s' % (self.readonly_resource_url,
-                                           self.readonly_id))
-
-        self.epoch = date_to_str(datetime(1970, 1, 1))
+        self.domain = self.app.config['DOMAIN']
 
     def setupDB(self):
         self.connection = self.app.data.driver
@@ -100,58 +57,77 @@ class TestBaseSQL(TestMinimal):
         self.connection.create_all()
         self.bulk_insert()
 
-    def tearDown(self):
-        self.dropDB()
-        del self.app
-
     def dropDB(self):
-        self.connection = self.app.data.driver
         self.connection.session.remove()
         self.connection.drop_all()
 
+    def assertValidationError(self, response, matches):
+        self.assertTrue(eve.STATUS in response)
+        self.assertTrue(eve.STATUS_ERR in response[eve.STATUS])
+        self.assertTrue(ISSUES in response)
+        issues = response[ISSUES]
+        self.assertTrue(len(issues))
+
+        for k, v in matches.items():
+            self.assertTrue(k in issues)
+            if isinstance(issues[k], collections.Sequence):
+                self.assertTrue(v in issues[k])
+            if isinstance(issues[k], collections.Mapping):
+                self.assertTrue(v in issues[k].values())
+
+
+class TestBase(eve.tests.TestBase, TestMinimal):
+
+    def setUp(self, url_converters=None):
+        super(TestBase, self).setUp(url_converters)
+        self.unknown_item_id = 424242
+        self.unknown_item_id_url = ('/%s/%s' %
+                                    (self.domain[self.known_resource]['url'],
+                                     self.unknown_item_id))
+
+    def random_contacts(self, num, standard_date_fields=True):
+        contacts = \
+            super(TestBase, self).random_contacts(num, standard_date_fields)
+        return [self._create_contact_dict(dict_) for dict_ in contacts]
+
+    def _create_contact_dict(self, dict_):
+        result = self._filter_keys_by_schema(dict_, 'contacts')
+        result['tid'] = random.randint(1, 10000)
+        if 'username' not in dict_ or dict_['username'] is None:
+            result['username'] = ''
+        return result
+
+    def _filter_keys_by_schema(self, dict_, resource):
+        allowed_keys = self.app.config['DOMAIN'][resource]['schema'].keys()
+        keys = set(dict_.keys()) & set(allowed_keys)
+        return dict([(key, dict_[key]) for key in keys])
+
+    def random_payments(self, num):
+        payments = super(TestBase, self).random_payments(num)
+        return [self._filter_keys_by_schema(dict_, 'payments')
+                for dict_ in payments]
+
+    def random_invoices(self, num):
+        invoices = super(TestBase, self).random_invoices(num)
+        return [self._filter_keys_by_schema(dict_, 'invoices')
+                for dict_ in invoices]
+
+    def random_internal_transactions(self, num):
+        transactions = super(TestBase, self).random_internal_transactions(num)
+        return [self._filter_keys_by_schema(dict_, 'internal_transactions')
+                for dict_ in transactions]
+
+    def random_products(self, num):
+        products = super(TestBase, self).random_products(num)
+        return [self._filter_keys_by_schema(dict_, 'products')
+                for dict_ in products]
+
     def bulk_insert(self):
-        sql_tables = self.test_sql_tables
-        if not self.connection.session.query(sql_tables.People).count():
-            # load random people in db
-            people = self.random_people(self.known_resource_count)
-            people = [sql_tables.People.from_tuple(item) for item in people]
-            for person in people:
-                dt = datetime.now()
-                person._created = dt
-                person._updated = dt
-                self.connection.session.add(person)
-            self.connection.session.commit()
-
-            # load random invoice
-            invoice = sql_tables.Invoices(number=random.randint(0, 100))
-            invoice.people_id = people[0]._id
-            invoice._created = datetime.now()
-            invoice._updated = datetime.now()
-            self.connection.session.add(invoice)
-            self.connection.session.commit()
-
-            # load random payments
-            for _ in range(10):
-                payment = sql_tables.Payments(number=random.randint(0, 100),
-                                              string=self.random_string(6))
-                dt = datetime.now()
-                payment._created = dt
-                payment._updated = dt
-                self.connection.session.add(payment)
-            self.connection.session.commit()
-
-    def random_string(self, length=6):
-        return ''.join(random.choice(string.ascii_lowercase)
-                       for _ in range(length)).capitalize()
-
-    def random_people(self, num):
-        people = []
-        for i in range(num):
-            people.append((self.random_string(6), self.random_string(6), i))
-        return people
-
-    def response_item(self, response, i=0):
-        if self.app.config['HATEOAS']:
-            return response['_items'][i]
-        else:
-            return response[i]
+        self.app.data.insert('contacts',
+                             self.random_contacts(self.known_resource_count))
+        self.app.data.insert('users', self.random_users(2))
+        self.app.data.insert('payments', self.random_payments(10))
+        self.app.data.insert('invoices', self.random_invoices(1))
+        self.app.data.insert('internal_transactions',
+                             self.random_internal_transactions(4))
+        self.app.data.insert('products', self.random_products(2))

@@ -1,360 +1,438 @@
-import simplejson as json
-import random
-# from unittest import skip
-from sqlalchemy.schema import ColumnDefault
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-from eve_sqlalchemy.tests import TestBaseSQL
-from eve.tests.utils import DummyEvent
-
-from eve import STATUS_OK, LAST_UPDATED, ID_FIELD, DATE_CREATED, ISSUES, \
-    STATUS, ETAG
+import pytest
+from eve import ISSUES, STATUS
+from eve.tests.methods import post as eve_post_tests
+from eve_sqlalchemy.tests import TestBase, test_sql_tables
 
 
-class TestPostSQL(TestBaseSQL):
+class TestPost(eve_post_tests.TestPost, TestBase):
 
-    def test_unknown_resource(self):
-        _, status = self.post(self.unknown_resource_url, data={})
-        self.assert404(status)
+    @pytest.mark.xfail(True, run=False, reason='not implemented yet')
+    def test_post_duplicate_key(self):
+        """POSTing an already existing key should result in 409, not 422.
 
-    def test_readonly_resource(self):
-        _, status = self.post(self.readonly_resource_url, data={})
-        self.assert405(status)
-
-    def test_post_to_item_endpoint(self):
-        _, status = self.post(self.item_id_url, data={})
-        self.assert405(status)
-
-    def test_validation_error(self):
-        r, status = self.post(self.known_resource_url, data={'prog': 'a'})
-        self.assertEqual(status, 422)
-        self.assertValidationError(r, {'prog': 'must be of integer type'})
-
-    def test_post_string(self):
-        test_field = 'lastname'
-        test_value = 'Adams'
-        data = {test_field: test_value}
-        self.assertPostItem(data, test_field, test_value)
+        EveMongo does this by not enforcing uniqueness at the validation level,
+        but wait until the MongoDB insert fails. They can then easily
+        distinguish between a validation error and a duplicate key error.
+        """
 
     def test_post_integer(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
         test_field = 'prog'
         test_value = 1
-        data = {test_field: test_value}
+        data = {test_field: test_value,
+                'ref': 'test_post_integer_1234567'}
+        self.assertPostItem(data, test_field, test_value)
+
+    def test_post_list_as_array(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+        test_field = "role"
+        test_value = ["vendor", "client"]
+        data = {test_field: test_value,
+                'ref': 'test_post_list_as_array_1'}
+        self.assertPostItem(data, test_field, test_value)
+
+    def test_post_rows(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+        test_field = "rows"
+        test_value = [
+            {'sku': 'AT1234', 'price': 99},
+            {'sku': 'XF9876', 'price': 9999}
+        ]
+        data = {test_field: test_value,
+                'ref': 'test_post_rows_1234567890'}
+        self.assertPostItem(data, test_field, test_value)
+
+    def test_post_list(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+        test_field = "alist"
+        test_value = ["a_string", 99]
+        data = {test_field: test_value,
+                'ref': 'test_post_list_1234567890'}
+        self.assertPostItem(data, test_field, test_value)
+
+    def test_post_integer_zero(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+        test_field = "aninteger"
+        test_value = 0
+        data = {test_field: test_value,
+                'ref': 'test_post_integer_zero_12'}
+        self.assertPostItem(data, test_field, test_value)
+
+    def test_post_float_zero(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+        test_field = "afloat"
+        test_value = 0.0
+        data = {test_field: test_value,
+                'ref': 'test_post_float_zero_1234'}
+        self.assertPostItem(data, test_field, test_value)
+
+    def test_post_dict(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+        test_field = "location"
+        test_value = {'address': 'an address', 'city': 'a city'}
+        data = {test_field: test_value,
+                'ref': 'test_post_dict_1234567890'}
         self.assertPostItem(data, test_field, test_value)
 
     def test_post_datetime(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
         test_field = "born"
         test_value = "Tue, 06 Nov 2012 10:33:31 GMT"
-        data = {test_field: test_value}
+        data = {test_field: test_value,
+                'ref': 'test_post_datetime_123456'}
         self.assertPostItem(data, test_field, test_value)
 
-    def test_post_default_value(self):
-        test_field = 'title'
-        test_value = 'Mr.'
-        data = {'firstname': 'Douglas'}
-        self.assertPostItem(data, test_field, test_value)
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_objectid(self):
+        pass
 
-    def test_post_default_value_empty_string(self):
-        old_default = self.test_sql_tables.People.title.\
-            property.columns[0].default
-        new_default = ColumnDefault('')
-        new_default.column = self.test_sql_tables.People.title.\
-            property.columns[0]
-        self.test_sql_tables.People.title.property.\
-            columns[0].default = new_default
-        title = self.domain['people']['schema']['title']
-        title['default'] = ''
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_null_objectid(self):
+        pass
+
+    def test_post_default_value_none(self):
+        # Eve test manipulates schema and changes type of 'title'. We decided
+        # to use different fields for each test.
+
+        # default values that assimilate to None (0, '', False) were ignored
+        # prior to 0.1.1
+        self.domain['contacts']['schema']['title']['default'] = ''
         self.app.set_defaults()
-        data = {'firstname': 'Douglas'}
+        data = {"ref": "UUUUUUUUUUUUUUUUUUUUUUUUU"}
         self.assertPostItem(data, 'title', '')
-        # reset default
-        self.test_sql_tables.People.title.property.\
-            columns[0].default = old_default
 
-    def test_post_default_value_0(self):
-        new_default = ColumnDefault(0)
-        new_default.column = self.test_sql_tables.People.prog.\
-            property.columns[0]
-        self.test_sql_tables.People.prog.property.\
-            columns[0].default = new_default
-        prog = self.domain['people']['schema']['prog']
-        prog['default'] = 0
+        self.domain['contacts']['schema']['aninteger']['default'] = 0
         self.app.set_defaults()
-        data = {'firstname': 'Isaac'}
-        self.assertPostItem(data, 'prog', 0)
-        # reset default
-        self.test_sql_tables.People.prog.property.columns[0].default = None
+        data = {"ref": "TTTTTTTTTTTTTTTTTTTTTTTTT"}
+        self.assertPostItem(data, 'aninteger', 0)
 
-    def test_multi_post(self):
+        self.domain['contacts']['schema']['abool']['default'] = False
+        self.app.set_defaults()
+        data = {"ref": "QQQQQQQQQQQQQQQQQQQQQQQQQ"}
+        self.assertPostItem(data, 'abool', False)
+
+    def test_multi_post_valid(self):
+        # Eve test uses mongo layer directly.
         data = [
-            {"firstname": "Douglas"},
-            {"prog": 7},
-            {"firstname": self.item_firstname, "lastname": 'Adams'}
+            {"ref": "9234567890123456789054321"},
+            {"ref": "5432112345678901234567890", "role": ["agent"]},
         ]
         r, status = self.post(self.known_resource_url, data=data)
-        self.assertEqual(status, 422)
+        self.assert201(status)
         results = r['_items']
 
         self.assertEqual(results[0]['_status'], 'OK')
         self.assertEqual(results[1]['_status'], 'OK')
 
-        self.assertValidationError(results[2], {'firstname': 'unique'})
+        r, status = self.get('contacts',
+                             '?where={"ref": "9234567890123456789054321"}')
+        self.assert200(status)
+        self.assertEqual(len(r['_items']), 1)
+        r, status = self.get('contacts',
+                             '?where={"ref": "5432112345678901234567890"}')
+        self.assert200(status)
+        self.assertEqual(len(r['_items']), 1)
 
-        self.assertTrue(ID_FIELD not in results[0])
-        self.assertTrue(ID_FIELD not in results[1])
+    def test_multi_post_invalid(self):
+        # Eve test uses mongo layer directly and 'tid' is an integer instead of
+        # ObjectId for Eve-SQLAlchemy.
+        data = [
+            {"ref": "9234567890123456789054321"},
+            {"prog": 9999},
+            {"ref": "5432112345678901234567890", "role": ["agent"]},
+            {"ref": self.item_ref},
+            {"ref": "9234567890123456789054321", "tid": "foo"},
+        ]
+        r, status = self.post(self.known_resource_url, data=data)
+        self.assertValidationErrorStatus(status)
+        results = r['_items']
 
-        # items on which validation failed should not be inserted into the db
-        _, status = self.get(self.known_resource_url,
-                             'where=lastname=="Adams"')
-        self.assert404(status)
+        self.assertEqual(results[0]['_status'], 'OK')
+        self.assertEqual(results[2]['_status'], 'OK')
 
-        # valid items part of a request containing invalid document should not
-        # be inserted into the db
-        _, status = self.get(self.known_resource_url, 'where=prog==7')
-        self.assert404(status)
+        self.assertValidationError(results[1], {'ref': 'required'})
+        self.assertValidationError(results[3], {'ref': 'unique'})
+        self.assertValidationError(results[4], {'tid': 'integer'})
 
-    def test_post_x_www_form_urlencoded(self):
-        test_field = 'firstname'
-        test_value = 'Douglas'
-        data = {test_field: test_value}
+        id_field = self.domain[self.known_resource]['id_field']
+        self.assertTrue(id_field not in results[0])
+        self.assertTrue(id_field not in results[1])
+        self.assertTrue(id_field not in results[2])
+        self.assertTrue(id_field not in results[3])
+
+        r, status = self.get('contacts', '?where={"prog": 9999}')
+        self.assert200(status)
+        self.assertEqual(len(r['_items']), 0)
+        r, status = self.get('contacts',
+                             '?where={"ref": "9234567890123456789054321"}')
+        self.assert200(status)
+        self.assertEqual(len(r['_items']), 0)
+
+    def test_post_x_www_form_urlencoded_number_serialization(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+        test_field = "anumber"
+        test_value = 34
+        data = {test_field: test_value,
+                'ref': 'test_post_x_www_num_ser_1'}
         r, status = self.parse_response(self.test_client.post(
             self.known_resource_url, data=data))
         self.assert201(status)
         self.assertTrue('OK' in r[STATUS])
         self.assertPostResponse(r)
 
+    def test_post_referential_integrity_list(self):
+        data = {"invoicing_contacts": [self.item_id, self.unknown_item_id]}
+        r, status = self.post('/invoices/', data=data)
+        self.assertValidationErrorStatus(status)
+        expected = ("value '%s' must exist in resource '%s', field '%s'" %
+                    (self.unknown_item_id, 'contacts',
+                     self.domain['contacts']['id_field']))
+        self.assertValidationError(r, {'invoicing_contacts': expected})
+
+        # Eve test posts a list with self.item_id twice, which can't be handled
+        # for our case because we use (invoice_id, contact_id) as primary key
+        # in the association table.
+        data = {"invoicing_contacts": [self.item_id]}
+        r, status = self.post('/invoices/', data=data)
+        self.assert201(status)
+        self.assertPostResponse(r)
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
     def test_post_allow_unknown(self):
-        data = {"unknown": "unknown"}
-        r, status = self.post(self.known_resource_url, data=data)
-        self.assertEqual(status, 422)
-        self.assertValidationError(r, {'unknown': 'unknown'})
+        pass
 
-    def test_post_with_content_type_charset(self):
-        test_field = 'firstname'
-        test_value = 'Douglas'
-        data = {test_field: test_value}
-        r, status = self.post(self.known_resource_url, data=data,
-                              content_type='application/json; charset=utf-8')
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_write_concern(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_list_of_objectid(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_nested_dict_objectid(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_valueschema_with_objectid(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_list_fixed_len(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_custom_etag_update_date(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_custom_date_updated(self):
+        pass
+
+    def test_post_with_relation_to_custom_idfield(self):
+        # Eve test uses mongo layer directly.
+        # TODO: Fix directly in Eve and remove this override
+
+        id_field = 'sku'
+        r, _ = self.get('products')
+        existing_product = r['_items'][0]
+        product = {
+            id_field: 'BAR',
+            'title': 'Foobar',
+            'parent_product': existing_product[id_field]
+        }
+        r, status = self.post('products', data=product)
+        self.assert201(status)
+        self.assertTrue(id_field in r)
+        self.assertItemLink(r['_links'], r[id_field])
+        r, status = self.get('products', item='BAR')
+        self.assertEqual(r['parent_product'], existing_product[id_field])
+
+    def test_post_dependency_fields_with_default(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+
+        # test that default values are resolved before validation. See #353.
+        test_field = 'dependency_field2'
+        test_value = 'a value'
+        data = {test_field: test_value,
+                'ref': 'test_post_dep_fields_defa'}
+        self.assertPostItem(data, test_field, test_value)
+
+    def test_post_dependency_required_fields(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+
+        schema = self.domain['contacts']['schema']
+        schema['dependency_field3']['required'] = True
+        data = {'ref': 'test_post_dep_req_fields1'}
+        r, status = self.post(self.known_resource_url, data=data)
+        self.assertValidationErrorStatus(status)
+        self.assertValidationError(r, {'dependency_field3': 'required'})
+
+        # required field dependnecy value matches the dependent field's default
+        # value. validation still fails since required field is still missing.
+        # See #665.
+        schema['dependency_field3']['dependencies'] = {'dependency_field1':
+                                                       'default'}
+        r, status = self.post(self.known_resource_url, data={})
+        self.assertValidationErrorStatus(status)
+        self.assertValidationError(r, {'dependency_field3': 'required'})
+
+        data = {'dependency_field3': 'hello',
+                'ref': 'test_post_dep_req_fields2'}
+        r, status = self.post(self.known_resource_url, data=data)
+        self.assert201(status)
+
+    def test_post_dependency_fields_with_values(self):
+        # Eve test dynamically registers a resource. This is more difficult for
+        # SQLAlchemy, so we just use an existing one.
+
+        schema = self.domain['contacts']['schema']
+        schema['dependency_field1']['default'] = 'one'
+        schema['dependency_field2']['required'] = True
+        schema['dependency_field2']['dependencies'] = \
+            {'dependency_field1': ['one', 'two']}
+
+        data = {"dependency_field1": "three", "dependency_field2": "seven",
+                'ref': 'test_post_dep_fields_val1'}
+        r, s = self.post(self.known_resource_url, data=data)
+        self.assert422(s)
+
+        data = {"dependency_field2": "seven",
+                'ref': 'test_post_dep_fields_val2'}
+        r, s = self.post(self.known_resource_url, data=data)
+        self.assert201(s)
+
+        data = {"dependency_field1": "one", "dependency_field2": "seven",
+                'ref': 'test_post_dep_fields_val3'}
+        r, s = self.post(self.known_resource_url, data=data)
+        self.assert201(s)
+
+        data = {"dependency_field1": "two", "dependency_field2": "seven",
+                'ref': 'test_post_dep_fields_val4'}
+        r, s = self.post(self.known_resource_url, data=data)
+        self.assert201(s)
+
+    def test_post_dependency_fields_with_subdocuments(self):
+        # Eve test dynamically registers a resource. This is more difficult for
+        # SQLAlchemy, so we just use an existing one.
+
+        schema = self.domain['contacts']['schema']
+        schema['dependency_field2']['dependencies'] = \
+            {'location.city': ['Berlin', 'Rome']}
+
+        data = {"location": {"city": "Paris"}, "dependency_field2": "seven",
+                'ref': 'test_post_dep_fields_sub1'}
+        r, s = self.post(self.known_resource_url, data=data)
+        self.assert422(s)
+
+        data = {"location": {"city": "Rome"}, "dependency_field2": "seven",
+                'ref': 'test_post_dep_fields_sub2'}
+        r, s = self.post(self.known_resource_url, data=data)
+        self.assert201(s)
+
+        data = {"location": {"city": "Berlin"}, "dependency_field2": "seven",
+                'ref': 'test_post_dep_fields_sub3'}
+        r, s = self.post(self.known_resource_url, data=data)
+        self.assert201(s)
+
+    def test_post_valueschema_dict(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+
+        data = {'valueschema_dict': {'k1': '1'},
+                'ref': 'test_post_valueschema_123'}
+        r, status = self.post(self.known_resource_url, data=data)
+        self.assertValidationErrorStatus(status)
+        issues = r[ISSUES]
+        self.assertTrue('valueschema_dict' in issues)
+        self.assertEqual(issues['valueschema_dict'],
+                         {'k1': 'must be of integer type'})
+
+        data['valueschema_dict']['k1'] = 1
+        r, status = self.post(self.known_resource_url, data=data)
+        self.assert201(status)
+
+    def test_post_propertyschema_dict(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+
+        data = {'propertyschema_dict': {'aaa': 1},
+                'ref': 'test_post_propertyschema1'}
+        r, status = self.post(self.known_resource_url, data=data)
+        self.assert201(status)
+
+        data = {'propertyschema_dict': {'AAA': '1'},
+                'ref': 'test_post_propertyschema2'}
+        r, status = self.post(self.known_resource_url, data=data)
+        self.assertValidationErrorStatus(status)
+
+        issues = r[ISSUES]
+        self.assertTrue('propertyschema_dict' in issues)
+        self.assertEqual(issues['propertyschema_dict'],
+                         'propertyschema_dict')
+
+    def test_post_nested(self):
+        # Eve test manipulates schema and removes required constraint on 'ref'.
+        # We decided to include 'ref' as it is not easy to manipulate
+        # nullable-constraints during runtime.
+
+        data = {'location.city': 'a nested city',
+                'location.address': 'a nested address',
+                'ref': 'test_post_nested_12345678'}
+        r, status = self.post(self.known_resource_url, data=data)
+        self.assert201(status)
+        values = self.compare_post_with_get(
+            r[self.domain[self.known_resource]['id_field']],
+            ['location']).pop()
+        self.assertEqual(values['city'], 'a nested city')
+        self.assertEqual(values['address'], 'a nested address')
+
+    def test_id_field_included_with_document(self):
+        # Eve test uses ObjectId, we have to use an integer instead.
+
+        # since v0.6 we also allow the id field to be included with the POSTed
+        # document
+        id_field = self.domain[self.known_resource]['id_field']
+        id = 4242
+        data = {"ref": "1234567890123456789054321", id_field: id}
+        r, status = self.post(self.known_resource_url, data=data)
         self.assert201(status)
         self.assertPostResponse(r)
-
-    def test_post_with_extra_response_fields(self):
-        self.domain['people']['extra_response_fields'] = ['firstname', 'nah']
-        test_field = 'firstname'
-        test_value = 'Douglas'
-        data = {test_field: test_value}
-        r, status = self.post(self.known_resource_url, data=data)
-        self.assert201(status)
-        self.assertTrue('firstname' in r)
-        self.assertFalse('nah' in r)
-
-    def test_post_with_get_override(self):
-        # a GET request with POST override turns into a POST request.
-        test_field = 'firstname'
-        test_value = 'Douglas'
-        data = json.dumps({test_field: test_value})
-        headers = [('X-HTTP-Method-Override', 'POST'),
-                   ('Content-Type', 'application/json')]
-        r = self.test_client.get(self.known_resource_url, data=data,
-                                 headers=headers)
-        self.assert201(r.status_code)
-        self.assertPostResponse(json.loads(r.get_data()))
-
-    def test_custom_issues(self):
-        self.app.config['ISSUES'] = 'errors'
-        r, status = self.post(self.known_resource_url, data={"ref": "123"})
-        self.assertEqual(status, 422)
-        self.assertTrue('errors' in r and ISSUES not in r)
-
-    def test_custom_status(self):
-        self.app.config['STATUS'] = 'report'
-        r, status = self.post(self.known_resource_url, data={"ref": "123"})
-        self.assertEqual(status, 422)
-        self.assertTrue('report' in r and STATUS not in r)
-
-#    @skip('Custom etag updated not supported')
-#    def test_custom_etag_update_date(self):
-#        self.app.config['ETAG'] = '_myetag'
-#        r, status = self.post(self.known_resource_url,
-#                              data={"ref": "1234567890123456789054321"})
-#        self.assert201(status)
-#        self.assertTrue('_myetag' in r and ETAG not in r)
-
-#    @skip('Custom date updated not supported')
-#    def test_custom_date_updated(self):
-#        self.app.config['LAST_UPDATED'] = '_update_date'
-#        r, status = self.post(self.known_resource_url,
-#                              data={"ref": "1234567890123456789054321"})
-#        self.assert201(status)
-#        self.assertTrue('_update_date' in r and LAST_UPDATED not in r)
-
-    def test_post_ifmatch_disabled(self):
-        # if IF_MATCH is disabled, then we get no etag in the payload.
-        self.app.config['IF_MATCH'] = False
-        test_field = 'ref'
-        test_value = "1234567890123456789054321"
-        data = {test_field: test_value}
-        r, status = self.post(self.known_resource_url, data=data)
-        self.assertTrue(ETAG not in r)
-
-#    @skip('Custom ID_FIELD not supported')
-#    def test_post_custom_idfield(self):
-#        # test that we can post a document with a custom id_field
-#        id_field = 'id'
-#        test_value = '1234'
-#        data = {id_field: test_value}
-#
-#        self.app.config['ID_FIELD'] = id_field
-#
-#        # custom id_fields also need to be included in the resource schema
-#        self.domain['contacts']['schema'][id_field] = {
-#            'type': 'string',
-#            'required': True,
-#            'unique': True
-#        }
-#        del(self.domain['contacts']['schema']['ref']['required'])
-#
-#        r, status = self.post(self.known_resource_url, data=data)
-#        self.assert201(status)
-#        self.assertTrue(id_field in r)
-#        self.assertItemLink(r['_links'], r[id_field])
-
-    def test_post_bandwidth_saver(self):
-        data = {'number': random.randint(1000, 10000)}
-
-        # bandwidth_saver is on by default
-        self.assertTrue(self.app.config['BANDWIDTH_SAVER'])
-        r, status = self.post('/invoices/', data=data)
-        self.assert201(status)
-        self.assertPostResponse(r)
-        self.assertFalse('number' in r)
-
-        # test return all fields (bandwidth_saver off)
-        self.app.config['BANDWIDTH_SAVER'] = False
-        r, status = self.post('/invoices/', data=data)
-        self.assert201(status)
-        self.assertPostResponse(r)
-        self.assertTrue('number' in r)
-
-    def perform_post(self, data, valid_items=[0]):
-        r, status = self.post(self.known_resource_url, data=data)
-        self.assert201(status)
-        self.assertPostResponse(r, valid_items)
-        return r
-
-    def assertPostItem(self, data, test_field, test_value):
-        r = self.perform_post(data)
-        item_id = r[ID_FIELD]
-        item_etag = r[ETAG]
-        db_value = self.compare_post_with_get(item_id, [test_field, ETAG])
-        self.assertEqual(db_value[0], test_value)
-        self.assertEqual(db_value[1], item_etag)
-
-    def assertPostResponse(self, response, valid_items=[0], id_field=ID_FIELD):
-        if '_items' in response:
-            results = response['_items']
-        else:
-            results = [response]
-
-        for i in valid_items:
-            item = results[i]
-            self.assertTrue(STATUS in item)
-            self.assertTrue(STATUS_OK in item[STATUS])
-            self.assertFalse(ISSUES in item)
-            self.assertTrue(ID_FIELD in item)
-            self.assertTrue(LAST_UPDATED in item)
-            self.assertTrue('_links' in item)
-            self.assertItemLink(item['_links'], item[ID_FIELD])
-            self.assertTrue(ETAG in item)
-
-    def compare_post_with_get(self, item_id, fields):
-        raw_r = self.test_client.get("%s/%s" % (self.known_resource_url,
-                                                item_id))
-        item, status = self.parse_response(raw_r)
-        self.assert200(status)
-        self.assertTrue(ID_FIELD in item)
-        self.assertTrue(item[ID_FIELD] == item_id)
-        self.assertTrue(DATE_CREATED in item)
-        self.assertTrue(LAST_UPDATED in item)
-        self.assertEqual(item[DATE_CREATED], item[LAST_UPDATED])
-        if isinstance(fields, list):
-            return [item[field] for field in fields]
-        else:
-            return item[fields]
-
-    def post(self, url, data, headers=[], content_type='application/json'):
-        headers.append(('Content-Type', content_type))
-        r = self.test_client.post(url, data=json.dumps(data), headers=headers)
-        return self.parse_response(r)
+        self.assertEqual(r['_id'], id)
 
 
-class TestEventsSQL(TestBaseSQL):
-    new_person = {'firstname': 'Douglas', 'lastname': 'Adams', 'prog': 10}
-
-    def test_on_pre_POST(self):
-        devent = DummyEvent(self.before_insert)
-        self.app.on_pre_POST += devent
-        self.post()
-        self.assertFalse(devent.called is None)
-
-    def test_on_pre_POST_people(self):
-        devent = DummyEvent(self.before_insert)
-        self.app.on_pre_POST_people += devent
-        self.post()
-        self.assertFalse(devent.called is None)
-
-    def test_on_post_POST(self):
-        devent = DummyEvent(self.after_insert)
-        self.app.on_post_POST += devent
-        self.post()
-        self.assertEqual(devent.called[0], self.known_resource)
-
-    def test_on_POST_post_resource(self):
-        devent = DummyEvent(self.after_insert)
-        self.app.on_post_POST_people += devent
-        self.post()
-        self.assertFalse(devent.called is None)
-
-    def test_on_insert(self):
-        devent = DummyEvent(self.before_insert, True)
-        self.app.on_insert += devent
-        self.post()
-        self.assertEqual(self.known_resource, devent.called[0])
-        self.assertEqual(self.new_person['firstname'],
-                         devent.called[1][0]['firstname'])
-
-    def test_on_insert_people(self):
-        devent = DummyEvent(self.before_insert, True)
-        self.app.on_insert_people += devent
-        self.post()
-        self.assertEqual(self.new_person['firstname'],
-                         devent.called[0][0]['firstname'])
-
-    def test_on_inserted(self):
-        devent = DummyEvent(self.after_insert, True)
-        self.app.on_inserted += devent
-        self.post()
-        self.assertEqual(self.known_resource, devent.called[0])
-        self.assertEqual(self.new_person['firstname'],
-                         devent.called[1][0]['firstname'])
-
-    def test_on_inserted_people(self):
-        devent = DummyEvent(self.after_insert, True)
-        self.app.on_inserted_people += devent
-        self.post()
-        self.assertEqual(self.new_person['firstname'],
-                         devent.called[0][0]['firstname'])
-
-    def post(self):
-        headers = [('Content-Type', 'application/json')]
-        data = json.dumps(self.new_person)
-        self.test_client.post(self.known_resource_url, data=data,
-                              headers=headers)
+class TestEvents(eve_post_tests.TestEvents, TestBase):
 
     def before_insert(self):
-        _db = self.app.data.driver
-        query = _db.session.query(self.test_sql_tables.People)
-        return query.filter_by(firstname=self.new_person['firstname']).\
-            first() is None
-
-    def after_insert(self):
-        return not self.before_insert()
+        # Eve test code uses mongo layer directy.
+        session = self.app.data.driver.session
+        model = test_sql_tables.Contacts
+        return session.query(model).filter(model.ref == self.new_contact_id) \
+                                   .first() is None

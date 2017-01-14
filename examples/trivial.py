@@ -35,7 +35,7 @@ SETTINGS = {
     'SQLALCHEMY_DATABASE_URI': 'sqlite://',
     'DOMAIN': {
         'people': People._eve_schema['people'],
-        }
+    }
 }
 
 app = Eve(auth=None, settings=SETTINGS, validator=ValidatorSQL, data=SQL)
