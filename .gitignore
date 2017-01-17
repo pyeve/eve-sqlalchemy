@@ -1,5 +1,67 @@
+/.project
+/.pydevproject
+/.settings
+.ropeproject
+
+# Eve
+run.py
+settings.py
+
+# Python
+*.py[co]
+
+# Gedit
+*~
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+.eggs
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
 .tox
-*.pyc
-.eggs/
-*.egg-info/
+
+#Translations
+*.mo
+
+#Mr Developer
+.mr.developer.cfg
+
+# SublimeText project files
+*.sublime-*
+
+# vim temp files
+*.swp
+
+#virtualenv
+Include
+Lib
+Scripts
+
+#pyenv
+.python-version
+
+#OSX
+.Python
+.DS_Store
+
+#Sphinx
+_build
+
+# PyCharm
+.idea
+
 .cache
