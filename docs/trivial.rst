@@ -24,7 +24,6 @@ You will see something like this:
 .. code-block:: xml
 
     <resource>
-        <link rel="child" href="invoices" title="invoices"/>
         <link rel="child" href="people" title="people"/>
     </resource>
 
