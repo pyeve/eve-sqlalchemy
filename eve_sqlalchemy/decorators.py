@@ -28,22 +28,14 @@ sqla_type_mapping = {
     types.Date: 'datetime',
     types.DateTime: 'datetime',
     types.DATETIME: 'datetime',
-    types.PickleType: None
+    types.PickleType: None,
+    types.JSON: 'json',
+    postgresql.JSON: 'json'
 }
 
 
-def get_sqla_type_mapping():
-    try:
-        sqla_type_mapping[postgresql.JSON] = 'json'
-    except AttributeError:
-        # NOTE(Gonéri): JSON has been introduced in SQLAlchemy 0.9.0.
-        pass
-    # TODO: Add the remaining sensible SQL types
-    return sqla_type_mapping
-
-
 def lookup_column_type(intype):
-    for sqla_type, api_type in get_sqla_type_mapping().items():
+    for sqla_type, api_type in sqla_type_mapping.items():
         if isinstance(intype, sqla_type):
             return api_type
     return 'string'
