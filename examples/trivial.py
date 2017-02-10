@@ -60,4 +60,4 @@ if not db.session.query(People).count():
     db.session.commit()
 
 app.run(debug=True, use_reloader=False)
-# using reloaded will destory in-memory sqlite db
+# using reloader will destroy in-memory sqlite db

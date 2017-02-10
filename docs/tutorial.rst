@@ -3,7 +3,7 @@
 Tutorial
 ========
 The example app used by this tutorial is available at ``examples`` inside
-Eve repository.
+the Eve-SQLAlchemy repository.
 
 Schema registration
 -------------------
@@ -40,7 +40,7 @@ with your custom options:
 
 Authentication example
 ----------------------
-This example is based on the Token-Based tutorial from `Eve Authentication`_. 
+This example is based on the Token-Based tutorial from `Eve Authentication`_.
 First we need to create eve-side authentication:
 
 .. code-block:: python
@@ -284,12 +284,12 @@ You can do this by subclassing ``SQL`` and overriding the driver.
 
    from eve_sqlalchemy import SQL as _SQL
    from flask_sqlalchemy import SQLAlchemy
-   
+
    db = SQLAlchemy(app)
-   
+
    class SQL(_SQL):
       driver = db
-   
+
    app = Eve(validator=ValidatorSQL, data=SQL)
 
 SQLAlchemy expressions
