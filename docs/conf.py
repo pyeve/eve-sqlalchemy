@@ -106,7 +106,7 @@ html_theme = 'alabaster'
 # html_theme_options = {'touch_icon': 'touch-icon.png'}
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = ['_themes', alabaster.get_path()]
+html_theme_path = [alabaster.get_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -148,12 +148,9 @@ html_sidebars = {
     '**': [
         'about.html',
         'navigation.html',
-        'alabaster/dev.html',
-        'alabaster/links.html',
-        # 'powered.html',
-        'donate.html',
+        'sidebarintro.html',
         'searchbox.html',
-        'alabaster/artwork.html'
+        'artwork.html',
     ]
 }
 
@@ -162,6 +159,7 @@ html_theme_options = {
     'github_user': 'RedTurtle',
     'github_repo': 'eve-sqlalchemy',
     'github_banner': True,
+    'github_banner_image': 'forkme_right_green_007200.png',
     'travis_button': True,
     'show_powered_by': False,
 }
