@@ -4,7 +4,7 @@ How to Contribute
 Contributions are welcome! Not familiar with the codebase yet? No problem!
 There are many ways to contribute to open source projects: reporting bugs,
 helping with the documentation, spreading the word and of course, adding
-new features and patches. 
+new features and patches.
 
 Getting Started
 ---------------
@@ -16,14 +16,15 @@ Making Changes
 --------------
 * Fork_ the repository on GitHub.
 * Create a topic branch from where you want to base your work.
-* This is usually the ``develop`` branch. 
-* Please avoid working directly on the ``develop`` branch.
+* This is usually the ``master`` branch.
+* Please avoid working directly on the ``master`` branch.
 * Make commits of logical units (if needed rebase your feature branch before
   submitting it).
 * Check for unnecessary whitespace with ``git diff --check`` before committing.
 * Make sure your commit messages are in the `proper format`_.
 * If your commit fixes an open issue, reference it in the commit message (#15).
-* Make sure your code conforms to PEP8_ (we're using flake8_ for PEP8 and extra checks).
+* Make sure your code conforms to PEP8_ (we're using flake8_ for PEP8 and extra
+  checks).
 * Make sure you have added the necessary tests for your changes.
 * Run all the tests to assure nothing else was accidentally broken.
 * Run again the entire suite via tox_ to check your changes against multiple
@@ -50,7 +51,7 @@ First time contributor?
 -----------------------
 It's alright. We've all been there. See next chapter.
 
-Don't know where to start? 
+Don't know where to start?
 --------------------------
 There are usually several TODO comments scattered around the codebase, maybe
 check them out and see if you have ideas, or can help with them. Also, check
@@ -60,7 +61,7 @@ improve the documentation. In any case, other than GitHub help_ pages, you might
 want to check this excellent `Effective Guide to Pull Requests`_
 
 .. _`the repository`: https://github.com/RedTurtle/eve-sqlalchemy
-.. _AUTHORS: https://github.com/RedTurtle/eve-sqlalchemy/blob/develop/AUTHORS
+.. _AUTHORS: https://github.com/RedTurtle/eve-sqlalchemy/blob/master/AUTHORS
 .. _`open issues`: https://github.com/RedTurtle/eve-sqlalchemy/issues
 .. _`new issue`: https://github.com/RedTurtle/eve-sqlalchemy/issues/new
 .. _GitHub: https://github.com/
