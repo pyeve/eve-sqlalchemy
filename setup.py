@@ -10,10 +10,9 @@ with open('README.rst') as f:
 with open('CHANGES') as f:
     LONG_DESCRIPTION += f.read()
 
-install_requires = [
-    'Eve>=0.6,<0.7',
-    'sqlalchemy>=0.8',
-    'Flask-SQLAlchemy>=1.0,<2.999',
+test_dependencies = [
+    'mock',
+    'pytest',
 ]
 
 setup(
@@ -28,13 +27,15 @@ setup(
     platforms=["any"],
     packages=['eve_sqlalchemy'],
     test_suite="eve_sqlalchemy.tests",
-    install_requires=install_requires,
+    install_requires=[
+        'Eve>=0.6,<0.7',
+        'Flask-SQLAlchemy>=1.0,<2.999',
+    ],
+    tests_require=test_dependencies,
     extras_require={
-        'tests': [
-            'pytest',
-            'mock',
-            'pytest-flakes',
-        ]
+        # This little hack allows us to reference our test dependencies within
+        # tox.ini. For details see http://stackoverflow.com/a/41398850 .
+        'test': test_dependencies,
     },
     classifiers=[
         'Development Status :: 4 - Beta',
