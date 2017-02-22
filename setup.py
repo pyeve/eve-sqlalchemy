@@ -25,6 +25,7 @@ setup(
     version=metadata['__version__'],
     description=(metadata['__summary__']),
     long_description=read('README.rst') + read('CHANGES'),
+    keywords='flask sqlalchemy rest',
     author=metadata['__author__'],
     author_email=metadata['__email__'],
     url=metadata['__url__'],
@@ -42,6 +43,7 @@ setup(
         # tox.ini. For details see http://stackoverflow.com/a/41398850 .
         'test': test_dependencies,
     },
+    zip_safe=True,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
