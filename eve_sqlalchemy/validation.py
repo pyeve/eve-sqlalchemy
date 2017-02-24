@@ -5,7 +5,8 @@
     conform to the API domain.
     An extension of Cerberus Validator.
 
-    :copyright: (c) 2013 by Nicola Iarocci, Andrew Mleczko and Tomasz Jezierski (Tefnet)
+    :copyright: (c) 2013 by Nicola Iarocci, Andrew Mleczko and
+                Tomasz Jezierski (Tefnet)
     :license: BSD, see LICENSE for more details.
 """
 from __future__ import unicode_literals

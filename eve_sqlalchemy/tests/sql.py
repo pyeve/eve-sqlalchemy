@@ -159,8 +159,8 @@ class TestSQLParser(TestCase):
         self.assertEqual(r[0].right.value,
                          "('john','mark')")
 
-        r = parse_dictionary({'username': 'similar to("(\'john%\'|\'mark%\')")'},
-                             self.model)
+        r = parse_dictionary(
+            {'username': 'similar to("(\'john%\'|\'mark%\')")'}, self.model)
         self.assertEqual(str(r[0]),
                          'contacts.username similar to :username_1')
         self.assertEqual(r[0].right.value,
@@ -226,11 +226,11 @@ class TestSQLStructures(TestCase):
         self.assertEqual(str(
             parse_sorting(Contacts, self.query, 'username', 1)).lower(),
             'contacts.username')
-        self.assertEqual(str(
-            parse_sorting(Contacts, self.query, 'username', -1, 'nullslast')).lower(),
+        self.assertEqual(str(parse_sorting(
+            Contacts, self.query, 'username', -1, 'nullslast')).lower(),
             'contacts.username desc nulls last')
-        self.assertEqual(str(
-            parse_sorting(Contacts, self.query, 'username', -1, 'nullsfirst')).lower(),
+        self.assertEqual(str(parse_sorting(
+            Contacts, self.query, 'username', -1, 'nullsfirst')).lower(),
             'contacts.username desc nulls first')
 
     def setupDB(self):

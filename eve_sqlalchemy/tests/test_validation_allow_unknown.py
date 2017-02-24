@@ -19,7 +19,8 @@ class TestValidator(unittest.TestCase):
             'allow_unknown': True,
         })
         config.DOMAIN = DOMAIN
-        self.validator = eve_sqlalchemy.validation.ValidatorSQL(schemas, resource='contacts')
+        self.validator = eve_sqlalchemy.validation.ValidatorSQL(
+            schemas, resource='contacts')
 
     def test_allow_unknown_true(self):
         self.assertTrue(self.validator.allow_unknown)

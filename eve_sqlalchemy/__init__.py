@@ -268,8 +268,8 @@ class SQL(DataLayer):
     def replace(self, resource, id_, document, original):
         model, filter_, fields_, _ = self._datasource_ex(resource, [])
         id_field = self._id_field(resource)
-        filter_ = self.combine_queries(filter_,
-                                       parse_dictionary({id_field: id_}, model))
+        filter_ = self.combine_queries(
+            filter_, parse_dictionary({id_field: id_}, model))
         query = self.driver.session.query(model)
 
         # Find and delete the old object
@@ -289,8 +289,8 @@ class SQL(DataLayer):
     def update(self, resource, id_, updates, original):
         model, filter_, _, _ = self._datasource_ex(resource, [])
         id_field = self._id_field(resource)
-        filter_ = self.combine_queries(filter_,
-                                       parse_dictionary({id_field: id_}, model))
+        filter_ = self.combine_queries(
+            filter_, parse_dictionary({id_field: id_}, model))
         query = self.driver.session.query(model)
         model_instance = query.filter(*filter_).first()
         if model_instance is None:
