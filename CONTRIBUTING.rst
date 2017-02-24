@@ -14,7 +14,7 @@ Getting Started
 
 Making Changes
 --------------
-* Fork_ the repository on GitHub.
+* Fork_ the repository_ on GitHub.
 * Create a topic branch from where you want to base your work.
 * This is usually the ``master`` branch.
 * Please avoid working directly on the ``master`` branch.
@@ -60,7 +60,7 @@ you're fluent in English (or notice any typo and/or mistake), feel free to
 improve the documentation. In any case, other than GitHub help_ pages, you might
 want to check this excellent `Effective Guide to Pull Requests`_
 
-.. _`the repository`: https://github.com/RedTurtle/eve-sqlalchemy
+.. _repository: https://github.com/RedTurtle/eve-sqlalchemy
 .. _AUTHORS: https://github.com/RedTurtle/eve-sqlalchemy/blob/master/AUTHORS
 .. _`open issues`: https://github.com/RedTurtle/eve-sqlalchemy/issues
 .. _`new issue`: https://github.com/RedTurtle/eve-sqlalchemy/issues/new

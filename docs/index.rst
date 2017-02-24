@@ -1,5 +1,3 @@
-.. _sqlalchemy_support:
-
 SQLAlchemy support
 ==================
 

@@ -1,5 +1,3 @@
-.. _trivial_example:
-
 Simple example
 ==============
 
