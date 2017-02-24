@@ -3,7 +3,7 @@
 import codecs
 import os
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 def read(*parts):
@@ -31,7 +31,7 @@ setup(
     url=metadata['__url__'],
     license=metadata['__license__'],
     platforms=["any"],
-    packages=['eve_sqlalchemy'],
+    packages=find_packages(),
     test_suite="eve_sqlalchemy.tests",
     install_requires=[
         'Eve>=0.6,<0.7',
