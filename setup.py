@@ -28,9 +28,9 @@ setup(
     author_email=metadata['__email__'],
     url=metadata['__url__'],
     license=metadata['__license__'],
-    platforms=["any"],
+    platforms=['any'],
     packages=find_packages(),
-    test_suite="eve_sqlalchemy.tests",
+    test_suite='eve_sqlalchemy.tests',
     install_requires=[
         'Eve>=0.6,<0.7',
         'Flask-SQLAlchemy>=1.0,<2.999',
