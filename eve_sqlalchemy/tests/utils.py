@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 import unittest
+
 import mock
+
 from eve_sqlalchemy.utils import extract_sort_arg
 
 

@@ -13,12 +13,14 @@ from __future__ import unicode_literals
 
 import collections
 import copy
+
 from cerberus import Validator
-from flask import current_app as app
 from eve.utils import config, str_type
 from eve.versioning import (
-    get_data_version_relation_document,
-    missing_version_field)
+    get_data_version_relation_document, missing_version_field,
+)
+from flask import current_app as app
+
 from eve_sqlalchemy.utils import dict_update, remove_none_values
 
 

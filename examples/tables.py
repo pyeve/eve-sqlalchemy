@@ -3,15 +3,9 @@
     This is a typical declarative usage of sqlalchemy,
     It has no dependency on flask or eve iself. Pure sqlalchemy.
 """
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import column_property, relationship
-from sqlalchemy import func
-from sqlalchemy import (
-    Column,
-    String,
-    Integer,
-    ForeignKey,
-    DateTime)
 
 Base = declarative_base()
 

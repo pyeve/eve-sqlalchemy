@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
-from io import BytesIO
-
 """
-    Media storage for sqlalchemy extenstion.
+    Media storage for sqlalchemy extension.
 
     :copyright: (c) 2014 by Andrew Mleczko
     :license: BSD, see LICENSE for more details.
 """
+from __future__ import unicode_literals
+
+from io import BytesIO
 
 
 class SQLBlobMediaStorage(object):

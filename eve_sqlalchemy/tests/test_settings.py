@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 import copy
 
 # db_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),

@@ -7,14 +7,13 @@
 """
 from __future__ import unicode_literals
 
-from sqlalchemy.sql import expression
-from sqlalchemy.ext.hybrid import HYBRID_PROPERTY
-from sqlalchemy.ext.associationproxy import ASSOCIATION_PROXY
-from sqlalchemy.orm.attributes import InstrumentedAttribute
-from sqlalchemy import types, inspect
 import sqlalchemy.dialects.postgresql as postgresql
-from sqlalchemy import schema as sqla_schema
 from eve.utils import config
+from sqlalchemy import inspect, schema as sqla_schema, types
+from sqlalchemy.ext.associationproxy import ASSOCIATION_PROXY
+from sqlalchemy.ext.hybrid import HYBRID_PROPERTY
+from sqlalchemy.orm.attributes import InstrumentedAttribute
+from sqlalchemy.sql import expression
 
 from .utils import dict_update
 

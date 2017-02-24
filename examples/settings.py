@@ -6,8 +6,10 @@
     Mongo as we need to define the schema using the registerSchema decorator.
 """
 from eve.utils import config
+
 from eve_sqlalchemy.decorators import registerSchema
-from tables import People, Invoices
+
+from .tables import Invoices, People
 
 ID_FIELD = 'id'
 config.ID_FIELD = ID_FIELD

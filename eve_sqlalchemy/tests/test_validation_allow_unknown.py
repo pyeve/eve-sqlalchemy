@@ -2,9 +2,11 @@
 from __future__ import unicode_literals
 
 import unittest
+
+from eve.utils import config
+
 import eve_sqlalchemy.validation
 from eve_sqlalchemy.tests.test_settings import DOMAIN
-from eve.utils import config
 
 
 class TestValidator(unittest.TestCase):

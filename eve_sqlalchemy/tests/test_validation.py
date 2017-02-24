@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import unittest
+
 import eve_sqlalchemy.validation
 
 

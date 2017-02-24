@@ -1,7 +1,9 @@
 from eve import Eve
+
 from eve_sqlalchemy import SQL
 from eve_sqlalchemy.validation import ValidatorSQL
-from tables import People, Base
+
+from .tables import Base, People
 
 app = Eve(validator=ValidatorSQL, data=SQL)
 

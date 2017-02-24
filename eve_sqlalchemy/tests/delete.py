@@ -2,10 +2,10 @@
 from __future__ import unicode_literals
 
 import pytest
-
 from eve import ETAG
 from eve.tests.methods import delete as eve_delete_tests
 from eve.tests.utils import DummyEvent
+
 from eve_sqlalchemy.tests import TestBase
 
 

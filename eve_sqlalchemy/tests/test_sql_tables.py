@@ -2,21 +2,17 @@
 from __future__ import unicode_literals
 
 import hashlib
-from sqlalchemy.ext.declarative import declarative_base
+
+from sqlalchemy import (
+    Boolean, Column, DateTime, Float, ForeignKey, Integer, LargeBinary,
+    PickleType, String, func,
+)
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column
-from sqlalchemy import Boolean
-from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
-from sqlalchemy import func
-from sqlalchemy import Integer
-from sqlalchemy import Float
-from sqlalchemy import String
-from sqlalchemy import LargeBinary
-from sqlalchemy import PickleType
-from eve_sqlalchemy.decorators import registerSchema
+
 from eve_sqlalchemy import db
+from eve_sqlalchemy.decorators import registerSchema
 
 Base = declarative_base()
 db.Model = Base

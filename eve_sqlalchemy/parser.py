@@ -9,14 +9,14 @@
 """
 from __future__ import unicode_literals
 
-import re
 import ast
-import operator as sqla_op
-import json
 import itertools
+import json
+import operator as sqla_op
+import re
 
-from eve.utils import str_to_date
 import sqlalchemy
+from eve.utils import str_to_date
 from sqlalchemy.ext.associationproxy import AssociationProxy
 from sqlalchemy.sql import expression as sqla_exp
 

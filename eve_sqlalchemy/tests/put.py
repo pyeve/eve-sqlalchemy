@@ -5,6 +5,7 @@ import pytest
 import six
 from eve import ETAG, STATUS
 from eve.tests.methods import put as eve_put_tests
+
 from eve_sqlalchemy.tests import TestBase
 
 
