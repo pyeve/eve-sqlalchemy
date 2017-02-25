@@ -10,17 +10,22 @@ matrix:
       env: TOX_ENV=py33
     - python: 2.7
       env: TOX_ENV=py34
+    - python: 3.5
+      env: TOX_ENV=py35
+    - python: 3.6
+      env: TOX_ENV=py36
     - python: 2.7
       env: TOX_ENV=pypy
     - python: 2.7
       env: TOX_ENV=flake8
-    - python: 3.5
-      env: TOX_ENV=py35
-    - python: 3.6-dev
-      env: TOX_ENV=py36
+    - python: 2.7
+      env: TOX_ENV=isort
+    - python: 2.7
+      env: TOX_ENV=rstcheck
+    - python: 2.7
+      env: TOX_ENV=whitespace
 script:
   - tox -e $TOX_ENV
 branches:
   only:
     - master
-    - develop
