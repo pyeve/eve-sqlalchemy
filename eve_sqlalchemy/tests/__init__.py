@@ -11,14 +11,16 @@ original Eve test code.
 from __future__ import unicode_literals
 
 import collections
-import random
 import os
+import random
+
 import eve
 import eve.tests
 from eve import ISSUES
+
+import eve_sqlalchemy.tests.test_sql_tables  # noqa
 from eve_sqlalchemy import SQL
 from eve_sqlalchemy.validation import ValidatorSQL
-import eve_sqlalchemy.tests.test_sql_tables  # noqa
 
 
 class TestMinimal(eve.tests.TestMinimal):

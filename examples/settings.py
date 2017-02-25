@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-    Normal settings file for Eve.
+    Settings file for Eve.
 
-    Differently from a configuration file for an Eve application backed by Mongo
-    we need to define the schema using the registerSchema decorator.
-
+    Different from a configuration file for an Eve application backed by
+    Mongo as we need to define the schema using the registerSchema decorator.
 """
 from eve.utils import config
+
 from eve_sqlalchemy.decorators import registerSchema
-from tables import People, Invoices
+
+from .tables import Invoices, People
 
 ID_FIELD = 'id'
 config.ID_FIELD = ID_FIELD
@@ -20,8 +21,9 @@ registerSchema('invoices')(Invoices)
 
 SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
-# The following two lines will output the SQL statements executed by SQLAlchemy.
-# Useful while debugging and in development. Turned off by default
+# The following two lines will output the SQL statements executed by
+# SQLAlchemy. This is useful while debugging and in development, but is turned
+# off by default.
 # --------
 # SQLALCHEMY_ECHO = True
 # SQLALCHEMY_RECORD_QUERIES = True

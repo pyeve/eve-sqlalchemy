@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 import copy
 
 # db_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -165,7 +166,8 @@ products = {
     'item_url': 'regex("[A-Z]+")'
 }
 child_products = copy.deepcopy(products)
-child_products['url'] = 'products/<regex("[A-Z]+"):parent_product_sku>/children'
+child_products['url'] = \
+    'products/<regex("[A-Z]+"):parent_product_sku>/children'
 child_products['datasource'] = {'source': 'Products'}
 
 DOMAIN = {

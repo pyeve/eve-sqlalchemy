@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import time
+
 import pytest
 import simplejson as json
-import time
 from eve.tests.methods import get as eve_get_tests
+
 from eve_sqlalchemy.tests import TestBase
 
 

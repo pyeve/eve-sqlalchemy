@@ -8,20 +8,21 @@
 from __future__ import unicode_literals
 
 import collections
-import simplejson as json
-import flask.ext.sqlalchemy as flask_sqlalchemy
-
-from flask import abort
 from copy import copy
 
-from eve.io.base import ConnectionException
-from eve.io.base import DataLayer
+import flask.ext.sqlalchemy as flask_sqlalchemy
+import simplejson as json
+from eve.io.base import ConnectionException, DataLayer
 from eve.utils import config, debug_error_message, str_to_date
-from .parser import parse, parse_dictionary, ParseError, sqla_op, parse_sorting
+from flask import abort
+
+from .parser import ParseError, parse, parse_dictionary, parse_sorting, sqla_op
 from .structures import SQLAResultCollection
-from .utils import dict_update, validate_filters, sqla_object_to_dict, \
-    extract_sort_arg, rename_relationship_fields_in_sort_args, \
-    rename_relationship_fields_in_dict, rename_relationship_fields_in_str
+from .utils import (
+    dict_update, extract_sort_arg, rename_relationship_fields_in_dict,
+    rename_relationship_fields_in_sort_args, rename_relationship_fields_in_str,
+    sqla_object_to_dict, validate_filters,
+)
 
 __version__ = '0.1-dev'
 
@@ -268,8 +269,8 @@ class SQL(DataLayer):
     def replace(self, resource, id_, document, original):
         model, filter_, fields_, _ = self._datasource_ex(resource, [])
         id_field = self._id_field(resource)
-        filter_ = self.combine_queries(filter_,
-                                       parse_dictionary({id_field: id_}, model))
+        filter_ = self.combine_queries(
+            filter_, parse_dictionary({id_field: id_}, model))
         query = self.driver.session.query(model)
 
         # Find and delete the old object
@@ -289,8 +290,8 @@ class SQL(DataLayer):
     def update(self, resource, id_, updates, original):
         model, filter_, _, _ = self._datasource_ex(resource, [])
         id_field = self._id_field(resource)
-        filter_ = self.combine_queries(filter_,
-                                       parse_dictionary({id_field: id_}, model))
+        filter_ = self.combine_queries(
+            filter_, parse_dictionary({id_field: id_}, model))
         query = self.driver.session.query(model)
         model_instance = query.filter(*filter_).first()
         if model_instance is None:

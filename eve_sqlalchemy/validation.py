@@ -5,19 +5,22 @@
     conform to the API domain.
     An extension of Cerberus Validator.
 
-    :copyright: (c) 2013 by Nicola Iarocci, Andrew Mleczko and Tomasz Jezierski (Tefnet)
+    :copyright: (c) 2013 by Nicola Iarocci, Andrew Mleczko and
+                Tomasz Jezierski (Tefnet)
     :license: BSD, see LICENSE for more details.
 """
 from __future__ import unicode_literals
 
 import collections
 import copy
+
 from cerberus import Validator
-from flask import current_app as app
 from eve.utils import config, str_type
 from eve.versioning import (
-    get_data_version_relation_document,
-    missing_version_field)
+    get_data_version_relation_document, missing_version_field,
+)
+from flask import current_app as app
+
 from eve_sqlalchemy.utils import dict_update, remove_none_values
 
 

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import pytest
 from eve import ETAG
 from eve.tests.methods import patch as eve_patch_tests
+
 from eve_sqlalchemy.tests import TestBase
 
 

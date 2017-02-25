@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import random
 import os
+import random
 import string
-import eve
 from datetime import datetime
-from unittest import TestCase
-from sqlalchemy.sql.elements import BooleanClauseList
 from operator import and_, or_
-from eve.utils import str_to_date
-from eve_sqlalchemy.tests.test_sql_tables import Contacts
-from eve_sqlalchemy.parser import parse
-from eve_sqlalchemy.parser import parse_dictionary
-from eve_sqlalchemy.parser import parse_sorting
-from eve_sqlalchemy.parser import ParseError
-from eve_sqlalchemy.parser import sqla_op
+from unittest import TestCase
 
-from eve_sqlalchemy.structures import SQLAResultCollection
+import eve
+from eve.utils import str_to_date
+from sqlalchemy.sql.elements import BooleanClauseList
+
 from eve_sqlalchemy import SQL
+from eve_sqlalchemy.parser import (
+    ParseError, parse, parse_dictionary, parse_sorting, sqla_op,
+)
+from eve_sqlalchemy.structures import SQLAResultCollection
+from eve_sqlalchemy.tests.test_sql_tables import Contacts
 
 
 class TestSQLParser(TestCase):
@@ -159,8 +158,8 @@ class TestSQLParser(TestCase):
         self.assertEqual(r[0].right.value,
                          "('john','mark')")
 
-        r = parse_dictionary({'username': 'similar to("(\'john%\'|\'mark%\')")'},
-                             self.model)
+        r = parse_dictionary(
+            {'username': 'similar to("(\'john%\'|\'mark%\')")'}, self.model)
         self.assertEqual(str(r[0]),
                          'contacts.username similar to :username_1')
         self.assertEqual(r[0].right.value,
@@ -226,11 +225,11 @@ class TestSQLStructures(TestCase):
         self.assertEqual(str(
             parse_sorting(Contacts, self.query, 'username', 1)).lower(),
             'contacts.username')
-        self.assertEqual(str(
-            parse_sorting(Contacts, self.query, 'username', -1, 'nullslast')).lower(),
+        self.assertEqual(str(parse_sorting(
+            Contacts, self.query, 'username', -1, 'nullslast')).lower(),
             'contacts.username desc nulls last')
-        self.assertEqual(str(
-            parse_sorting(Contacts, self.query, 'username', -1, 'nullsfirst')).lower(),
+        self.assertEqual(str(parse_sorting(
+            Contacts, self.query, 'username', -1, 'nullsfirst')).lower(),
             'contacts.username desc nulls first')
 
     def setupDB(self):

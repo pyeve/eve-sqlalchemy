@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import pytest
 from eve import ISSUES, STATUS
 from eve.tests.methods import post as eve_post_tests
+
 from eve_sqlalchemy.tests import TestBase, test_sql_tables
 
 

@@ -1,7 +1,9 @@
 from eve import Eve
+
 from eve_sqlalchemy import SQL
 from eve_sqlalchemy.validation import ValidatorSQL
-from tables import People, Base
+
+from .tables import Base, People
 
 app = Eve(validator=ValidatorSQL, data=SQL)
 
@@ -18,4 +20,5 @@ if not db.session.query(People).count():
         db.session.add(People.from_tuple(item))
     db.session.commit()
 
-app.run(debug=True, use_reloader=False)  # using reloaded will destory in-memory sqlite db
+# using reloader will destroy in-memory sqlite db
+app.run(debug=True, use_reloader=False)
