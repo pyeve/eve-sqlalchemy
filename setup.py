@@ -1,14 +1,17 @@
-#!/usr/bin/env python
+import codecs
+import os
 
-from setuptools import setup
-DESCRIPTION = ("REST API framework powered by Flask, SQLAlchemy and good "
-               "intentions.")
+from setuptools import find_packages, setup
 
-with open('README.rst') as f:
-    LONG_DESCRIPTION = f.read()
 
-with open('CHANGES') as f:
-    LONG_DESCRIPTION += f.read()
+def read(*parts):
+    here = os.path.abspath(os.path.dirname(__file__))
+    return codecs.open(os.path.join(here, *parts), 'r', 'utf-8').read()
+
+
+# Import the project's metadata
+metadata = {}
+exec(read('eve_sqlalchemy', '__about__.py'), metadata)
 
 test_dependencies = [
     'mock',
@@ -16,17 +19,18 @@ test_dependencies = [
 ]
 
 setup(
-    name='Eve-SQLAlchemy',
-    version='0.4.2.dev0',
-    description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
-    author='Dominik Kellner',
-    author_email='dkellner@dkellner.de',
-    url='https://github.com/RedTurtle/eve-sqlalchemy',
-    license='GPL',
-    platforms=["any"],
-    packages=['eve_sqlalchemy'],
-    test_suite="eve_sqlalchemy.tests",
+    name=metadata['__title__'],
+    version=metadata['__version__'],
+    description=(metadata['__summary__']),
+    long_description=read('README.rst') + read('CHANGES'),
+    keywords='flask sqlalchemy rest',
+    author=metadata['__author__'],
+    author_email=metadata['__email__'],
+    url=metadata['__url__'],
+    license=metadata['__license__'],
+    platforms=['any'],
+    packages=find_packages(),
+    test_suite='eve_sqlalchemy.tests',
     install_requires=[
         'Eve>=0.6,<0.7',
         'Flask-SQLAlchemy>=1.0,<2.999',
@@ -37,6 +41,7 @@ setup(
         # tox.ini. For details see http://stackoverflow.com/a/41398850 .
         'test': test_dependencies,
     },
+    zip_safe=True,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
