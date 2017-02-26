@@ -4,8 +4,16 @@ Changelog
 0.5.0 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-- Configure `zest.releaser` for release management. [Dominik Kellner]
-- Leverage further automated syntax and formatting checks. [Dominik Kellner]
+- Configure `zest.releaser` for release management (#137)
+  [Dominik Kellner, Øystein S. Haaland]
+- Leverage further automated syntax and formatting checks (#138)
+  [Dominik Kellner]
+- Clean up specification of dependencies [Dominik Kellner]
+- Added 'Contributing' section to docs (#129) [Mario Kralj]
+- Fix trivial app output in documentation (#131) [Michal Vlasák]
+- Added dialect-specific PostgreSQL JSON type (#133) [Mario Kralj]
+- Fix url field in documentation about additional lookup (#110) [Killian Kemps]
+- Compatibility with Eve 0.6.4 and refactoring of tests (#92) [Dominik Kellner]
 
 
 0.4.1 (2015-12-16)
