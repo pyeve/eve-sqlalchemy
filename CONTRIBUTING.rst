@@ -55,10 +55,13 @@ Don't know where to start?
 --------------------------
 There are usually several TODO comments scattered around the codebase, maybe
 check them out and see if you have ideas, or can help with them. Also, check
-the `open issues`_ in case there's something that sparks your interest. If
-you're fluent in English (or notice any typo and/or mistake), feel free to
-improve the documentation. In any case, other than GitHub help_ pages, you might
-want to check this excellent `Effective Guide to Pull Requests`_
+the `open issues`_ in case there's something that sparks your interest. There's
+also a special ``contributor-friendly`` label flagging some interesting feature
+requests and issues that will easily get you started - even without knowing the
+codebase yet. If you're fluent in English (or notice any typo and/or mistake),
+feel free to improve the documentation. In any case, other than GitHub help_
+pages, you might want to check this excellent `Effective Guide to Pull
+Requests`_
 
 .. _repository: https://github.com/RedTurtle/eve-sqlalchemy
 .. _AUTHORS: https://github.com/RedTurtle/eve-sqlalchemy/blob/master/AUTHORS
