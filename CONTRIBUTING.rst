@@ -63,10 +63,10 @@ feel free to improve the documentation. In any case, other than GitHub help_
 pages, you might want to check this excellent `Effective Guide to Pull
 Requests`_
 
-.. _repository: https://github.com/RedTurtle/eve-sqlalchemy
-.. _AUTHORS: https://github.com/RedTurtle/eve-sqlalchemy/blob/master/AUTHORS
-.. _`open issues`: https://github.com/RedTurtle/eve-sqlalchemy/issues
-.. _`new issue`: https://github.com/RedTurtle/eve-sqlalchemy/issues/new
+.. _repository: https://github.com/pyeve/eve-sqlalchemy
+.. _AUTHORS: https://github.com/pyeve/eve-sqlalchemy/blob/master/AUTHORS
+.. _`open issues`: https://github.com/pyeve/eve-sqlalchemy/issues
+.. _`new issue`: https://github.com/pyeve/eve-sqlalchemy/issues/new
 .. _GitHub: https://github.com/
 .. _Fork: https://help.github.com/articles/fork-a-repo
 .. _`proper format`: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

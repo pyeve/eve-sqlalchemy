@@ -1,8 +1,8 @@
 Eve-SQLAlchemy extension
 ========================
 
-.. image:: https://travis-ci.org/RedTurtle/eve-sqlalchemy.svg?branch=master
-   :target: https://travis-ci.org/RedTurtle/eve-sqlalchemy
+.. image:: https://travis-ci.org/pyeve/eve-sqlalchemy.svg?branch=master
+   :target: https://travis-ci.org/pyeve/eve-sqlalchemy
 
 Powered by Eve, SQLAlchemy and good intentions this extension allows
 to effortlessly build and deploy highly customizable, fully featured
