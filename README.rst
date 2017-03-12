@@ -1,4 +1,4 @@
-Eve SQLAlchemy extension
+Eve-SQLAlchemy extension
 ========================
 
 .. image:: https://travis-ci.org/RedTurtle/eve-sqlalchemy.svg?branch=master
@@ -8,7 +8,7 @@ Powered by Eve, SQLAlchemy and good intentions this extension allows
 to effortlessly build and deploy highly customizable, fully featured
 RESTful Web Services with SQL-based backends.
 
-Eve SQLAlchemy is Simple
+Eve-SQLAlchemy is Simple
 ------------------------
 .. code-block:: python
 
