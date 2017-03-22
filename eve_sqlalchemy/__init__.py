@@ -10,7 +10,7 @@ from __future__ import unicode_literals
 import collections
 from copy import copy
 
-import flask.ext.sqlalchemy as flask_sqlalchemy
+import flask_sqlalchemy
 import simplejson as json
 from eve.io.base import ConnectionException, DataLayer
 from eve.utils import config, debug_error_message, str_to_date
