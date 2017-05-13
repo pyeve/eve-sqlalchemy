@@ -3,7 +3,6 @@
 # Eve-SQLAlchemy, run `pip install .`.
 
 .
--e git+https://github.com/nicolaiarocci/alabaster.git@15d190f29f86141aab202843f2bf3edfde71e56c#egg=alabaster
 Sphinx>=1.2.3
 alabaster
 zest.releaser[recommended]

@@ -162,11 +162,11 @@ html_sidebars = {
 }
 
 html_theme_options = {
-    'logo': 'eve-sidebar.png',
+    'logo': 'eve_leaf.png',
     'github_user': 'pyeve',
     'github_repo': 'eve-sqlalchemy',
-    'github_banner': True,
-    'github_banner_image': 'forkme_right_green_007200.png',
+    'github_type': 'star',
+    'github_banner': 'forkme_right_green_007200.png',
     'travis_button': True,
     'show_powered_by': False,
 }
