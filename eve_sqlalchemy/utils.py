@@ -17,6 +17,19 @@ from eve.utils import config
 from sqlalchemy.ext.declarative.api import DeclarativeMeta
 
 
+def merge_dicts(*dicts):
+    """
+    Given any number of dicts, shallow copy and merge into a new dict,
+    precedence goes to key value pairs in latter dicts.
+
+    Source: https://stackoverflow.com/q/38987
+    """
+    result = {}
+    for dictionary in dicts:
+        result.update(dictionary)
+    return result
+
+
 def dict_update(d, u):
     for k, v in u.items():
         if isinstance(v, collections.Mapping) and \
