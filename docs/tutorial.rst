@@ -10,7 +10,7 @@ dependencies and keep model registration depend only on sqlalchemy
 library. This means that you can simply use something like that:
 
 .. literalinclude:: ../examples/tables.py
-   :lines: 6-19,34-40,46-
+   :lines: 6-19,33-38
 
 We have used ``CommonColumns`` abstract class to provide attributes used by
 Eve, such us ``_created`` and ``_updated``, but you are not forced to used
@@ -27,7 +27,7 @@ need manually decide which `SQLAlchemy`_ declarative classes you wish to
 register.  You can do it using ``registerSchema``:
 
 .. literalinclude:: ../examples/settings.py
-   :lines: 9-13, 25-29
+   :lines: 9-13, 19-21, 25-29
 
 As you noticed the schema will be stored inside `_eve_schema` class attribute
 so it can be easily used. You can of course extend the autogenerate schema with
@@ -219,7 +219,7 @@ That's almost everything. Before you can start Eve you need to bind SQLAlchemy
 from the Eve data driver:
 
 .. literalinclude:: ../examples/sqla_example.py
-   :lines: 1-11
+   :lines: 1-14
 
 Now you can run Eve:
 
