@@ -13,7 +13,7 @@ from copy import copy
 import flask_sqlalchemy
 import simplejson as json
 from eve.io.base import ConnectionException, DataLayer
-from eve.utils import config, debug_error_message, str_to_date
+from eve.utils import debug_error_message, str_to_date
 from flask import abort
 
 from .__about__ import __version__  # noqa
@@ -104,9 +104,9 @@ class SQL(DataLayer):
             if 'datasource' in v and 'projection' in v['datasource']:
                 projection = v['datasource']['projection']
                 projection[self._id_field(k)] = 1
-                projection[config.ETAG] = 0
+                projection[app.config['ETAG']] = 0
             else:
-                projection = {config.ETAG: 0}
+                projection = {app.config['ETAG']: 0}
 
     def find(self, resource, req, sub_resource_lookup):
         """Retrieves a set of documents matching a given request. Queries can
@@ -165,8 +165,9 @@ class SQL(DataLayer):
                                                       model))
 
         if req.if_modified_since:
-            updated_filter = sqla_op.gt(getattr(model, config.LAST_UPDATED),
-                                        req.if_modified_since)
+            updated_filter = sqla_op.gt(
+                getattr(model, self.app.config.LAST_UPDATED),
+                req.if_modified_since)
             args['spec'].append(updated_filter)
 
         query = self.driver.session.query(model)
