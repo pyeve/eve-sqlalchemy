@@ -27,7 +27,7 @@ need manually decide which `SQLAlchemy`_ declarative classes you wish to
 register.  You can do it using ``registerSchema``:
 
 .. literalinclude:: ../examples/settings.py
-   :lines: 9-13, 19-21, 25-29
+   :lines: 10-13, 19-21, 25-29
 
 As you noticed the schema will be stored inside `_eve_schema` class attribute
 so it can be easily used. You can of course extend the autogenerate schema with
