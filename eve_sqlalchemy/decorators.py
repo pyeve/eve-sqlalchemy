@@ -17,7 +17,6 @@ from sqlalchemy.sql import expression
 
 from .utils import dict_update
 
-
 __all__ = ['registerSchema']
 
 sqla_type_mapping = {
