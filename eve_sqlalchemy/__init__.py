@@ -16,7 +16,7 @@ from eve.io.base import ConnectionException, DataLayer
 from eve.utils import config, debug_error_message, str_to_date
 from flask import abort
 
-from .__about__ import __version__   # noqa
+from .__about__ import __version__  # noqa
 from .parser import ParseError, parse, parse_dictionary, parse_sorting, sqla_op
 from .structures import SQLAResultCollection
 from .utils import (
@@ -24,7 +24,6 @@ from .utils import (
     rename_relationship_fields_in_sort_args, rename_relationship_fields_in_str,
     sqla_object_to_dict, validate_filters,
 )
-
 
 db = flask_sqlalchemy.SQLAlchemy()
 

@@ -4,6 +4,7 @@ Changelog
 0.5.0 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
+- Fixes in documentation (#151) [Alessandro De Angelis]
 - Fix deprecated import warning (#142) [Cuong Manh Le]
 - Configure `zest.releaser` for release management (#137)
   [Dominik Kellner, Øystein S. Haaland]
