@@ -245,12 +245,13 @@ class SQL(DataLayer):
                 if 'schema' in schema[field] and \
                    'data_relation' in schema[field]['schema']:
                     sub_schema = schema[field]['schema']
+                    related_resource = sub_schema['data_relation']['resource']
                     contains_ids = False
                     list_ = []
                     for v in value:
                         if isinstance(v, collections.Mapping):
                             list_.append(self._create_model_instance(
-                                sub_schema['data_relation']['resource'], v))
+                                related_resource, v))
                         else:
                             contains_ids = True
                             list_.append(v)
@@ -258,6 +259,14 @@ class SQL(DataLayer):
                         if schema[field]['type'] == 'set' else list_
                     if contains_ids and 'local_id_field' in schema[field]:
                         fields[schema[field]['local_id_field']] = collection
+                    elif contains_ids:
+                        related_model = \
+                            self._datasource_ex(related_resource)[0]
+                        lookup = {sub_schema['data_relation']['field']: value}
+                        filter_ = parse_dictionary(lookup, related_model)
+                        fields[field] = self.driver.session \
+                                            .query(related_model) \
+                                            .filter(*filter_).all()
                     else:
                         fields[field] = collection
                 else:
