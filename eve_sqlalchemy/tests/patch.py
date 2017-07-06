@@ -18,6 +18,24 @@ class TestPatch(eve_patch_tests.TestPatch, TestBase):
     def test_patch_null_objectid(self):
         pass
 
+    def test_patch_defaults(self):
+        # Eve assumes that our stored records don't contain the title, even it
+        # has a default value. We manually remove the title from the first
+        # record.
+        with self.app.app_context():
+            self.app.data.update(self.known_resource, self.item_id,
+                                 {'title': None}, None)
+        super(TestPatch, self).test_patch_defaults()
+
+    def test_patch_defaults_with_post_override(self):
+        # Eve assumes that our stored records don't contain the title, even it
+        # has a default value. We manually remove the title from the first
+        # record.
+        with self.app.app_context():
+            self.app.data.update(self.known_resource, self.item_id,
+                                 {'title': None}, None)
+        super(TestPatch, self).test_patch_defaults_with_post_override()
+
     @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
     def test_patch_write_concern_fail(self):
         pass
@@ -26,10 +44,11 @@ class TestPatch(eve_patch_tests.TestPatch, TestBase):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
 
-        contacts = self.random_contacts(1, False)
-        ref = 'test_patch_missing_date_f'
-        contacts[0]['ref'] = ref
-        self.app.data.insert('contacts', contacts)
+        with self.app.app_context():
+            contacts = self.random_contacts(1, False)
+            ref = 'test_patch_missing_date_f'
+            contacts[0]['ref'] = ref
+            self.app.data.insert('contacts', contacts)
 
         # now retrieve same document via API and get its etag, which is
         # supposed to be computed on default DATE_CREATED and LAST_UPDATAED
@@ -50,13 +69,14 @@ class TestPatch(eve_patch_tests.TestPatch, TestBase):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
 
-        # create random contact
-        fake_contact = self.random_contacts(1)
-        fake_contact_id = self.app.data.insert('contacts', fake_contact)[0]
+        with self.app.app_context():
+            # create random contact
+            fake_contact = self.random_contacts(1)
+            fake_contact_id = self.app.data.insert('contacts', fake_contact)[0]
 
-        # update first invoice to reference the new contact
-        self.app.data.update('invoices', self.invoice_id,
-                             {'person': fake_contact_id}, None)
+            # update first invoice to reference the new contact
+            self.app.data.update('invoices', self.invoice_id,
+                                 {'person': fake_contact_id}, None)
 
         # GET all invoices by new contact
         response, status = self.get('users/%s/invoices/%s' %
@@ -78,6 +98,15 @@ class TestPatch(eve_patch_tests.TestPatch, TestBase):
     @pytest.mark.xfail(True, run=False, reason='not implemented yet')
     def test_patch_nested_document_nullable_missing(self):
         pass
+
+    def test_patch_dependent_field_on_origin_document(self):
+        # Eve assumes that our stored records don't contain the title, even it
+        # has a default value. We manually remove the title from the first
+        # record.
+        with self.app.app_context():
+            self.app.data.update(self.known_resource, self.item_id,
+                                 {'dependency_field1': None}, None)
+        super(TestPatch, self).test_patch_dependent_field_on_origin_document()
 
     def test_id_field_in_document_fails(self):
         # Eve test uses ObjectId as id.

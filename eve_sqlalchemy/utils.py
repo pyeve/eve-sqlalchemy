@@ -101,8 +101,8 @@ def _sanitize_value(value):
 
 
 def _get_id(obj):
-    resource = list(obj._eve_schema.keys())[0]
-    return getattr(obj, obj._eve_schema[resource]['id_field'])
+    resource = _get_resource(obj)
+    return getattr(obj, config.DOMAIN[resource]['id_field'])
 
 
 def extract_sort_arg(req):
@@ -153,9 +153,19 @@ def rename_relationship_fields_in_str(model, str_):
 
 def _get_relationship_to_id_field_rename_mapping(model):
     result = {}
-    resource = list(model._eve_schema.keys())[0]
-    schema = model._eve_schema[resource]['schema']
+    resource = _get_resource(model)
+    schema = config.DOMAIN[resource]['schema']
     for field, field_schema in schema.items():
         if 'local_id_field' in field_schema:
             result[field] = field_schema['local_id_field']
     return result
+
+
+def _get_resource(model_or_obj):
+    if isinstance(model_or_obj.__class__, DeclarativeMeta):
+        model = model_or_obj.__class__
+    else:
+        model = model_or_obj
+    for resource, settings in config.DOMAIN.items():
+        if settings['datasource']['source'] == model.__name__:
+            return resource

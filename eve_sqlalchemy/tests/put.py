@@ -55,13 +55,13 @@ class TestPut(eve_put_tests.TestPut, TestBase):
         # Eve test uses mongo layer directly.
         self.app.config['BANDWIDTH_SAVER'] = False
 
-        # create random contact
-        fake_contact = self.random_contacts(1)
-        fake_contact_id = self.app.data.insert('contacts', fake_contact)[0]
-
-        # update first invoice to reference the new contact
-        self.app.data.update('invoices', self.invoice_id,
-                             {'person': fake_contact_id}, None)
+        with self.app.app_context():
+            # create random contact
+            fake_contact = self.random_contacts(1)
+            fake_contact_id = self.app.data.insert('contacts', fake_contact)[0]
+            # update first invoice to reference the new contact
+            self.app.data.update('invoices', self.invoice_id,
+                                 {'person': fake_contact_id}, None)
 
         # GET all invoices by new contact
         response, status = self.get('users/%s/invoices/%s' %

@@ -38,10 +38,12 @@ class TestGet(eve_get_tests.TestGet, TestBase):
         """
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
-        contacts = self.random_contacts(1, False)
-        ref = 'test_update_field'
-        contacts[0]['ref'] = ref
-        self.app.data.insert('contacts', contacts)
+        with self.app.app_context():
+            contacts = self.random_contacts(1, False)
+            ref = 'test_update_field'
+            contacts[0]['ref'] = ref
+            self.app.data.insert('contacts', contacts)
+
         where = '{"ref": "%s"}' % ref
         response, status = self.get(self.known_resource,
                                     '?where=%s' % where)
@@ -62,11 +64,13 @@ class TestGet(eve_get_tests.TestGet, TestBase):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
 
-        # We need to assign a `person` to our test invoice
-        fake_contact = self.random_contacts(1)[0]
-        fake_contact_id = self.app.data.insert('contacts', [fake_contact])[0]
-        self.app.data.update('invoices', self.invoice_id,
-                             {'person': fake_contact_id}, None)
+        with self.app.app_context():
+            # We need to assign a `person` to our test invoice
+            fake_contact = self.random_contacts(1)[0]
+            fake_contact_id = self.app.data.insert('contacts',
+                                                   [fake_contact])[0]
+            self.app.data.update('invoices', self.invoice_id,
+                                 {'person': fake_contact_id}, None)
 
         invoices = self.domain['invoices']
 
@@ -161,11 +165,14 @@ class TestGet(eve_get_tests.TestGet, TestBase):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
         self.app.config['QUERY_EMBEDDED'] = 'included'
-        # We need to assign a `person` to our test invoice
-        fake_contact = self.random_contacts(1)[0]
-        fake_contact_id = self.app.data.insert('contacts', [fake_contact])[0]
-        self.app.data.update('invoices', self.invoice_id,
-                             {'person_id': fake_contact_id}, None)
+
+        with self.app.app_context():
+            # We need to assign a `person` to our test invoice
+            fake_contact = self.random_contacts(1)[0]
+            fake_contact_id = self.app.data.insert('contacts',
+                                                   [fake_contact])[0]
+            self.app.data.update('invoices', self.invoice_id,
+                                 {'person_id': fake_contact_id}, None)
 
         invoices = self.domain['invoices']
         invoices['schema']['person']['data_relation']['embeddable'] = True
@@ -188,12 +195,14 @@ class TestGet(eve_get_tests.TestGet, TestBase):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
 
-        # create random contact
-        fake_contact = self.random_contacts(1)[0]
-        fake_contact_id = self.app.data.insert('contacts', [fake_contact])[0]
-        # update first invoice to reference the new contact
-        self.app.data.update('invoices', self.invoice_id,
-                             {'person': fake_contact_id}, None)
+        with self.app.app_context():
+            # create random contact
+            fake_contact = self.random_contacts(1)[0]
+            fake_contact_id = self.app.data.insert('contacts',
+                                                   [fake_contact])[0]
+            # update first invoice to reference the new contact
+            self.app.data.update('invoices', self.invoice_id,
+                                 {'person': fake_contact_id}, None)
 
         # GET all invoices by new contact
         response, status = self.get('users/%s/invoices' % fake_contact_id)
@@ -247,10 +256,13 @@ class TestGet(eve_get_tests.TestGet, TestBase):
         # get random contact
         response, status = self.get('contacts', '?max_results=1')
         contact_id = response['_items'][0]['_id']
-        # create random invoice to reference the contact
-        fake_invoice = self.random_invoices(1)[0]
-        fake_invoice['person'] = contact_id
-        self.app.data.insert('invoices', [fake_invoice])
+
+        with self.app.app_context():
+            # create random invoice to reference the contact
+            fake_invoice = self.random_invoices(1)[0]
+            fake_invoice['person'] = contact_id
+            self.app.data.insert('invoices', [fake_invoice])
+
         # test dict syntax
         response, status = self.get('invoices',
                                     '?where={"person": %d}' % contact_id)
@@ -270,10 +282,12 @@ class TestGetItem(eve_get_tests.TestGetItem, TestBase):
     def test_getitem_missing_standard_date_fields(self):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
-        contacts = self.random_contacts(1, False)
-        ref = 'test_update_field'
-        contacts[0]['ref'] = ref
-        self.app.data.insert('contacts', contacts)
+        with self.app.app_context():
+            contacts = self.random_contacts(1, False)
+            ref = 'test_update_field'
+            contacts[0]['ref'] = ref
+            self.app.data.insert('contacts', contacts)
+
         response, status = self.get(self.known_resource, item=ref)
         self.assertItemResponse(response, status)
 
@@ -281,10 +295,11 @@ class TestGetItem(eve_get_tests.TestGetItem, TestBase):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
 
-        fake_contact = self.random_contacts(1)
-        fake_contact_id = self.app.data.insert('contacts', fake_contact)[0]
-        self.app.data.update('invoices', self.invoice_id,
-                             {'person': fake_contact_id}, None)
+        with self.app.app_context():
+            fake_contact = self.random_contacts(1)
+            fake_contact_id = self.app.data.insert('contacts', fake_contact)[0]
+            self.app.data.update('invoices', self.invoice_id,
+                                 {'person': fake_contact_id}, None)
 
         invoices = self.domain['invoices']
 
@@ -377,12 +392,13 @@ class TestGetItem(eve_get_tests.TestGetItem, TestBase):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
 
-        # create random contact
-        fake_contact = self.random_contacts(1)
-        fake_contact_id = self.app.data.insert('contacts', fake_contact)[0]
-        # update first invoice to reference the new contact
-        self.app.data.update('invoices', self.invoice_id,
-                             {'person': fake_contact_id}, None)
+        with self.app.app_context():
+            # create random contact
+            fake_contact = self.random_contacts(1)
+            fake_contact_id = self.app.data.insert('contacts', fake_contact)[0]
+            # update first invoice to reference the new contact
+            self.app.data.update('invoices', self.invoice_id,
+                                 {'person': fake_contact_id}, None)
 
         # GET all invoices by new contact
         response, status = self.get('users/%s/invoices/%s' % (fake_contact_id,
