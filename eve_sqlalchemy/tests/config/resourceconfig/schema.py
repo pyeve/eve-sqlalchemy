@@ -97,3 +97,8 @@ class TestSchema(ResourceConfigTestCase):
         self.assertEqual(schema['id']['coerce'], int)
         schema = self._render(StringPK)['schema']
         self.assertNotIn('coerce', schema['id'])
+
+    def test_default_is_not_unset(self):
+        self._render(SomeModel)
+        self.assertIsNotNone(SomeModel.a_string.default)
+        self.assertEqual(SomeModel.a_string.default.arg, 'H2G2')
