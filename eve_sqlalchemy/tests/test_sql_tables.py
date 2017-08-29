@@ -10,10 +10,7 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from eve_sqlalchemy import db
-
 Base = declarative_base()
-db.Model = Base
 
 
 class CommonColumns(Base):

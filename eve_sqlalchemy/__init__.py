@@ -178,6 +178,10 @@ class SQL(DataLayer):
 
     def _create_model_instance(self, resource, dict_):
         model, _, _, _ = self._datasource_ex(resource)
+        attrs = self._get_model_attributes(resource, dict_)
+        return model(**attrs)
+
+    def _get_model_attributes(self, resource, dict_):
         schema = self.app.config['DOMAIN'][resource]['schema']
         fields = {}
         for field, value in dict_.items():
@@ -208,18 +212,21 @@ class SQL(DataLayer):
                     elif contains_ids:
                         related_model = \
                             self._datasource_ex(related_resource)[0]
-                        lookup = {sub_schema['data_relation']['field']: value}
+                        lookup = {sub_schema['data_relation']['field']:
+                                  list(value)}
                         filter_ = parse_dictionary(lookup, related_model)
                         fields[field] = self.driver.session \
                                             .query(related_model) \
                                             .filter(*filter_).all()
+                        if schema[field]['type'] == 'set':
+                            fields[field] = set(fields[field])
                     else:
                         fields[field] = collection
                 else:
                     fields[field] = value
             else:
                 fields[field] = value
-        return model(**fields)
+        return fields
 
     def replace(self, resource, id_, document, original):
         model, filter_, fields_, _ = self._datasource_ex(resource, [])
@@ -251,9 +258,9 @@ class SQL(DataLayer):
         model_instance = query.filter(*filter_).first()
         if model_instance is None:
             abort(500, description=debug_error_message('Object not existent'))
-        updates = rename_relationship_fields_in_dict(model, updates)
         self._handle_immutable_id(id_field, model_instance, updates)
-        for k, v in updates.items():
+        attrs = self._get_model_attributes(resource, updates)
+        for k, v in attrs.items():
             setattr(model_instance, k, v)
         self.driver.session.commit()
 

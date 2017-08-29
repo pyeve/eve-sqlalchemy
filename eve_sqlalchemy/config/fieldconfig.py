@@ -86,10 +86,17 @@ class RelationshipFieldConfig(FieldConfig):
 
     def _render(self):
         if self._relationship.uselist:
-            return {
-                'type': 'list',
-                'schema': self._get_foreign_key_definition()
-            }
+            if self._relationship.collection_class == set:
+                return {
+                    'type': 'set',
+                    'coerce': set,
+                    'schema': self._get_foreign_key_definition()
+                }
+            else:
+                return {
+                    'type': 'list',
+                    'schema': self._get_foreign_key_definition()
+                }
         else:
             field_def = self._get_foreign_key_definition()
             # This is a workaround to support PUT with integer ids.
