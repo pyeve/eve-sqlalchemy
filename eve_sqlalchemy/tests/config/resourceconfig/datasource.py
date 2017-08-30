@@ -40,7 +40,4 @@ class TestDatasource(ResourceConfigTestCase):
             'non_unique': 0,
             'id': 1,
             'unique': 1,
-            '_etag': 1,
-            '_created': 1,
-            '_updated': 1,
         })

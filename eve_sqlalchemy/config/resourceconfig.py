@@ -51,7 +51,10 @@ class ResourceConfig(object):
             :class:`ResourceConfig` object. This is needed to properly set up
             the relationship configuration expected by Eve.
         """
-        self._ignored_fields = set([date_created, last_updated, etag])
+        self._ignored_fields = set(
+            [f for f in self.model.__dict__ if f[0] == '_'] +
+            [date_created, last_updated, etag]) - \
+            set([self.id_field, self.item_lookup_field])
         field_configs = self._create_field_configs()
         return {
             'id_field': self.id_field,

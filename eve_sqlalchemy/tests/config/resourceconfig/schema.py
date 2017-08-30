@@ -21,6 +21,7 @@ class SomeModel(Base):
     another_json = Column(postgresql.JSON)
     a_pickle = Column(types.PickleType)
     a_string = Column(types.String(42), default='H2G2')
+    _internal = Column(types.Integer)
 
 
 class StringPK(Base):
