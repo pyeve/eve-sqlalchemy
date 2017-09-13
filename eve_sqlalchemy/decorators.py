@@ -58,7 +58,7 @@ class registerSchema(object):
                 'id_field': config.ID_FIELD,
                 'item_lookup': True,
                 'item_lookup_field': config.ID_FIELD,
-                'item_url': 'regex("[0-9]+")'
+                'item_url': config.ITEM_URL,
             }
         }
         projection = domain[resource]['datasource']['projection'] = {}
