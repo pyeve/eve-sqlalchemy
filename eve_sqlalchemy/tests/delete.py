@@ -23,22 +23,26 @@ class TestDelete(eve_delete_tests.TestDelete, TestBase):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
 
-        # create random contact
-        fake_contact = self.random_contacts(1)[0]
-        fake_contact['username'] = 'foo'
-        fake_contact_id = self.app.data.insert('contacts', [fake_contact])[0]
+        with self.app.app_context():
+            # create random contact
+            fake_contact = self.random_contacts(1)[0]
+            fake_contact['username'] = 'foo'
+            fake_contact_id = self.app.data.insert('contacts',
+                                                   [fake_contact])[0]
 
-        # grab parent collection count; we will use this later to make sure we
-        # didn't delete all the users in the database. We add one extra invoice
-        # to make sure that the actual count will never be 1 (which would
-        # invalidate the test)
-        self.app.data.insert('invoices', [{'inv_number': 1}])
+            # grab parent collection count; we will use this later to make sure
+            # we didn't delete all the users in the database. We add one extra
+            # invoice to make sure that the actual count will never be 1 (which
+            # would invalidate the test)
+            self.app.data.insert('invoices', [{'inv_number': 1}])
+
         response, status = self.get('invoices')
         invoices = len(response[self.app.config['ITEMS']])
 
-        # update first invoice to reference the new contact
-        self.app.data.update('invoices', self.invoice_id,
-                             {'person': fake_contact_id}, None)
+        with self.app.app_context():
+            # update first invoice to reference the new contact
+            self.app.data.update('invoices', self.invoice_id,
+                                 {'person': fake_contact_id}, None)
 
         # verify that the only document retrieved is referencing the correct
         # parent document
@@ -63,14 +67,16 @@ class TestDelete(eve_delete_tests.TestDelete, TestBase):
         # Eve test uses the Mongo layer directly.
         # TODO: Fix directly in Eve and remove this override
 
-        # create random contact
-        fake_contact = self.random_contacts(1)[0]
-        fake_contact['username'] = 'foo'
-        fake_contact_id = self.app.data.insert('contacts', [fake_contact])[0]
+        with self.app.app_context():
+            # create random contact
+            fake_contact = self.random_contacts(1)[0]
+            fake_contact['username'] = 'foo'
+            fake_contact_id = self.app.data.insert('contacts',
+                                                   [fake_contact])[0]
 
-        # update first invoice to reference the new contact
-        self.app.data.update('invoices', self.invoice_id,
-                             {'person': fake_contact_id}, None)
+            # update first invoice to reference the new contact
+            self.app.data.update('invoices', self.invoice_id,
+                                 {'person': fake_contact_id}, None)
 
         # GET all invoices by new contact
         response, status = self.get('users/%s/invoices/%s' %

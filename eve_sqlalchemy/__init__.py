@@ -13,14 +13,14 @@ from copy import copy
 import flask_sqlalchemy
 import simplejson as json
 from eve.io.base import ConnectionException, DataLayer
-from eve.utils import config, debug_error_message, str_to_date
+from eve.utils import debug_error_message, str_to_date
 from flask import abort
 
 from .__about__ import __version__  # noqa
 from .parser import ParseError, parse, parse_dictionary, parse_sorting, sqla_op
 from .structures import SQLAResultCollection
 from .utils import (
-    dict_update, extract_sort_arg, rename_relationship_fields_in_dict,
+    extract_sort_arg, rename_relationship_fields_in_dict,
     rename_relationship_fields_in_sort_args, rename_relationship_fields_in_str,
     sqla_object_to_dict, validate_filters,
 )
@@ -53,60 +53,6 @@ class SQL(DataLayer):
             self.driver.init_app(app)
         except Exception as e:
             raise ConnectionException(e)
-
-        self.register_schema(app)
-
-    @classmethod
-    def lookup_model(cls, model_name):
-        """
-        Lookup SQLAlchemy model class by its name
-
-        :param model_name: Name of SQLAlchemy model.
-        """
-        return cls.driver.Model._decl_class_registry[model_name]
-
-#    @classmethod
-    def register_schema(self, app, model_name=None):
-        """Register eve schema for SQLAlchemy model(s)
-        :param app: Flask application instance.
-        :param model_name: Name of SQLAlchemy model
-            (register all models if not provided)
-        """
-        if model_name:
-            models = {model_name.capitalize(): self.driver.
-                      Model._decl_class_registry[model_name.capitalize()]}
-        else:
-            models = self.driver.Model._decl_class_registry
-
-        for model_name, model_cls in models.items():
-            if model_name.startswith('_'):
-                continue
-            if getattr(model_cls, '_eve_schema', None):
-                eve_schema = model_cls._eve_schema
-                dict_update(app.config['DOMAIN'], eve_schema)
-                resource = list(eve_schema.keys())[0]
-                model_cls._eve_schema[resource] = \
-                    app.config['DOMAIN'][resource]
-
-        for k, v in app.config['DOMAIN'].items():
-            # If a resource has a relation, copy the properties of the relation
-            if 'datasource' in v and 'source' in v['datasource']:
-                source = v['datasource']['source']
-                source = app.config['DOMAIN'].get(source.lower(), {})
-                for key in ('schema', 'id_field', 'item_lookup_field',
-                            'item_url'):
-                    if key in source:
-                        v[key] = source[key]
-            # Even if the projection was set by the user, require that:
-            # - the id field is included
-            # - the ETag is excluded, as it will be added automatically if
-            #   IF_MATCH is True
-            if 'datasource' in v and 'projection' in v['datasource']:
-                projection = v['datasource']['projection']
-                projection[self._id_field(k)] = 1
-                projection[config.ETAG] = 0
-            else:
-                projection = {config.ETAG: 0}
 
     def find(self, resource, req, sub_resource_lookup):
         """Retrieves a set of documents matching a given request. Queries can
@@ -165,8 +111,9 @@ class SQL(DataLayer):
                                                       model))
 
         if req.if_modified_since:
-            updated_filter = sqla_op.gt(getattr(model, config.LAST_UPDATED),
-                                        req.if_modified_since)
+            updated_filter = sqla_op.gt(
+                getattr(model, self.app.config.LAST_UPDATED),
+                req.if_modified_since)
             args['spec'].append(updated_filter)
 
         query = self.driver.session.query(model)
@@ -231,6 +178,10 @@ class SQL(DataLayer):
 
     def _create_model_instance(self, resource, dict_):
         model, _, _, _ = self._datasource_ex(resource)
+        attrs = self._get_model_attributes(resource, dict_)
+        return model(**attrs)
+
+    def _get_model_attributes(self, resource, dict_):
         schema = self.app.config['DOMAIN'][resource]['schema']
         fields = {}
         for field, value in dict_.items():
@@ -244,12 +195,13 @@ class SQL(DataLayer):
                 if 'schema' in schema[field] and \
                    'data_relation' in schema[field]['schema']:
                     sub_schema = schema[field]['schema']
+                    related_resource = sub_schema['data_relation']['resource']
                     contains_ids = False
                     list_ = []
                     for v in value:
                         if isinstance(v, collections.Mapping):
                             list_.append(self._create_model_instance(
-                                sub_schema['data_relation']['resource'], v))
+                                related_resource, v))
                         else:
                             contains_ids = True
                             list_.append(v)
@@ -257,13 +209,24 @@ class SQL(DataLayer):
                         if schema[field]['type'] == 'set' else list_
                     if contains_ids and 'local_id_field' in schema[field]:
                         fields[schema[field]['local_id_field']] = collection
+                    elif contains_ids:
+                        related_model = \
+                            self._datasource_ex(related_resource)[0]
+                        lookup = {sub_schema['data_relation']['field']:
+                                  list(value)}
+                        filter_ = parse_dictionary(lookup, related_model)
+                        fields[field] = self.driver.session \
+                                            .query(related_model) \
+                                            .filter(*filter_).all()
+                        if schema[field]['type'] == 'set':
+                            fields[field] = set(fields[field])
                     else:
                         fields[field] = collection
                 else:
                     fields[field] = value
             else:
                 fields[field] = value
-        return model(**fields)
+        return fields
 
     def replace(self, resource, id_, document, original):
         model, filter_, fields_, _ = self._datasource_ex(resource, [])
@@ -295,9 +258,9 @@ class SQL(DataLayer):
         model_instance = query.filter(*filter_).first()
         if model_instance is None:
             abort(500, description=debug_error_message('Object not existent'))
-        updates = rename_relationship_fields_in_dict(model, updates)
         self._handle_immutable_id(id_field, model_instance, updates)
-        for k, v in updates.items():
+        attrs = self._get_model_attributes(resource, updates)
+        for k, v in attrs.items():
             setattr(model_instance, k, v)
         self.driver.session.commit()
 
@@ -331,7 +294,7 @@ class SQL(DataLayer):
         return self.driver.app.config['DOMAIN'][resource]['id_field']
 
     def _model(self, resource):
-        return self.lookup_model(self._source(resource))
+        return self.driver.Model._decl_class_registry[self._source(resource)]
 
     def _parse_filter(self, model, filter):
         """

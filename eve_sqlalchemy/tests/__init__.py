@@ -18,14 +18,15 @@ import eve
 import eve.tests
 from eve import ISSUES
 
-import eve_sqlalchemy.tests.test_sql_tables  # noqa
 from eve_sqlalchemy import SQL
+from eve_sqlalchemy.tests.test_sql_tables import Base
 from eve_sqlalchemy.validation import ValidatorSQL
 
 
 class TestMinimal(eve.tests.TestMinimal):
 
-    def setUp(self, settings_file=None, url_converters=None):
+    def setUp(self, settings_file=None, url_converters=None,
+              declarative_base=None):
         """ Prepare the test fixture
 
         :param settings_file: the name of the settings file.  Defaults
@@ -43,6 +44,11 @@ class TestMinimal(eve.tests.TestMinimal):
         self.known_resource_count = 101
 
         self.settings_file = settings_file
+        if declarative_base is not None:
+            SQL.driver.Model = declarative_base
+        else:
+            SQL.driver.Model = Base
+
         self.app = eve.Eve(settings=self.settings_file,
                            url_converters=url_converters, data=SQL,
                            validator=ValidatorSQL)

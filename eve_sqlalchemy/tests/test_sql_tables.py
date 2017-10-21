@@ -5,17 +5,12 @@ import hashlib
 
 from sqlalchemy import (
     Boolean, Column, DateTime, Float, ForeignKey, Integer, LargeBinary,
-    PickleType, String, func,
+    PickleType, String, Table, func,
 )
-from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from eve_sqlalchemy import db
-from eve_sqlalchemy.decorators import registerSchema
-
 Base = declarative_base()
-db.Model = Base
 
 
 class CommonColumns(Base):
@@ -38,21 +33,21 @@ class CommonColumns(Base):
         super(CommonColumns, self).__init__(*args, **kwargs)
 
 
-@registerSchema('disabled_bulk')
 class DisabledBulk(CommonColumns):
     __tablename__ = 'disabled_bulk'
     _id = Column(Integer, primary_key=True)
     string_field = Column(String(25))
 
 
-class InvoicingContacts(Base):
-    __tablename__ = 'invoicing_contacts'
-    invoice_id = Column(Integer, ForeignKey('invoices._id'), primary_key=True)
-    contact_id = Column(Integer, ForeignKey('contacts._id'), primary_key=True)
-    contact = relationship('Contacts')
+InvoicingContacts = Table(
+    'invoicing_contacts', Base.metadata,
+    Column('invoice_id', Integer, ForeignKey('invoices._id'),
+           primary_key=True),
+    Column('contact_id', Integer, ForeignKey('contacts._id'),
+           primary_key=True)
+)
 
 
-@registerSchema('contacts')
 class Contacts(CommonColumns):
     __tablename__ = 'contacts'
     _id = Column(Integer, primary_key=True)
@@ -85,75 +80,53 @@ class Contacts(CommonColumns):
     abool = Column(Boolean)
 
 
-@registerSchema('invoices')
-@registerSchema('required_invoices')
 class Invoices(CommonColumns):
     __tablename__ = 'invoices'
     _id = Column(Integer, primary_key=True)
     inv_number = Column(String(25))
     person_id = Column(Integer, ForeignKey('contacts._id'))
     person = relationship(Contacts)
-    invoicing_contacts = association_proxy(
-        'invoicing_contacts_assoc', 'contact',
-        creator=lambda contact_id: InvoicingContacts(contact_id=contact_id))
-    invoicing_contacts_assoc = relationship('InvoicingContacts')
+    invoicing_contacts = relationship('Contacts', secondary=InvoicingContacts)
 
 
-@registerSchema('empty')
 class Empty(CommonColumns):
     __tablename__ = 'empty'
     _id = Column(Integer, primary_key=True)
     inv_number = Column(String(25))
 
 
-class DepartmentsContacts(Base):
-    __tablename__ = 'department_contacts'
-    department_id = Column(Integer, ForeignKey('departments._id'),
-                           primary_key=True)
-    contact_id = Column(Integer, ForeignKey('contacts._id'), primary_key=True)
-    # departments = relationship('Departments',
-    #                            backref=backref('departments_contacts_assoc',
-    #                                            cascade='all,delete-orphan'))
-    contact = relationship('Contacts')
+DepartmentsContacts = Table(
+    'department_contacts', Base.metadata,
+    Column('department_id', Integer, ForeignKey('departments._id'),
+           primary_key=True),
+    Column('contact_id', Integer, ForeignKey('contacts._id'),
+           primary_key=True)
+)
+
+CompaniesDepartments = Table(
+    'companies_departments', Base.metadata,
+    Column('company_id', Integer, ForeignKey('companies._id'),
+           primary_key=True),
+    Column('department_id', Integer, ForeignKey('departments._id'),
+           primary_key=True)
+)
 
 
-class CompaniesDepartments(Base):
-    __tablename__ = 'companies_departments'
-    company_id = Column(Integer, ForeignKey('companies._id'), primary_key=True)
-    department_id = Column(Integer, ForeignKey('departments._id'),
-                           primary_key=True)
-    # companies = relationship('Companies',
-    #                          backref=backref('companies_departments_assoc',
-    #                                          cascade='all,delete-orphan'))
-    department = relationship('Departments')
-
-
-@registerSchema('departments')
 class Departments(CommonColumns):
     __tablename__ = 'departments'
     _id = Column(Integer, primary_key=True)
     title = Column(String(25))
-    members = association_proxy(
-        'departments_contacts_assoc', 'contact',
-        creator=lambda contact_id: DepartmentsContacts(
-            contact_id=contact_id))
-    departments_contacts_assoc = relationship('DepartmentsContacts')
+    members = relationship('Contacts', secondary=DepartmentsContacts)
 
 
-@registerSchema('companies')
 class Companies(CommonColumns):
     __tablename__ = 'companies'
     _id = Column(Integer, primary_key=True)
     holding_id = Column(String(16), ForeignKey('companies._id'))
     holding = relationship('Companies', remote_side=[_id])
-    departments = association_proxy(
-        'companies_departments_assoc', 'department',
-        creator=lambda department_id: CompaniesDepartments(
-            department_id=department_id))
-    companies_departments_assoc = relationship('CompaniesDepartments')
+    departments = relationship('Departments', secondary=CompaniesDepartments)
 
 
-@registerSchema('payments')
 class Payments(CommonColumns):
     __tablename__ = 'payments'
     _id = Column(Integer, primary_key=True)
@@ -161,7 +134,6 @@ class Payments(CommonColumns):
     a_number = Column(Integer)
 
 
-@registerSchema('internal_transactions')
 class InternalTransactions(CommonColumns):
     __tablename__ = 'internal_transactions'
     _id = Column(Integer, primary_key=True)
@@ -169,7 +141,6 @@ class InternalTransactions(CommonColumns):
     internal_number = Column(Integer)
 
 
-@registerSchema('login')
 class Login(CommonColumns):
     __tablename__ = 'login'
     _id = Column(Integer, primary_key=True)
@@ -177,7 +148,6 @@ class Login(CommonColumns):
     password = Column(String(32), nullable=False)
 
 
-@registerSchema('products')
 class Products(CommonColumns):
     __tablename__ = 'products'
     sku = Column(String(16), primary_key=True)

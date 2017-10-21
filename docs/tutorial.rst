@@ -1,6 +1,7 @@
 Tutorial
 ========
-The example app used by this tutorial is available at ``examples`` inside
+
+The example app used by this tutorial is available at ``examples/simple`` inside
 the Eve-SQLAlchemy repository.
 
 Schema registration
@@ -9,32 +10,20 @@ The main goal of the `SQLAlchemy`_ integration in Eve is to separate
 dependencies and keep model registration depend only on sqlalchemy
 library. This means that you can simply use something like that:
 
-.. literalinclude:: ../examples/tables.py
-   :lines: 6-19,33-38
+.. literalinclude:: ../examples/simple/simple/tables.py
 
 We have used ``CommonColumns`` abstract class to provide attributes used by
 Eve, such us ``_created`` and ``_updated``, but you are not forced to used
-them:
-
-.. literalinclude:: ../examples/tables.py
-   :lines: 20-24
+them.
 
 
 Eve settings
 ------------
 All standard Eve settings will work with `SQLAlchemy`_ support. However, you
 need manually decide which `SQLAlchemy`_ declarative classes you wish to
-register.  You can do it using ``registerSchema``:
+register.  You can do it using ``DomainConfig`` and ``ResourceConfig``:
 
-.. literalinclude:: ../examples/settings.py
-   :lines: 10-13, 19-21, 25-29
-
-As you noticed the schema will be stored inside `_eve_schema` class attribute
-so it can be easily used. You can of course extend the autogenerate schema with
-your custom options:
-
-.. literalinclude:: ../examples/settings.py
-   :lines: 31-
+.. literalinclude:: ../examples/simple/settings.py
 
 
 Authentication example
@@ -218,8 +207,12 @@ Start Eve
 That's almost everything. Before you can start Eve you need to bind SQLAlchemy
 from the Eve data driver:
 
-.. literalinclude:: ../examples/sqla_example.py
-   :lines: 1-14
+.. code-block:: python
+
+    app = Eve(validator=ValidatorSQL, data=SQL)
+    db = app.data.driver
+    Base.metadata.bind = db.engine
+    db.Model = Base
 
 Now you can run Eve:
 
@@ -231,7 +224,7 @@ and start it:
 
 .. code-block:: console
 
-    $ python sqla_example.py
+    $ python app.py
      * Running on http://127.0.0.1:5000/
 
 and check that everything is working like expected, by trying requesting
@@ -375,28 +368,6 @@ You can also support the following python-Eve syntax:
 .. code-block:: console
 
     http://127.0.0.1:5000/people?sort=lastname,-created_at
-
-How to adjust the primary column name
--------------------------------------
-
-Eve use the `_id` column as primary id field. This is the default value of the
-MongoDB database.  In SQL, it much more common to call this column just
-`id`. You can do that with the following change in your `settings.py`:
-
-.. code-block:: python
-
-    from eve.utils import config
-
-    ID_FIELD = 'id'
-    ITEM_LOOKUP_FIELD = ID_FIELD
-    config.ID_FIELD = ID_FIELD
-    config.ITEM_LOOKUP_FIELD = ID_FIELD
-
-    registerSchema('people')(People)
-
-    DOMAIN = {
-        'people': People._eve_schema['people'],
-    }
 
 Embedded resources
 ------------------

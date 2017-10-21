@@ -1,8 +1,3 @@
-"""
-    SQL tables.
-    This is a typical declarative usage of sqlalchemy,
-    It has no dependency on flask or eve iself. Pure sqlalchemy.
-"""
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import column_property, relationship
@@ -23,11 +18,6 @@ class People(CommonColumns):
     firstname = Column(String(80))
     lastname = Column(String(120))
     fullname = column_property(firstname + " " + lastname)
-
-    @classmethod
-    def from_tuple(cls, data):
-        """Helper method to populate the db"""
-        return cls(firstname=data[0], lastname=data[1])
 
 
 class Invoices(CommonColumns):

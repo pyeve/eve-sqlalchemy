@@ -21,6 +21,7 @@ Developer's Guide
 
     tutorial
     trivial
+    upgrading
     contributing
 
 .. include:: ../CHANGES
