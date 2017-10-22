@@ -22,7 +22,7 @@ setup(
     name=metadata['__title__'],
     version=metadata['__version__'],
     description=(metadata['__summary__']),
-    long_description=read('README.rst') + read('CHANGES'),
+    long_description=read('README.rst') + "\n\n" + read('CHANGES'),
     keywords='flask sqlalchemy rest',
     author=metadata['__author__'],
     author_email=metadata['__email__'],
