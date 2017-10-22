@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.5.0 (unreleased)
+0.5.0 (2017-10-22)
 ~~~~~~~~~~~~~~~~~~
 
 - Add DomainConfig and ResourceConfig to ease configuration (#152)
