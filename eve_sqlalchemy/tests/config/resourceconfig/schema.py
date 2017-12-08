@@ -41,7 +41,8 @@ class TestSchema(ResourceConfigTestCase):
         self.assertEqual(set(schema.keys()),
                          set(('id', 'a_boolean', 'a_date', 'a_datetime',
                               'a_float', 'a_json', 'another_json',
-                              'a_pickle', 'a_string')))
+                              'a_pickle', 'a_string', 'a_nullable_boolean',
+                              'a_server_default_col')))
 
     def test_field_types(self):
         schema = self._render(SomeModel)['schema']
