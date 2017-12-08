@@ -22,6 +22,8 @@ class SomeModel(Base):
     a_pickle = Column(types.PickleType)
     a_string = Column(types.String(42), default='H2G2')
     _internal = Column(types.Integer)
+    a_nullable_boolean = Column(types.Boolean, nullable=True)
+    a_server_default_col = Column(types.Integer, server_default='0')
 
 
 class StringPK(Base):
@@ -66,6 +68,10 @@ class TestSchema(ResourceConfigTestCase):
         # autoincrement='auto' per default (see SQLAlchemy docs for
         # details). As such, it is not required.
         self.assertFalse(schema['id']['required'])
+        # Columns with server_default field should be marked as not required
+        # additional test for nullable field set to True
+        self.assertFalse(schema['a_nullable_boolean']['required'])
+        self.assertFalse(schema['a_server_default_col']['required'])
 
     def test_required_string_pk(self):
         schema = self._render(StringPK)['schema']

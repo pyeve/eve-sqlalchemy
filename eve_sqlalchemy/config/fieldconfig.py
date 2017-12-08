@@ -56,11 +56,20 @@ class ColumnFieldConfig(FieldConfig):
     def _get_field_nullable(self):
         return getattr(self._sqla_column, 'nullable', True)
 
+    def _has_field_server_default(self):
+        check = getattr(self._sqla_column, 'server_default')
+        if check:
+            return True
+        else:
+            return False
+
     def _get_field_required(self):
         autoincrement = (self._sqla_column.primary_key
                          and self._sqla_column.autoincrement
                          and isinstance(self._sqla_column.type, types.Integer))
-        return not (self._get_field_nullable() or autoincrement)
+        return not (self._get_field_nullable()
+                    or autoincrement
+                    or self._has_field_server_default())
 
     def _get_field_unique(self):
         return getattr(self._sqla_column, 'unique', None)
