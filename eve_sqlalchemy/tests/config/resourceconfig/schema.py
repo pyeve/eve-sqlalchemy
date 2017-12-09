@@ -69,8 +69,6 @@ class TestSchema(ResourceConfigTestCase):
         # autoincrement='auto' per default (see SQLAlchemy docs for
         # details). As such, it is not required.
         self.assertFalse(schema['id']['required'])
-        # Columns with server_default field should be marked as not required
-        # additional test for nullable field set to True
         self.assertFalse(schema['a_nullable_boolean']['required'])
         self.assertFalse(schema['a_server_default_col']['required'])
 
