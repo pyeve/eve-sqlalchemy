@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import sqlalchemy.dialects.postgresql as postgresql
-from sqlalchemy import Column, types
+from sqlalchemy import Column, types, text
 from sqlalchemy.ext.declarative import declarative_base
 
 from . import ResourceConfigTestCase
@@ -23,7 +23,7 @@ class SomeModel(Base):
     a_string = Column(types.String(42), default='H2G2')
     _internal = Column(types.Integer)
     a_nullable_boolean = Column(types.Boolean, nullable=True)
-    a_server_default_col = Column(types.Integer, server_default='0')
+    a_server_default_col = Column(types.Integer, server_default=text('0'))
 
 
 class StringPK(Base):

@@ -57,11 +57,7 @@ class ColumnFieldConfig(FieldConfig):
         return getattr(self._sqla_column, 'nullable', True)
 
     def _has_field_server_default(self):
-        check = getattr(self._sqla_column, 'server_default')
-        if check:
-            return True
-        else:
-            return False
+        return bool(getattr(self._sqla_column, 'server_default'))
 
     def _get_field_required(self):
         autoincrement = (self._sqla_column.primary_key
