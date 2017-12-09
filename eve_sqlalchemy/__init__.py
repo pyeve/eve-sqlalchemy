@@ -367,7 +367,7 @@ class SQL(DataLayer):
         if req and req.embedded:
             try:
                 client_embedded = json.loads(req.embedded)
-            except:
+            except json.JSONDecodeError:
                 abort(400, description=debug_error_message(
                     'Unable to parse `embedded` clause'
                 ))

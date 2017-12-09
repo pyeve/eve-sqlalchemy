@@ -22,7 +22,7 @@ setup(
     name=metadata['__title__'],
     version=metadata['__version__'],
     description=(metadata['__summary__']),
-    long_description=read('README.rst') + read('CHANGES'),
+    long_description=read('README.rst') + "\n\n" + read('CHANGES'),
     keywords='flask sqlalchemy rest',
     author=metadata['__author__'],
     author_email=metadata['__email__'],
@@ -35,6 +35,8 @@ setup(
         'Eve>=0.6,<0.7',
         'Flask-SQLAlchemy>=1.0,<2.999',
         'SQLAlchemy>=1.1',
+        # keep until pip properly resolves dependencies:
+        'Flask<0.11',
     ],
     tests_require=test_dependencies,
     extras_require={
@@ -53,7 +55,6 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
