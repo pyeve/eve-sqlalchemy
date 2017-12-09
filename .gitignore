@@ -53,6 +53,7 @@ Scripts
 
 #pyenv
 .python-version
+.venv
 
 #OSX
 .Python
@@ -65,3 +66,6 @@ _build
 .idea
 
 .cache
+
+# vscode
+.vscode
