@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import sqlalchemy as sa
 import sqlalchemy.dialects.postgresql as postgresql
 from sqlalchemy import Column, types
 from sqlalchemy.ext.declarative import declarative_base
@@ -22,6 +23,7 @@ class SomeModel(Base):
     a_pickle = Column(types.PickleType)
     a_string = Column(types.String(42), default='H2G2')
     _internal = Column(types.Integer)
+    a_server_default_col = Column(types.Integer, server_default=sa.text('0'))
 
 
 class StringPK(Base):
@@ -39,7 +41,7 @@ class TestSchema(ResourceConfigTestCase):
         self.assertEqual(set(schema.keys()),
                          set(('id', 'a_boolean', 'a_date', 'a_datetime',
                               'a_float', 'a_json', 'another_json',
-                              'a_pickle', 'a_string')))
+                              'a_pickle', 'a_string', 'a_server_default_col')))
 
     def test_field_types(self):
         schema = self._render(SomeModel)['schema']
@@ -66,6 +68,7 @@ class TestSchema(ResourceConfigTestCase):
         # autoincrement='auto' per default (see SQLAlchemy docs for
         # details). As such, it is not required.
         self.assertFalse(schema['id']['required'])
+        self.assertFalse(schema['a_server_default_col']['required'])
 
     def test_required_string_pk(self):
         schema = self._render(StringPK)['schema']
