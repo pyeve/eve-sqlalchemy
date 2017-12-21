@@ -69,7 +69,7 @@ First we need to create eve-side authentication:
         register_views(app)
         app.run()
 
-Next step is the `User` SQLAlchemy model:
+Next step is the `User` And `Role` SQLAlchemy model:
 
 .. code-block:: python
 
@@ -92,19 +92,31 @@ Next step is the `User` SQLAlchemy model:
         as Serializer
     from itsdangerous import SignatureExpired, BadSignature
 
-    from sqlalchemy.orm import validates
+    from sqlalchemy.orm import validates, relationship
     from sqlalchemy.ext.declarative import declarative_base
+    from sqlalchemy import Column, ForeignKey, Integer, String, Table
 
     Base = declarative_base()
     SECRET_KEY = 'this-is-my-super-secret-key'
 
+    association_table = Table(
+        'association', Base.metadata,
+        Column('role_id', Integer, ForeignKey('roles.id')),
+        Column('user_login', String(80), ForeignKey('users.login')),
+    )
+
+    class Role(Base):
+        __tablename__ = 'roles'
+
+        id = Column(Integer, primary_key=True, autoincrement=True)
+        name = Column(String(80))
 
     class User(Base):
         __tablename__ = 'users'
 
-        login = Column(String, primary_key=True)
-        password = Column(String)
-        roles = relationship("Role", backref="users")
+        login = Column(String(120), primary_key=True)
+        password = Column(String(120))
+        roles = relationship('Role', secondary=association_table, backref='users')
 
         def generate_auth_token(self, expiration=24*60*60):
             """Generates token for given expiration
@@ -134,13 +146,12 @@ Next step is the `User` SQLAlchemy model:
             return len(allowed_roles) > 0
 
         def generate_salt(self):
-            return ''.join(random.sample(string.letters, 12))
+            return SECRET_KEY
 
         def encrypt(self, password):
             """Encrypt password using hashlib and current salt.
             """
-            return str(hashlib.sha1(password + str(self.salt))\
-                .hexdigest())
+            return str(hashlib.sha1((password + str(self.generate_salt())).encode('utf8')).hexdigest())
 
         @validates('password')
         def _set_password(self, key, value):
@@ -148,7 +159,6 @@ Next step is the `User` SQLAlchemy model:
             time password is changed it will get encrypted
             before flushing to db.
             """
-            self.salt = self.generate_salt()
             return self.encrypt(value)
 
         def check_password(self, password):
@@ -201,6 +211,7 @@ And finally a flask login view:
                     return jsonify({'token': token.decode('ascii')})
             raise Unauthorized('Wrong username and/or password.')
 
+For more code see: `examples/auth`_
 
 Start Eve
 ---------
@@ -395,3 +406,4 @@ referring each other.
 .. _`Eve Authentication`: http://python-eve.org/authentication.html#token-based-authentication
 .. _`Eve Embedded Resource Serialization`: http://python-eve.org/features.html#embedded-resource-serialization
 .. _`Eve Projections`: http://python-eve.org/features.html#projections
+.. _`examples/auth`: https://github.com/pyeve/eve-sqlalchemy/tree/master/examples
