@@ -1,8 +1,6 @@
-import json
-import base64
-from flask import request, jsonify
-from werkzeug.exceptions import Unauthorized
+from flask import jsonify, request
 from models import User
+from werkzeug.exceptions import Unauthorized
 
 
 def register_views(app):

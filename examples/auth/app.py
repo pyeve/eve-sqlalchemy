@@ -1,10 +1,10 @@
+import pymysql
 from eve import Eve
 from eve.auth import TokenAuth
 from eve_sqlalchemy import SQL
 from eve_sqlalchemy.validation import ValidatorSQL
-from models import Role, User, Base
+from models import Base, Role, User
 from views import register_views
-import pymysql
 
 pymysql.install_as_MySQLdb()
 
@@ -17,6 +17,7 @@ class TokenAuth(TokenAuth):
             return user.isAuthorized(allowed_roles)
         else:
             return False
+
 
 if __name__ == '__main__':
     app = Eve(auth=TokenAuth, validator=ValidatorSQL, data=SQL)

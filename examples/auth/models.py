@@ -1,9 +1,14 @@
 import hashlib
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from itsdangerous import SignatureExpired, BadSignature
-from sqlalchemy.orm import validates, column_property, relationship
+from itsdangerous import (
+    BadSignature, SignatureExpired,
+    TimedJSONWebSignatureSerializer as Serializer,
+)
+from sqlalchemy import (
+    Column, DateTime, ForeignKey, Integer, String, Table, func,
+)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func, Table
+from sqlalchemy.orm import column_property, relationship, validates
+
 
 Base = declarative_base()
 
@@ -69,14 +74,17 @@ class User(Base):
         return data['login']
 
     def isAuthorized(self, role_names):
-        allowed_roles = set([r.name for r in self.roles]).intersection(set(role_names))
+        allowed_roles = set(
+            [r.name for r in self.roles]).intersection(set(role_names))
         return len(allowed_roles) > 0
 
     def generate_salt(self):
         return SECRET_KEY
 
     def encrypt(self, password):
-        return str(hashlib.sha1((password + str(self.generate_salt())).encode('utf8')).hexdigest())
+        return str(hashlib.sha1(
+                (password + str(self.generate_salt())).encode('utf8')
+        ).hexdigest())
 
     @validates('password')
     def _set_password(self, key, value):
