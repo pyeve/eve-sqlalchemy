@@ -65,6 +65,9 @@ def sqla_object_to_dict(obj, fields):
     if config.ETAG not in fields \
             and getattr(config, 'IF_MATCH', True):
         fields.append(config.ETAG)
+    # If SOFT_DELETED is enable, add _deleted field
+    if config.SOFT_DELETE:
+        fields.append("_deleted")
 
     result = {}
     for field in map(lambda f: f.split('.', 1)[0], fields):
@@ -84,6 +87,8 @@ def sqla_object_to_dict(obj, fields):
             pass
 
     remove_none_values(result)
+    if config.SOFT_DELETE and result['_deleted'] == True:
+        return None
     return result
 
 
