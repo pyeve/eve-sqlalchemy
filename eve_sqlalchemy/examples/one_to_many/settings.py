@@ -1,12 +1,10 @@
 from eve_sqlalchemy.config import DomainConfig, ResourceConfig
-
-from many_to_many.domain import Child, Parent
+from eve_sqlalchemy.examples.one_to_many.domain import Child, Parent
 
 DEBUG = True
 SQLALCHEMY_DATABASE_URI = 'sqlite://'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 RESOURCE_METHODS = ['GET', 'POST']
-ITEM_METHODS = ['GET', 'PATCH']
 
 # The following two lines will output the SQL statements executed by
 # SQLAlchemy. This is useful while debugging and in development, but is turned

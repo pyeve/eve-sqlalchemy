@@ -1,8 +1,8 @@
 from eve import Eve
-from eve_sqlalchemy import SQL
-from eve_sqlalchemy.validation import ValidatorSQL
 
-from foreign_primary_key.domain import Base, Lock, Node
+from eve_sqlalchemy import SQL
+from eve_sqlalchemy.examples.many_to_many.domain import Base, Child, Parent
+from eve_sqlalchemy.validation import ValidatorSQL
 
 app = Eve(validator=ValidatorSQL, data=SQL)
 
@@ -11,9 +11,9 @@ Base.metadata.bind = db.engine
 db.Model = Base
 db.create_all()
 
-nodes = [Node(), Node()]
-locks = [Lock(node=nodes[1])]
-db.session.add_all(nodes + locks)
+children = [Child() for _ in range(20)]
+parents = [Parent(children=children[:n]) for n in range(10)]
+db.session.add_all(parents)
 db.session.commit()
 
 # using reloader will destroy in-memory sqlite db

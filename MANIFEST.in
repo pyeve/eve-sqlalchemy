@@ -2,6 +2,5 @@ include AUTHORS CHANGES CONTRIBUTING.rst LICENSE
 include requirements.txt tox.ini
 graft docs
 prune docs/_build
-graft examples
 
 global-exclude __pycache__ *.pyc *.pyo

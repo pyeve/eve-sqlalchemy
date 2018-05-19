@@ -1,6 +1,5 @@
 from eve_sqlalchemy.config import DomainConfig, ResourceConfig
-
-from one_to_many.domain import Child, Parent
+from eve_sqlalchemy.examples.many_to_one.domain import Child, Parent
 
 DEBUG = True
 SQLALCHEMY_DATABASE_URI = 'sqlite://'
@@ -19,3 +18,5 @@ DOMAIN = DomainConfig({
     'parents': ResourceConfig(Parent),
     'children': ResourceConfig(Child)
 }).render()
+
+DOMAIN['children']['datasource']['projection']['child_id'] = 1

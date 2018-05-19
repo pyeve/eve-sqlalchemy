@@ -1,11 +1,12 @@
 ''' Trivial Eve-SQLAlchemy example. '''
 from eve import Eve
-from eve_sqlalchemy import SQL
-from eve_sqlalchemy.config import DomainConfig, ResourceConfig
-from eve_sqlalchemy.validation import ValidatorSQL
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import column_property
+
+from eve_sqlalchemy import SQL
+from eve_sqlalchemy.config import DomainConfig, ResourceConfig
+from eve_sqlalchemy.validation import ValidatorSQL
 
 Base = declarative_base()
 

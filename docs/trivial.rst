@@ -3,7 +3,7 @@ Simple example
 
 Create a file, called trivial.py, and include the following:
 
-.. literalinclude:: ../examples/trivial/trivial.py
+.. literalinclude:: ../eve_sqlalchemy/examples/trivial/trivial.py
 
 Run this command to start the server:
 
