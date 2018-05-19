@@ -22,7 +22,7 @@ class Parent(BaseModel):
     __tablename__ = 'parent'
     id = Column(Integer, primary_key=True)
     child_id = Column(Integer, ForeignKey('child.id'))
-    child = relationship("Child")
+    child = relationship("Child", backref="parents")
 
 
 class Child(BaseModel):

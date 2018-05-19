@@ -21,7 +21,7 @@ class BaseModel(Base):
 class Parent(BaseModel):
     __tablename__ = 'parent'
     id = Column(Integer, primary_key=True)
-    children = relationship("Child")
+    children = relationship("Child", backref="parent")
 
 
 class Child(BaseModel):
