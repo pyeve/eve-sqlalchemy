@@ -18,23 +18,13 @@ class TestPatch(eve_patch_tests.TestPatch, TestBase):
     def test_patch_null_objectid(self):
         pass
 
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
     def test_patch_defaults(self):
-        # Eve assumes that our stored records don't contain the title, even it
-        # has a default value. We manually remove the title from the first
-        # record.
-        with self.app.app_context():
-            self.app.data.update(self.known_resource, self.item_id,
-                                 {'title': None}, None)
-        super(TestPatch, self).test_patch_defaults()
+        pass
 
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
     def test_patch_defaults_with_post_override(self):
-        # Eve assumes that our stored records don't contain the title, even it
-        # has a default value. We manually remove the title from the first
-        # record.
-        with self.app.app_context():
-            self.app.data.update(self.known_resource, self.item_id,
-                                 {'title': None}, None)
-        super(TestPatch, self).test_patch_defaults_with_post_override()
+        pass
 
     @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
     def test_patch_write_concern_fail(self):
@@ -100,13 +90,37 @@ class TestPatch(eve_patch_tests.TestPatch, TestBase):
         pass
 
     def test_patch_dependent_field_on_origin_document(self):
-        # Eve assumes that our stored records don't contain the title, even it
-        # has a default value. We manually remove the title from the first
-        # record.
-        with self.app.app_context():
-            self.app.data.update(self.known_resource, self.item_id,
-                                 {'dependency_field1': None}, None)
-        super(TestPatch, self).test_patch_dependent_field_on_origin_document()
+        """ Test that when patching a field which is dependent on another and
+        this other field is not provided with the patch but is still present
+        on the target document, the patch will be accepted. See #363.
+        """
+        # Eve remove the default-setting on 'dependency_field1', which we
+        # cannot do easily with SQLAlchemy.
+        # TODO: Fix directly in Eve and remove this override.
+
+        # this will fail as dependent field is missing even in the
+        # document we are trying to update.
+        schema = self.domain['contacts']['schema']
+        schema['dependency_field2']['dependencies'] = \
+            ['dependency_field1_without_default']
+        changes = {'dependency_field2': 'value'}
+        r, status = self.patch(self.item_id_url, data=changes,
+                               headers=[('If-Match', self.item_etag)])
+        self.assert422(status)
+
+        # update the stored document by adding dependency field.
+        changes = {'dependency_field1_without_default': 'value'}
+        r, status = self.patch(self.item_id_url, data=changes,
+                               headers=[('If-Match', self.item_etag)])
+        self.assert200(status)
+
+        # now the field2 update will be accepted as the dependency field is
+        # present in the stored document already.
+        etag = r['_etag']
+        changes = {'dependency_field2': 'value'}
+        r, status = self.patch(self.item_id_url, data=changes,
+                               headers=[('If-Match', etag)])
+        self.assert200(status)
 
     def test_id_field_in_document_fails(self):
         # Eve test uses ObjectId as id.
