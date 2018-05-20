@@ -45,11 +45,11 @@ Keep fork in sync
 -----------------
 The fork can be kept in sync_ by following the instructions `here <sync_>`_.
 
-Join us on IRC and/or Gitter
-----------------------------
+Join us on IRC
+--------------
 If you're interested in contributing to the Eve-SQLAlchemy project or have any
 questions about it, come join us in Eve's #python-eve channel on
-irc.freenode.net or Eve-SQLAlchemy `gitter`_ room.
+irc.freenode.net.
 
 First time contributor?
 -----------------------
@@ -82,4 +82,3 @@ Requests`_
 .. _`Effective Guide to Pull Requests`: http://codeinthehole.com/writing/pull-requests-and-other-good-practices-for-teams-using-github/
 .. _`fork and edit`: https://github.com/blog/844-forking-with-the-edit-button
 .. _`Pull Request`: https://help.github.com/articles/creating-a-pull-request
-.. _`gitter`: https://gitter.im/RedTurtle/eve-sqlalchemy
