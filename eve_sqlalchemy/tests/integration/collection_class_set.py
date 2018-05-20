@@ -32,6 +32,7 @@ class Parent(BaseModel):
     id = Column(Integer, primary_key=True)
     children = relationship("Child", secondary=association_table,
                             backref="parents", collection_class=set)
+    none_field = Column(Integer)
 
 
 class Child(BaseModel):
@@ -84,3 +85,9 @@ class TestCollectionClassSet(TestMinimal):
         self.assert200(status)
         response, _ = self.get('parents', item=2)
         self.assertEqual(response['children'], [3, 4])
+
+    def test_get_can_return_none_value(self):
+        response, status = self.get('parents/1')
+        self.assert200(status)
+        self.assertIn('none_field', response)
+        self.assertIsNone(response['none_field'])

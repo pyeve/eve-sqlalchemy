@@ -83,7 +83,6 @@ def sqla_object_to_dict(obj, fields):
             # (may be wrong embedding parameter)
             pass
 
-    remove_none_values(result)
     return result
 
 

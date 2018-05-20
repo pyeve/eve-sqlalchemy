@@ -156,9 +156,9 @@ class ValidatorSQL(Validator):
         dcopy = None
         if self._original_document:
             dcopy = copy.copy(document)
-            # Use dict_update and remove_none_values from utils, so existing
-            # values in document don't get overridden by the original document
-            # and None values are removed. Otherwise handling in parent method
+            # Use dict_update from utils, so existing
+            # values in document don't get overridden by the original document.
+            # Otherwise handling in parent method
             # does not work as expected.
             dict_update(dcopy, self._original_document)
             remove_none_values(dcopy)

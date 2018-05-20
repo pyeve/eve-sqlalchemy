@@ -65,6 +65,7 @@ class Contacts(CommonColumns):
     # id_list_of_dict
     # id_list_fixed_len
     dependency_field1 = Column(String(25), default='default')
+    dependency_field1_without_default = Column(String(25))
     dependency_field2 = Column(String(25))
     dependency_field3 = Column(String(25))
     read_only_field = Column(String(25), default='default')
