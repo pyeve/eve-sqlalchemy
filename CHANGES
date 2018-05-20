@@ -4,6 +4,7 @@ Changelog
 0.5.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
+- Allow to supply own Flask-SQLAlchemy driver (#86) [fubu]
 - Support columns with server_default (#160) [Asif Mahmud Shimon]
 
 
