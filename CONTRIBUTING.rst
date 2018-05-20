@@ -43,7 +43,8 @@ Submitting Changes
 
 Keep fork in sync
 -----------------
-The fork can be kept in sync_ by following the instructions `here <sync_>`_.
+The fork can be kept in sync by following the instructions `here
+<https://help.github.com/articles/syncing-a-fork>`_.
 
 Join us on IRC
 --------------
@@ -73,7 +74,6 @@ Requests`_
 .. _`new issue`: https://github.com/pyeve/eve-sqlalchemy/issues/new
 .. _GitHub: https://github.com/
 .. _Fork: https://help.github.com/articles/fork-a-repo
-.. _sync: https://help.github.com/articles/syncing-a-fork
 .. _`proper format`: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 .. _PEP8: http://www.python.org/dev/peps/pep-0008/
 .. _flake8: http://flake8.readthedocs.org/en/latest/
