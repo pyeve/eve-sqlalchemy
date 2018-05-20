@@ -41,11 +41,15 @@ Submitting Changes
 * Submit a `Pull Request`_.
 * Wait for maintainer feedback.
 
-Join us on IRC and/or Gitter
-----------------------------
+Keep fork in sync
+-----------------
+The fork can be kept in sync_ by following the instructions `here <sync_>`_.
+
+Join us on IRC
+--------------
 If you're interested in contributing to the Eve-SQLAlchemy project or have any
 questions about it, come join us in Eve's #python-eve channel on
-irc.freenode.net or Eve-SQLAlchemy `gitter`_ room.
+irc.freenode.net.
 
 First time contributor?
 -----------------------
@@ -69,6 +73,7 @@ Requests`_
 .. _`new issue`: https://github.com/pyeve/eve-sqlalchemy/issues/new
 .. _GitHub: https://github.com/
 .. _Fork: https://help.github.com/articles/fork-a-repo
+.. _sync: https://help.github.com/articles/syncing-a-fork
 .. _`proper format`: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 .. _PEP8: http://www.python.org/dev/peps/pep-0008/
 .. _flake8: http://flake8.readthedocs.org/en/latest/
@@ -77,4 +82,3 @@ Requests`_
 .. _`Effective Guide to Pull Requests`: http://codeinthehole.com/writing/pull-requests-and-other-good-practices-for-teams-using-github/
 .. _`fork and edit`: https://github.com/blog/844-forking-with-the-edit-button
 .. _`Pull Request`: https://help.github.com/articles/creating-a-pull-request
-.. _`gitter`: https://gitter.im/RedTurtle/eve-sqlalchemy
