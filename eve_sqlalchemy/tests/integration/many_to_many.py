@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import unittest
-
 from eve_sqlalchemy.examples.many_to_many import settings
 from eve_sqlalchemy.examples.many_to_many.domain import Base
 from eve_sqlalchemy.tests import TestMinimal
@@ -22,14 +20,12 @@ class TestManyToMany(TestMinimal):
             {'id': 2, 'children': [1, 3]},
             {'id': 3, 'children': []}])
 
-    @unittest.skip
     def test_get_related_children_with_where(self):
         response, status = self.get('children', '?where={"parents": 1}')
         self.assert200(status)
         children = response['_items']
         self.assertEqual([c['id'] for c in children], [1, 2])
 
-    @unittest.skip
     def test_get_related_parents_with_where(self):
         response, status = self.get('parents', '?where={"children": 1}')
         self.assert200(status)

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import unittest
-
 from eve_sqlalchemy.examples.many_to_one import settings
 from eve_sqlalchemy.examples.many_to_one.domain import Base
 from eve_sqlalchemy.tests import TestMinimal
@@ -22,7 +20,6 @@ class TestManyToOne(TestMinimal):
             {'id': 2, 'child': 1},
             {'id': 3}])
 
-    @unittest.skip
     def test_get_related_children_with_where(self):
         response, status = self.get('children', '?where={"parents": 1}')
         self.assert200(status)

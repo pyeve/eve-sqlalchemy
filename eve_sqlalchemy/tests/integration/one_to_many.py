@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import unittest
-
 from eve_sqlalchemy.examples.one_to_many import settings
 from eve_sqlalchemy.examples.one_to_many.domain import Base
 from eve_sqlalchemy.tests import TestMinimal
@@ -28,7 +26,6 @@ class TestOneToMany(TestMinimal):
         children = response['_items']
         self.assertEqual([c['id'] for c in children], [1, 2])
 
-    @unittest.skip
     def test_get_related_parents_with_where(self):
         response, status = self.get('parents', '?where={"children": 2}')
         self.assert200(status)
