@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.5.1 (unreleased)
+0.6.0 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
 - Return None-values again (#155) [Cuong Manh Le]
