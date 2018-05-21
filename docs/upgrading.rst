@@ -2,6 +2,15 @@
 Upgrading
 =========
 
+Upgrading from 0.5.0 to 0.6.0
+=============================
+
+There is one potentially breaking change in 0.6.0: Due to a regression 0.5.0
+did not return `None`/`null` values anymore (as Eve does and 0.4.1 did). That
+means your API might return slightly different responses after upgrading to
+0.6.0 than it did before. If it's really a breaking change for you depends on
+your API specification and your clients.
+
 Upgrading from 0.4.1 to 0.5.0
 =============================
 
