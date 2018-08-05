@@ -4,6 +4,7 @@ Changelog
 0.6.0 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
+- Fix querying of list relations using `where` [Dominik Kellner]
 - Update Tutorial (#177) [Nicola Iarocci]
 - Return None-values again (#155) [Cuong Manh Le]
 - Allow to supply own Flask-SQLAlchemy driver (#86) [fubu]

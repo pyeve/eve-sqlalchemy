@@ -1,6 +1,5 @@
 from eve_sqlalchemy.config import DomainConfig, ResourceConfig
-
-from many_to_one.domain import Child, Parent
+from eve_sqlalchemy.examples.foreign_primary_key.domain import Lock, Node
 
 DEBUG = True
 SQLALCHEMY_DATABASE_URI = 'sqlite://'
@@ -16,8 +15,6 @@ RESOURCE_METHODS = ['GET', 'POST']
 
 # The default schema is generated using DomainConfig:
 DOMAIN = DomainConfig({
-    'parents': ResourceConfig(Parent),
-    'children': ResourceConfig(Child)
+    'nodes': ResourceConfig(Node),
+    'locks': ResourceConfig(Lock)
 }).render()
-
-DOMAIN['children']['datasource']['projection']['child_id'] = 1

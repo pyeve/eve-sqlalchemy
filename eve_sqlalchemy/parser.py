@@ -70,10 +70,22 @@ def parse_dictionary(filter_dict, model):
             else:
                 conditions.append(attr.contains(v))
 
-        elif hasattr(attr, 'property') and \
-                hasattr(attr.property, 'remote_side'):  # a relation
-            for fk in attr.property.remote_side:
-                conditions.append(sqla_op.eq(fk, v))
+        # Relations:
+        elif (hasattr(attr, 'property') and
+              hasattr(attr.property, 'remote_side')):
+            relationship = attr.property
+            if relationship.primaryjoin is not None:
+                conditions.append(relationship.primaryjoin)
+            if relationship.secondaryjoin is not None:
+                conditions.append(relationship.secondaryjoin)
+            remote_column = list(relationship.remote_side)[0]
+            if relationship.uselist:
+                if callable(relationship.argument):
+                    mapper = relationship.argument().__mapper__
+                else:
+                    mapper = relationship.argument
+                remote_column = list(mapper.primary_key)[0]
+            conditions.append(sqla_op.eq(remote_column, v))
 
         else:
             try:
@@ -93,6 +105,7 @@ def parse_dictionary(filter_dict, model):
                 else:
                     new_filter = sqla_op.eq(attr, v)
             conditions.append(new_filter)
+
     return conditions
 
 

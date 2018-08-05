@@ -1,8 +1,8 @@
 from eve import Eve
-from eve_sqlalchemy import SQL
-from eve_sqlalchemy.validation import ValidatorSQL
 
-from one_to_many.domain import Base, Child, Parent
+from eve_sqlalchemy import SQL
+from eve_sqlalchemy.examples.one_to_many.domain import Base, Child, Parent
+from eve_sqlalchemy.validation import ValidatorSQL
 
 app = Eve(validator=ValidatorSQL, data=SQL)
 

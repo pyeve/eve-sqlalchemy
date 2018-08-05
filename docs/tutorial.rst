@@ -10,7 +10,7 @@ The main goal of the `SQLAlchemy`_ integration in Eve is to separate
 dependencies and keep model registration depend only on sqlalchemy
 library. This means that you can simply use something like that:
 
-.. literalinclude:: ../examples/simple/simple/tables.py
+.. literalinclude:: ../eve_sqlalchemy/examples/simple/tables.py
 
 We have used ``CommonColumns`` abstract class to provide attributes used by
 Eve, such as ``_created`` and ``_updated``. These are not needed if you are only
@@ -24,7 +24,7 @@ All standard Eve settings will work with `SQLAlchemy`_ support. However, you
 need manually decide which `SQLAlchemy`_ declarative classes you wish to
 register.  You can do it using ``DomainConfig`` and ``ResourceConfig``:
 
-.. literalinclude:: ../examples/simple/settings.py
+.. literalinclude:: ../eve_sqlalchemy/examples/simple/settings.py
 
 
 Authentication example

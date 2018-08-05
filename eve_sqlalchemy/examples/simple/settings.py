@@ -1,6 +1,5 @@
 from eve_sqlalchemy.config import DomainConfig, ResourceConfig
-
-from simple.tables import Invoices, People
+from eve_sqlalchemy.examples.simple.tables import Invoices, People
 
 DEBUG = True
 SQLALCHEMY_DATABASE_URI = 'sqlite://'
