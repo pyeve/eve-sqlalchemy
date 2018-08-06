@@ -2,19 +2,11 @@
 from __future__ import unicode_literals
 
 from sqlalchemy import Column, DateTime, Integer, String, func
-from sqlalchemy.ext.declarative import declarative_base
 
 from eve_sqlalchemy.config import DomainConfig, ResourceConfig
 from eve_sqlalchemy.tests import TestMinimal
 
-Base = declarative_base()
-
-
-class BaseModel(Base):
-    __abstract__ = True
-    _created = Column(DateTime, default=func.now())
-    _updated = Column(DateTime, default=func.now(), onupdate=func.now())
-    _etag = Column(String(40))
+from eve_sqlalchemy.declarative import BaseModel
 
 
 class Node(BaseModel):
@@ -37,7 +29,7 @@ SETTINGS = {
 class TestGetNoneValues(TestMinimal):
 
     def setUp(self, url_converters=None):
-        super(TestGetNoneValues, self).setUp(SETTINGS, url_converters, Base)
+        super(TestGetNoneValues, self).setUp(SETTINGS, url_converters, BaseModel)
 
     def bulk_insert(self):
         self.app.data.insert('nodes', [{'id': k} for k in range(1, 5)])

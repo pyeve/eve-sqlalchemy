@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from sqlalchemy import Column, DateTime, String, func
 from sqlalchemy.ext.declarative import declared_attr
+from eve_sqlalchemy.declarative import BaseModel
 
 
 def call_for(*args):
@@ -14,11 +15,8 @@ def call_for(*args):
     return decorator
 
 
-class BaseModel(object):
+class BaseModel(BaseModel):
     __abstract__ = True
-    _created = Column(DateTime, default=func.now())
-    _updated = Column(DateTime, default=func.now())
-    _etag = Column(String)
 
     @declared_attr
     def __tablename__(cls):

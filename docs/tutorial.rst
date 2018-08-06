@@ -12,7 +12,7 @@ library. This means that you can simply use something like that:
 
 .. literalinclude:: ../eve_sqlalchemy/examples/simple/tables.py
 
-We have used ``CommonColumns`` abstract class to provide attributes used by
+We have used ``BaseModel`` abstract class to provide attributes used by
 Eve, such as ``_created`` and ``_updated``. These are not needed if you are only
 reading from the database. However, if your API is also writing to the database,
 then you need to include them.

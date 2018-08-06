@@ -1,46 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import hashlib
-
-from sqlalchemy import (
-    Boolean, Column, DateTime, Float, ForeignKey, Integer, LargeBinary,
-    PickleType, String, Table, func,
-)
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, LargeBinary, PickleType, String, Table
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from eve_sqlalchemy.declarative import BaseModel
 
 
-class CommonColumns(Base):
-    """
-    Master SQLAlchemy Model. All the SQL tables defined for the application
-    should inherit from this class. It provides common columns such as
-    _created, _updated and _id.
-
-    WARNING: the _id column name does not respect Eve's setting for custom
-    ID_FIELD.
-    """
-    __abstract__ = True
-    _created = Column(DateTime, default=func.now())
-    _updated = Column(DateTime, default=func.now(), onupdate=func.now())
-    _etag = Column(String)
-
-    def __init__(self, *args, **kwargs):
-        h = hashlib.sha1()
-        self._etag = h.hexdigest()
-        super(CommonColumns, self).__init__(*args, **kwargs)
-
-
-class DisabledBulk(CommonColumns):
+class DisabledBulk(BaseModel):
     __tablename__ = 'disabled_bulk'
     _id = Column(Integer, primary_key=True)
     string_field = Column(String(25))
 
 
 InvoicingContacts = Table(
-    'invoicing_contacts', Base.metadata,
+    'invoicing_contacts', BaseModel.metadata,
     Column('invoice_id', Integer, ForeignKey('invoices._id'),
            primary_key=True),
     Column('contact_id', Integer, ForeignKey('contacts._id'),
@@ -48,7 +22,7 @@ InvoicingContacts = Table(
 )
 
 
-class Contacts(CommonColumns):
+class Contacts(BaseModel):
     __tablename__ = 'contacts'
     _id = Column(Integer, primary_key=True)
     ref = Column(String(25), unique=True, nullable=False)
@@ -81,7 +55,7 @@ class Contacts(CommonColumns):
     abool = Column(Boolean)
 
 
-class Invoices(CommonColumns):
+class Invoices(BaseModel):
     __tablename__ = 'invoices'
     _id = Column(Integer, primary_key=True)
     inv_number = Column(String(25))
@@ -90,14 +64,14 @@ class Invoices(CommonColumns):
     invoicing_contacts = relationship('Contacts', secondary=InvoicingContacts)
 
 
-class Empty(CommonColumns):
+class Empty(BaseModel):
     __tablename__ = 'empty'
     _id = Column(Integer, primary_key=True)
     inv_number = Column(String(25))
 
 
 DepartmentsContacts = Table(
-    'department_contacts', Base.metadata,
+    'department_contacts', BaseModel.metadata,
     Column('department_id', Integer, ForeignKey('departments._id'),
            primary_key=True),
     Column('contact_id', Integer, ForeignKey('contacts._id'),
@@ -105,7 +79,7 @@ DepartmentsContacts = Table(
 )
 
 CompaniesDepartments = Table(
-    'companies_departments', Base.metadata,
+    'companies_departments', BaseModel.metadata,
     Column('company_id', Integer, ForeignKey('companies._id'),
            primary_key=True),
     Column('department_id', Integer, ForeignKey('departments._id'),
@@ -113,14 +87,14 @@ CompaniesDepartments = Table(
 )
 
 
-class Departments(CommonColumns):
+class Departments(BaseModel):
     __tablename__ = 'departments'
     _id = Column(Integer, primary_key=True)
     title = Column(String(25))
     members = relationship('Contacts', secondary=DepartmentsContacts)
 
 
-class Companies(CommonColumns):
+class Companies(BaseModel):
     __tablename__ = 'companies'
     _id = Column(Integer, primary_key=True)
     holding_id = Column(String(16), ForeignKey('companies._id'))
@@ -128,28 +102,28 @@ class Companies(CommonColumns):
     departments = relationship('Departments', secondary=CompaniesDepartments)
 
 
-class Payments(CommonColumns):
+class Payments(BaseModel):
     __tablename__ = 'payments'
     _id = Column(Integer, primary_key=True)
     a_string = Column(String(10))
     a_number = Column(Integer)
 
 
-class InternalTransactions(CommonColumns):
+class InternalTransactions(BaseModel):
     __tablename__ = 'internal_transactions'
     _id = Column(Integer, primary_key=True)
     internal_string = Column(String(10))
     internal_number = Column(Integer)
 
 
-class Login(CommonColumns):
+class Login(BaseModel):
     __tablename__ = 'login'
     _id = Column(Integer, primary_key=True)
     email = Column(String(255), nullable=False, unique=True)
     password = Column(String(32), nullable=False)
 
 
-class Products(CommonColumns):
+class Products(BaseModel):
     __tablename__ = 'products'
     sku = Column(String(16), primary_key=True)
     title = Column(String(32))

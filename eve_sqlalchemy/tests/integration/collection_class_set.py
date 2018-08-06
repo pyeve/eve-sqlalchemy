@@ -1,27 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from sqlalchemy import (
-    Column, DateTime, ForeignKey, Integer, String, Table, func,
-)
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, ForeignKey, Integer, Table
 from sqlalchemy.orm import relationship
 
 from eve_sqlalchemy.config import DomainConfig, ResourceConfig
+from eve_sqlalchemy.declarative import BaseModel
 from eve_sqlalchemy.tests import TestMinimal
-
-Base = declarative_base()
-
-
-class BaseModel(Base):
-    __abstract__ = True
-    _created = Column(DateTime, default=func.now())
-    _updated = Column(DateTime, default=func.now(), onupdate=func.now())
-    _etag = Column(String(40))
 
 
 association_table = Table(
-    'association', Base.metadata,
+    'association', BaseModel.metadata,
     Column('left_id', Integer, ForeignKey('left.id')),
     Column('right_id', Integer, ForeignKey('right.id'))
 )
@@ -55,7 +44,7 @@ class TestCollectionClassSet(TestMinimal):
 
     def setUp(self, url_converters=None):
         super(TestCollectionClassSet, self).setUp(
-            SETTINGS, url_converters, Base)
+            SETTINGS, url_converters, BaseModel)
 
     def bulk_insert(self):
         self.app.data.insert('children', [{'id': k} for k in range(1, 5)])
