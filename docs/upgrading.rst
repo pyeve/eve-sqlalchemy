@@ -2,6 +2,13 @@
 Upgrading
 =========
 
+Upgrading from 0.6.0 to 0.7.0
+=============================
+
+With Eve v0.7, the ETag format was changed to comply with RFC 7232-2.3. Be
+aware the ETag header values are now enclosed with double-quotes.
+
+
 Upgrading from 0.5.0 to 0.6.0
 =============================
 
