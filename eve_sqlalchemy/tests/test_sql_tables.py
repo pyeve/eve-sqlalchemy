@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, LargeBinary, PickleType, String, Table
+from sqlalchemy import (
+    Boolean, Column, DateTime, Float, ForeignKey, Integer, LargeBinary,
+    PickleType, String, Table,
+)
 from sqlalchemy.orm import relationship
 
 from eve_sqlalchemy.declarative import BaseModel

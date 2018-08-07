@@ -8,7 +8,6 @@ from eve_sqlalchemy.config import DomainConfig, ResourceConfig
 from eve_sqlalchemy.declarative import BaseModel
 from eve_sqlalchemy.tests import TestMinimal
 
-
 association_table = Table(
     'association', BaseModel.metadata,
     Column('left_id', Integer, ForeignKey('left.id')),

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from sqlalchemy import Column, DateTime, String, func
 from sqlalchemy.ext.declarative import declared_attr
+
 from eve_sqlalchemy.declarative import BaseModel
 
 

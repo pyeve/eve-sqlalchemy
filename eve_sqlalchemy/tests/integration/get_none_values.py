@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from sqlalchemy import Column, DateTime, Integer, String, func
+from sqlalchemy import Column, Integer
 
 from eve_sqlalchemy.config import DomainConfig, ResourceConfig
-from eve_sqlalchemy.tests import TestMinimal
-
 from eve_sqlalchemy.declarative import BaseModel
+from eve_sqlalchemy.tests import TestMinimal
 
 
 class Node(BaseModel):
@@ -29,7 +28,8 @@ SETTINGS = {
 class TestGetNoneValues(TestMinimal):
 
     def setUp(self, url_converters=None):
-        super(TestGetNoneValues, self).setUp(SETTINGS, url_converters, BaseModel)
+        super(TestGetNoneValues, self).setUp(SETTINGS, url_converters,
+                                             BaseModel)
 
     def bulk_insert(self):
         self.app.data.insert('nodes', [{'id': k} for k in range(1, 5)])
