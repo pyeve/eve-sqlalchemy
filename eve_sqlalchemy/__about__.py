@@ -3,7 +3,7 @@ __summary__ = 'REST API framework powered by Eve, SQLAlchemy and good ' \
               'intentions.'
 __url__ = 'https://github.com/pyeve/eve-sqlalchemy'
 
-__version__ = '0.6.0.dev0'
+__version__ = '0.6.0'
 
 __author__ = 'Dominik Kellner'
 __email__ = 'dkellner@dkellner.de'

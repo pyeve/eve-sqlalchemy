@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.6.0 (unreleased)
+0.6.0 (2018-08-15)
 ~~~~~~~~~~~~~~~~~~
 
 - Fix querying of list relations using `where` [Dominik Kellner]
