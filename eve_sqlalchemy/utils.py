@@ -110,7 +110,7 @@ def _get_id(obj):
 
 def extract_sort_arg(req):
     if req.sort:
-        if re.match('^[-,\w]+$', req.sort):
+        if re.match(r'^[-,\w]+$', req.sort):
             arg = []
             for s in req.sort.split(','):
                 if s.startswith('-'):

@@ -44,7 +44,7 @@ DOMAIN['contacts'].update({
     'cache_expires': 20,
     'item_title': 'contact',
     'additional_lookup': {
-        'url': 'regex("[\w]+")',
+        'url': r'regex("[\w]+")',
         'field': 'ref'
     }
 })
