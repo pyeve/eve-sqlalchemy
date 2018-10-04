@@ -2,6 +2,21 @@
 Upgrading
 =========
 
+Upgrading from 0.6.0 to 0.7.0
+=============================
+
+Eve-SQLAlchemy is now based on Eve 0.7, which introduces potentially breaking
+changes:
+
+- The ETag format was changed to comply with RFC 7232-2.3. Be aware the ETag
+  header values are now enclosed with double-quotes.
+- Eve now returns a `428 Precondition Required` instead of a generic `403
+  Forbidden` when the `If-Match` request header is missing.
+
+For a comprehensive list of changes refer to the `official changelog`_.
+
+.. _official changelog: http://python-eve.org/changelog.html#version-0-7
+
 Upgrading from 0.5.0 to 0.6.0
 =============================
 

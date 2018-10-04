@@ -13,6 +13,18 @@ from eve_sqlalchemy.tests import TestBase
 class TestGet(eve_get_tests.TestGet, TestBase):
 
     @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_get_aggregation_parsing(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_get_aggregation_pagination(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_get_aggregation_endpoint(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
     def test_get_where_mongo_combined_date(self):
         pass
 
@@ -58,6 +70,10 @@ class TestGet(eve_get_tests.TestGet, TestBase):
 
     @pytest.mark.xfail(True, run=False, reason='not implemented yet')
     def test_get_embedded_media(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not implemented yet')
+    def test_get_embedded_media_validate_rest_of_fields(self):
         pass
 
     def test_get_embedded(self):

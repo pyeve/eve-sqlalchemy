@@ -10,6 +10,22 @@ from eve_sqlalchemy.tests import TestBase, test_sql_tables
 
 class TestPost(eve_post_tests.TestPost, TestBase):
 
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_auto_create_lists(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_auto_collapse_multiple_keys(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_post_auto_collapse_media_list(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_dbref_post_referential_integrity(self):
+        pass
+
     @pytest.mark.xfail(True, run=False, reason='not implemented yet')
     def test_post_duplicate_key(self):
         """POSTing an already existing key should result in 409, not 422.

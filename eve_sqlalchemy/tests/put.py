@@ -12,6 +12,10 @@ from eve_sqlalchemy.tests import TestBase
 class TestPut(eve_put_tests.TestPut, TestBase):
 
     @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
+    def test_put_dbref_subresource(self):
+        pass
+
+    @pytest.mark.xfail(True, run=False, reason='not applicable to SQLAlchemy')
     def test_allow_unknown(self):
         pass
 
@@ -157,7 +161,8 @@ class TestPut(eve_put_tests.TestPut, TestBase):
         raw_r = self.test_client.get(self.item_id_url)
         r, status = self.parse_response(raw_r)
         self.assert200(status)
-        self.assertEqual(raw_r.headers.get('ETag'),
+        # Since v0.7, ETag conform to RFC 7232-2.3 (see Eve#794)
+        self.assertEqual(raw_r.headers.get('ETag')[1:-1],
                          put_response[ETAG])
         if isinstance(fields, six.string_types):
             return r[fields]
