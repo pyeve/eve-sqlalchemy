@@ -285,7 +285,7 @@ SQLAlchemy expressions
 With this version of Eve you can use `SQLAlchemy`_ expressions such as: `like`,
 `in`, `any`, etc. For more examples please check `SQLAlchemy internals`_.
 
-Using those expresssion is straightforward (you can use them only with
+Using those expression is straightforward (you can use them only with
 dictionary where filter):
 
 .. code-block:: console
@@ -302,7 +302,7 @@ Another examples using `in`:
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/people?where={"firstname":"in(\"(\'John\',\'Fred\'\"))"}
+    http://127.0.0.1:5000/people?where={"firstname":"in(\"(\'John\',\'Fred\')\")"}
 
 which produces where closure:
 
