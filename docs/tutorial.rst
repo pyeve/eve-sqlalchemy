@@ -285,7 +285,9 @@ SQLAlchemy expressions
 With this version of Eve you can use `SQLAlchemy`_ expressions such as: `like`,
 `in`, `any`, etc. For more examples please check `SQLAlchemy internals`_.
 
-Query strings are supported, allowing for filtering and sorting. Both native Mongo queries and Python conditional expressions are supported.
+Query strings are supported, allowing for filtering and sorting. Both native
+Mongo queries and Python conditional expressions are supported. For more
+examples please check `SQLAlchemy filtering`_.
 
 **Generating 'exact' matches**
 
@@ -300,6 +302,20 @@ which produces where closure:
 .. code-block:: sql
 
    people.lastname = "Smith"
+
+**Generating multiple 'exact' matches**
+
+Here we are asking for all `people` where `age` value is between `50` and `60`:
+
+.. code-block:: console
+
+    /people?where=age>50 and age<60
+
+which produces where closure:
+
+.. code-block:: sql
+
+   people.age > 50 AND people.age < 60
 
 **Generating 'like' matches**
 
@@ -323,6 +339,12 @@ Here we are asking for all `people` where `firstname` value is `John` or `Fred`:
 
     /people?where={"firstname":"in(\"(\'John\',\'Fred\')\")"}
 
+or you can also use the other syntax query
+
+.. code-block:: console
+
+    /people?where={"firstname":['John','Fred']}
+
 which produces where closure:
 
 .. code-block:: sql
@@ -333,7 +355,7 @@ which produces where closure:
 
 .. code-block:: console
 
-    /people?where={"firstname":"similar to(\"(\'%ohn\'|\'%acob\'\"))"}
+    /people?where={"firstname":"similar to(\"(\'%ohn\'|\'%acob\')\")"}
 
 which produces where closure:
 
@@ -413,6 +435,7 @@ referring each other.
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-SQLAlchemy: http://flask-sqlalchemy.pocoo.org/
 .. _SQLAlchemy internals: http://docs.sqlalchemy.org/en/latest/orm/internals.html
+.. _SQLAlchemy filtering: http://docs.python-eve.org/en/latest/features.html#filtering
 .. _SQLAlchemy ORDER BY: http://docs.sqlalchemy.org/en/latest/core/sqlelement.html#sqlalchemy.sql.expression.nullsfirst
 .. _`Eve Authentication`: http://python-eve.org/authentication.html#token-based-authentication
 .. _`Eve Embedded Resource Serialization`: http://python-eve.org/features.html#embedded-resource-serialization
