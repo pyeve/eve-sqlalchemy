@@ -285,12 +285,45 @@ SQLAlchemy expressions
 With this version of Eve you can use `SQLAlchemy`_ expressions such as: `like`,
 `in`, `any`, etc. For more examples please check `SQLAlchemy internals`_.
 
-Using those expresssion is straightforward (you can use them only with
-dictionary where filter):
+Query strings are supported, allowing for filtering and sorting. Both native
+Mongo queries and Python conditional expressions are supported. For more
+examples please check `SQLAlchemy filtering`_.
+
+**Generating 'exact' matches**
+
+Here we are asking for all `people` where `lastname` value is `Smith`:
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/people?where={"lastname":"like(\"Smi%\")"}
+    /people?where={"lastname":"Smith"}
+
+which produces where closure:
+
+.. code-block:: sql
+
+   people.lastname = "Smith"
+
+**Generating multiple 'exact' matches**
+
+Here we are asking for all `people` where `age` value is between `50` and `60`:
+
+.. code-block:: console
+
+    /people?where=age>50 and age<60
+
+which produces where closure:
+
+.. code-block:: sql
+
+   people.age > 50 AND people.age < 60
+
+**Generating 'like' matches**
+
+Here we are asking for all `people` where `lastname` value contains `Smi`:
+
+.. code-block:: console
+
+    /people?where={"lastname":"like(\"Smi%\")"}
 
 which produces where closure:
 
@@ -298,11 +331,19 @@ which produces where closure:
 
    people.lastname LIKE "Smi%"
 
-Another examples using `in`:
+**Generating 'in' matches**
+
+Here we are asking for all `people` where `firstname` value is `John` or `Fred`:
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/people?where={"firstname":"in(\"(\'John\',\'Fred\'\"))"}
+    /people?where={"firstname":"in(\"(\'John\',\'Fred\')\")"}
+
+or you can also use the other syntax query
+
+.. code-block:: console
+
+    /people?where={"firstname":['John','Fred']}
 
 which produces where closure:
 
@@ -310,11 +351,11 @@ which produces where closure:
 
    people.firstname IN ("John", "Fred")
 
-Another examples using `similar to`:
+**Generating 'similar to' matches**
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/people?where={"firstname":"similar to(\"(\'%ohn\'|\'%acob\'\"))"}
+    /people?where={"firstname":"similar to(\"(\'%ohn\'|\'%acob\')\")"}
 
 which produces where closure:
 
@@ -322,11 +363,13 @@ which produces where closure:
 
    people.firstname SIMILAR TO '("%ohn"|"%acob")'
 
-and if you have postgresql ARRAY column you can use `any`:
+**Generating 'any' matches**
+
+If you have postgresql ARRAY column you can use `any`:
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/documents?where={"keywords":"any(\"critical\")"}
+    /documents?where={"keywords":"any(\"critical\")"}
 
 which produces where closure:
 
@@ -334,11 +377,11 @@ which produces where closure:
 
    "critical" = ANY(documents.keywords)
 
-and if you want to query using NULL:
+**Generating 'not null' matches**
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/documents?where={"keywords":"!=null"}
+    /documents?where={"keywords":"!=null"}
 
 which produces where closure:
 
@@ -356,7 +399,7 @@ sorting:
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/people?sort=[("lastname", -1, "nullslast")]
+    /people?sort=[("lastname", -1, "nullslast")]
 
 which produces order by expression:
 
@@ -364,11 +407,11 @@ which produces order by expression:
 
    people.lastname DESC NULLS LAST
 
-You can also support the following python-Eve syntax:
+You can also use the following python-Eve syntax:
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/people?sort=lastname,-created_at
+    /people?sort=lastname,-created_at
 
 Embedded resources
 ------------------
@@ -378,7 +421,7 @@ Resource Serialization`_).
 
 .. code-block:: console
 
-    http://127.0.0.1:5000/people?embedded={"address":1}
+    /people?embedded={"address":1}
 
 For example, the following request will list the people and embedded their
 addresses.
@@ -392,6 +435,7 @@ referring each other.
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-SQLAlchemy: http://flask-sqlalchemy.pocoo.org/
 .. _SQLAlchemy internals: http://docs.sqlalchemy.org/en/latest/orm/internals.html
+.. _SQLAlchemy filtering: http://docs.python-eve.org/en/latest/features.html#filtering
 .. _SQLAlchemy ORDER BY: http://docs.sqlalchemy.org/en/latest/core/sqlelement.html#sqlalchemy.sql.expression.nullsfirst
 .. _`Eve Authentication`: http://python-eve.org/authentication.html#token-based-authentication
 .. _`Eve Embedded Resource Serialization`: http://python-eve.org/features.html#embedded-resource-serialization
