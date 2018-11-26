@@ -289,6 +289,8 @@ Query strings are supported, allowing for filtering and sorting. Both native
 Mongo queries and Python conditional expressions are supported. For more
 examples please check `SQLAlchemy filtering`_.
 
+Filtering
+~~~~~~~~~
 **Generating 'exact' matches**
 
 Here we are asking for all `people` where `lastname` value is `Smith`:
@@ -389,8 +391,23 @@ which produces where closure:
 
    documents.keywords IS NOT NULL
 
-SQLAlchemy sorting
-------------------
+**Generating 'datetime' matches**
+
+Here we are asking for all `documents` that where `_created` after
+`Mon, 17 Oct 2019 03:00:00 GMT`:
+
+.. code-block:: console
+
+    /documents?where=_created> \"Mon, 17 Oct 2019 03:00:00 GMT\"
+
+which produces where closure:
+
+.. code-block:: sql
+
+   documents._created > 2019-10-17 03:00:00
+
+Sorting
+~~~~~~~
 Starting from version 0.2 you can use `SQLAlchemy ORDER BY`_ expressions such
 as: `nullsfirst`, `nullslast`, etc.
 
@@ -412,6 +429,18 @@ You can also use the following python-Eve syntax:
 .. code-block:: console
 
     /people?sort=lastname,-created_at
+
+FAQ
+~~~
+**cURL**
+
+Keep in mind that every browser or cURL generator can implement its own encoder,
+and not all produce the same result. So, adding `--data-urlencode` to the curl
+query should work.
+
+.. code-block:: console
+
+    curl -iG --data-urlencode where='_created> "Thu, 22 Nov 2018 09:00:00 GMT"' localhost:5000/people
 
 Embedded resources
 ------------------
