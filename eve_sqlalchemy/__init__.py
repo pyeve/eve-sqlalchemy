@@ -121,7 +121,8 @@ class SQL(DataLayer):
         if args['sort']:
             ql = []
             for sort_item in args['sort']:
-                ql.append(parse_sorting(model, query, *sort_item))
+                query, s = parse_sorting(model, query, *sort_item)
+                ql.append(s)
             args['sort'] = ql
 
         if req.max_results:

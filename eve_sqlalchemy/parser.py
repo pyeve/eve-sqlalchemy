@@ -159,7 +159,7 @@ def parse_sorting(model, query, key, order=1, expression=None):
     if expression:  # sql expressions
         expression = getattr(base_sort, expression)
         base_sort = expression()
-    return base_sort
+    return query, base_sort
 
 
 class SQLAVisitor(ast.NodeVisitor):

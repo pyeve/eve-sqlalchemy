@@ -220,16 +220,16 @@ class TestSQLStructures(TestCase):
     def test_base_sorting(self):
         self.setupDB()
         self.assertEqual(str(
-            parse_sorting(Contacts, self.query, 'username', -1)).lower(),
+            parse_sorting(Contacts, self.query, 'username', -1)[1]).lower(),
             'contacts.username desc')
         self.assertEqual(str(
-            parse_sorting(Contacts, self.query, 'username', 1)).lower(),
+            parse_sorting(Contacts, self.query, 'username', 1)[1]).lower(),
             'contacts.username')
         self.assertEqual(str(parse_sorting(
-            Contacts, self.query, 'username', -1, 'nullslast')).lower(),
+            Contacts, self.query, 'username', -1, 'nullslast')[1]).lower(),
             'contacts.username desc nulls last')
         self.assertEqual(str(parse_sorting(
-            Contacts, self.query, 'username', -1, 'nullsfirst')).lower(),
+            Contacts, self.query, 'username', -1, 'nullsfirst')[1]).lower(),
             'contacts.username desc nulls first')
 
     def setupDB(self):
