@@ -1,11 +1,29 @@
-sudo: false
+dist: xenial
 language: python
 cache: pip
+
+matrix:
+  include:
+    - env: TOXENV=py27
+      python: "2.7"
+    - env: TOXENV=py34
+      python: "3.4"
+    - env: TOXENV=py35
+      python: "3.5"
+    - env: TOXENV=py36
+      python: "3.6"
+    - env: TOXENV=py37
+      python: "3.7"
+    - env: TOXENV=pypy
+      python: "pypy2.7-6.0"
+    - env: TOXENV=flake8
+      python: "3.7"
+    - env: TOXENV=isort
+      python: "3.7"
+    - env: TOXENV=rstcheck
+      python: "3.7"
+    - env: TOXENV=whitespace
+      python: "3.7"
+
+install: travis_retry pip install tox
 script: tox
-install: travis_retry pip install tox-travis
-python:
-  - 2.7
-  - 3.4
-  - 3.5
-  - 3.6
-  - pypy
