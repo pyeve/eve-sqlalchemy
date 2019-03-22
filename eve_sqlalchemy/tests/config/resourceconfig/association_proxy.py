@@ -8,8 +8,8 @@ from sqlalchemy.orm import relationship
 
 from eve_sqlalchemy.config import ResourceConfig
 
-from . import ResourceConfigTestCase
 from .. import BaseModel
+from . import ResourceConfigTestCase
 
 Base = declarative_base(cls=BaseModel)
 

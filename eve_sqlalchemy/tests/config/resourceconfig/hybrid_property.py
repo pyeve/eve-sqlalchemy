@@ -5,8 +5,8 @@ from sqlalchemy import Column, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 
-from . import ResourceConfigTestCase
 from .. import BaseModel
+from . import ResourceConfigTestCase
 
 Base = declarative_base(cls=BaseModel)
 

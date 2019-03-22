@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
-from . import ResourceConfigTestCase
 from .. import BaseModel
+from . import ResourceConfigTestCase
 
 Base = declarative_base(cls=BaseModel)
 

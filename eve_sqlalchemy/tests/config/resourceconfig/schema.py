@@ -6,8 +6,8 @@ import sqlalchemy.dialects.postgresql as postgresql
 from sqlalchemy import Column, types
 from sqlalchemy.ext.declarative import declarative_base
 
-from . import ResourceConfigTestCase
 from .. import BaseModel
+from . import ResourceConfigTestCase
 
 Base = declarative_base(cls=BaseModel)
 
