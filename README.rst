@@ -128,7 +128,7 @@ file (defaults to ``settings.py``) and a launch script.  Overall, you
 will find that configuring and fine-tuning your API is a very simple
 process.
 
-Eve-SQLAlchemy is thoroughly tested under Python 2.7-3.6 and PyPy.
+Eve-SQLAlchemy is thoroughly tested under Python 2.7-3.7 and PyPy.
 
 Documentation
 -------------

@@ -9,12 +9,16 @@
 from __future__ import unicode_literals
 
 import ast
-import collections
 import copy
 import re
 
 from eve.utils import config
 from sqlalchemy.ext.declarative.api import DeclarativeMeta
+
+try:
+    from collections.abc import Mapping, MutableSequence, Set
+except ImportError:
+    from collections import Mapping, MutableSequence, Set
 
 
 def merge_dicts(*dicts):
@@ -32,8 +36,7 @@ def merge_dicts(*dicts):
 
 def dict_update(d, u):
     for k, v in u.items():
-        if isinstance(v, collections.Mapping) and \
-           k in d and isinstance(d[k], collections.Mapping):
+        if isinstance(v, Mapping) and k in d and isinstance(d[k], Mapping):
             dict_update(d[k], v)
         elif k not in d:
             d[k] = u[k]
@@ -93,11 +96,11 @@ def sqla_object_to_dict(obj, fields):
 def _sanitize_value(value):
     if isinstance(value.__class__, DeclarativeMeta):
         return _get_id(value)
-    elif isinstance(value, collections.Mapping):
+    elif isinstance(value, Mapping):
         return dict([(k, _sanitize_value(v)) for k, v in value.items()])
-    elif isinstance(value, collections.MutableSequence):
+    elif isinstance(value, MutableSequence):
         return [_sanitize_value(v) for v in value]
-    elif isinstance(value, collections.Set):
+    elif isinstance(value, Set):
         return set(_sanitize_value(v) for v in value)
     else:
         return copy.copy(value)
