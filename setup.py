@@ -34,7 +34,7 @@ setup(
     install_requires=[
         'Eve<0.8',
         'Flask-SQLAlchemy>=1.0,<2.999',
-        'SQLAlchemy>=1.1',
+        'SQLAlchemy>=1.1,<1.3',
     ],
     tests_require=test_dependencies,
     extras_require={
