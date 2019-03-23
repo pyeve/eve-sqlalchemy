@@ -21,8 +21,12 @@ then you need to include them.
 Eve settings
 ------------
 All standard Eve settings will work with `SQLAlchemy`_ support. However, you
-need manually decide which `SQLAlchemy`_ declarative classes you wish to
-register.  You can do it using ``DomainConfig`` and ``ResourceConfig``:
+need to manually decide which `SQLAlchemy`_ declarative classes you wish to
+register. You can do so using ``DomainConfig`` and ``ResourceConfig``, which
+will give you a default schema (``DOMAIN`` dictionary) derived from your
+`SQLAlchemy`_ models. This is intended as a starting point and to save you
+from redundant configuration, but there's nothing wrong with customizing this
+dictionary if you need to!
 
 .. literalinclude:: ../eve_sqlalchemy/examples/simple/settings.py
 

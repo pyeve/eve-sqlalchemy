@@ -26,3 +26,8 @@ DOMAIN['people'].update({
     'cache_expires': 10,
     'resource_methods': ['GET', 'POST', 'DELETE']
 })
+
+# Even adding custom validations just for the REST-layer is possible:
+DOMAIN['invoices']['schema']['number'].update({
+    'min': 10000
+})
