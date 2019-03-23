@@ -16,6 +16,8 @@ matrix:
       python: "3.7"
     - env: TOXENV=pypy
       python: "pypy2.7-6.0"
+    - env: TOXENV=pypy3
+      python: "pypy3.5-6.0"
     - env: TOXENV=flake8
       python: "3.7"
     - env: TOXENV=isort
