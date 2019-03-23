@@ -4,6 +4,7 @@ Changelog
 0.7.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
+- Pin SQLAlchemy version due to warnings in Flask-SQLAlchemy [Dominik Kellner]
 - Improve documentation (#187, #189) [Marc Vila]
 
 
