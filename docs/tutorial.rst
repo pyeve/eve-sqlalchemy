@@ -96,6 +96,9 @@ Next step is the `User` SQLAlchemy model:
     from itsdangerous import TimedJSONWebSignatureSerializer \
         as Serializer
     from itsdangerous import SignatureExpired, BadSignature
+    
+    from werkzeug.security import generate_password_hash, \
+     check_password_hash
 
     from sqlalchemy.orm import validates
     from sqlalchemy.ext.declarative import declarative_base
@@ -138,14 +141,10 @@ Next step is the `User` SQLAlchemy model:
                 .intersection(set(role_names))
             return len(allowed_roles) > 0
 
-        def generate_salt(self):
-            return ''.join(random.sample(string.letters, 12))
-
         def encrypt(self, password):
-            """Encrypt password using hashlib and current salt.
+            """Encrypt password using werkzeug security module
             """
-            return str(hashlib.sha1(password + str(self.salt))\
-                .hexdigest())
+            return generate_password_hash(password)
 
         @validates('password')
         def _set_password(self, key, value):
@@ -153,13 +152,12 @@ Next step is the `User` SQLAlchemy model:
             time password is changed it will get encrypted
             before flushing to db.
             """
-            self.salt = self.generate_salt()
             return self.encrypt(value)
 
         def check_password(self, password):
             if not self.password:
                 return False
-            return self.encrypt(password) == self.password
+            return check_password_hash(self.password, password)
 
 
 And finally a flask login view:
