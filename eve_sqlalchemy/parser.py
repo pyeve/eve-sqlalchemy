@@ -60,7 +60,8 @@ def parse_dictionary(filter_dict, model):
             except (TypeError, ValueError):
                 raise ParseError("Can't parse expression '{0}'".format(v))
 
-        attr = getattr(model, k)
+        attr, joins = _parse_attribute_name(model, k)
+        conditions.extend(joins)
 
         if isinstance(attr, AssociationProxy):
             # If the condition is a dict, we must use 'any' method to match
@@ -140,26 +141,42 @@ def parse(expression, model):
     return v.sqla_query
 
 
-def parse_sorting(model, query, key, order=1, expression=None):
-    """
-    Sorting parser that works with embedded resources and sql expressions
-    Moved out from the query (find) method.
-    """
-    if '.' in key:  # sort by related mapper class
-        rel, sort_attr = key.split('.')
-        rel_class = getattr(model, rel).property.mapper.class_
-        query = query.outerjoin(rel_class)
-        base_sort = getattr(rel_class, sort_attr)
-    else:
-        base_sort = getattr(model, key)
+def parse_sorting(model, key, order=1, expression=None):
+    """Sorting parser that works with embedded resources and sql expressions.
 
+    Returns a tuple containing the argument for `order_by` and a list of
+    conditions to be used with `filter`, e.g.:
+
+    order_by, conditions = parse_sorting(...)
+    query = query.filter(*conditions).order_by(order_by)
+    """
+    attr, conditions = _parse_attribute_name(model, key)
     if order == -1:
-        base_sort = base_sort.desc()
-
+        attr = attr.desc()
     if expression:  # sql expressions
-        expression = getattr(base_sort, expression)
-        base_sort = expression()
-    return base_sort
+        expression = getattr(attr, expression)
+        attr = expression()
+    return (attr, conditions)
+
+
+def _parse_attribute_name(model, name):
+    """Parses a (probably) nested attribute name.
+
+    Returns a tuple containing an `InstrumentedAttribute` and a list of
+    conditions to be used with `filter`.
+    """
+    parts = iter(name.split('.'))
+    attr = getattr(model, next(parts))
+    joins = []
+    for part in parts:
+        rel = attr.property
+        rel_class = rel.mapper.class_
+        if rel.primaryjoin is not None:
+            joins.append(rel.primaryjoin)
+        if rel.secondaryjoin is not None:
+            joins.append(rel.secondaryjoin)
+        attr = getattr(rel_class, part)
+    return (attr, joins)
 
 
 class SQLAVisitor(ast.NodeVisitor):
@@ -216,9 +233,11 @@ class SQLAVisitor(ast.NodeVisitor):
     def visit_Compare(self, node):
         """ Compare operator handler.
         """
-
         self.visit(node.left)
-        left = getattr(self.model, self.current_value)
+
+        left, joins = _parse_attribute_name(self.model, self.current_value)
+        for join in joins:
+            self.sqla_query.append(join)
 
         operation = self.op_mapper[node.ops[0].__class__]
 
@@ -227,6 +246,26 @@ class SQLAVisitor(ast.NodeVisitor):
             self.visit(comparator)
 
         value = self.current_value
+
+        if (False):
+            pass
+
+        # Relations:
+        elif (hasattr(left, 'property') and
+              hasattr(left.property, 'remote_side')):
+            relationship = left.property
+            if relationship.primaryjoin is not None:
+                self.sqla_query.append(relationship.primaryjoin)
+            if relationship.secondaryjoin is not None:
+                self.sqla_query.append(relationship.secondaryjoin)
+            remote_column = list(relationship.remote_side)[0]
+            if relationship.uselist:
+                if callable(relationship.argument):
+                    mapper = relationship.argument().__mapper__
+                else:
+                    mapper = relationship.argument
+                remote_column = list(mapper.primary_key)[0]
+            left = remote_column
 
         if self.ops:
             self.ops[-1]['args'].append(operation(left, value))

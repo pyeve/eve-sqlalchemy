@@ -35,7 +35,8 @@ class SQLAResultCollection(object):
         if self._spec:
             self._query = self._query.filter(*self._spec)
         if self._sort:
-            self._query = self._query.order_by(*self._sort)
+            for (order_by, joins) in self._sort:
+                self._query = self._query.filter(*joins).order_by(order_by)
 
         # save the count of items to an internal variables before applying the
         # limit to the query as that screws the count returned by it

@@ -219,18 +219,18 @@ class TestSQLStructures(TestCase):
 
     def test_base_sorting(self):
         self.setupDB()
-        self.assertEqual(str(
-            parse_sorting(Contacts, self.query, 'username', -1)).lower(),
-            'contacts.username desc')
-        self.assertEqual(str(
-            parse_sorting(Contacts, self.query, 'username', 1)).lower(),
-            'contacts.username')
-        self.assertEqual(str(parse_sorting(
-            Contacts, self.query, 'username', -1, 'nullslast')).lower(),
-            'contacts.username desc nulls last')
-        self.assertEqual(str(parse_sorting(
-            Contacts, self.query, 'username', -1, 'nullsfirst')).lower(),
-            'contacts.username desc nulls first')
+        cases = [
+            ((Contacts, 'username', -1), 'contacts.username desc', []),
+            ((Contacts, 'username', 1), 'contacts.username', []),
+            ((Contacts, 'username', -1, 'nullslast'),
+             'contacts.username desc nulls last', []),
+            ((Contacts, 'username', -1, 'nullsfirst'),
+             'contacts.username desc nulls first', []),
+        ]
+        for args, expected_order_by, expected_joins in cases:
+            order_by, joins = parse_sorting(*args)
+            self.assertEqual((str(order_by).lower(), joins),
+                             (expected_order_by, expected_joins))
 
     def setupDB(self):
         self.this_directory = os.path.dirname(os.path.realpath(__file__))

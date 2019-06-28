@@ -113,7 +113,7 @@ def _get_id(obj):
 
 def extract_sort_arg(req):
     if req.sort:
-        if re.match(r'^[-,\w]+$', req.sort):
+        if re.match(r'^[-,\w.]+$', req.sort):
             arg = []
             for s in req.sort.split(','):
                 if s.startswith('-'):
@@ -129,12 +129,10 @@ def extract_sort_arg(req):
 
 def rename_relationship_fields_in_sort_args(model, sort):
     result = []
-    rename_mapping = _get_relationship_to_id_field_rename_mapping(model)
     for t in sort:
-        if t[0] in rename_mapping:
-            t = list(t)
-            t[0] = rename_mapping[t[0]]
-            t = tuple(t)
+        t = list(t)
+        t[0] = rename_relationship_fields_in_str(model, t[0])
+        t = tuple(t)
         result.append(t)
     return result
 
@@ -153,7 +151,7 @@ def rename_relationship_fields_in_dict(model, dict_):
 def rename_relationship_fields_in_str(model, str_):
     rename_mapping = _get_relationship_to_id_field_rename_mapping(model)
     for k, v in rename_mapping.items():
-        str_ = re.sub(r'\b%s\b' % k, v, str_)
+        str_ = re.sub(r'\b%s\b(?!\.)' % k, v, str_)
     return str_
 
 

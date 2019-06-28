@@ -119,10 +119,7 @@ class SQL(DataLayer):
         query = self.driver.session.query(model)
 
         if args['sort']:
-            ql = []
-            for sort_item in args['sort']:
-                ql.append(parse_sorting(model, query, *sort_item))
-            args['sort'] = ql
+            args['sort'] = [parse_sorting(model, *a) for a in args['sort']]
 
         if req.max_results:
             args['max_results'] = req.max_results
