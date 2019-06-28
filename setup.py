@@ -33,8 +33,8 @@ setup(
     test_suite='eve_sqlalchemy.tests',
     install_requires=[
         'Eve<0.8',
-        'Flask-SQLAlchemy>=1.0,<2.999',
-        'SQLAlchemy>=1.1,<1.3',
+        'Flask-SQLAlchemy>=2.4,<2.999',
+        'SQLAlchemy>=1.3',
     ],
     tests_require=test_dependencies,
     extras_require={
