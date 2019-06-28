@@ -145,9 +145,9 @@ class ResourceConfig(object):
                            column_properties, hybrid_properties)
 
     def _get_association_proxy_fields(self):
-        return (k for k, v in self.model.__dict__.items()
+        return [k for k, v in self.model.__dict__.items()
                 if k not in self._ignored_fields
-                and getattr(v, 'extension_type', None) == ASSOCIATION_PROXY)
+                and getattr(v, 'extension_type', None) == ASSOCIATION_PROXY]
 
     def _get_relationship_fields(self, proxied_relationships):
         return (f.key for f in self._mapper.relationships
@@ -171,9 +171,9 @@ class ResourceConfig(object):
                 and isinstance(f.expression, expression.Label))
 
     def _get_hybrid_property_fields(self):
-        return (k for k, v in self.model.__dict__.items()
+        return [k for k, v in self.model.__dict__.items()
                 if k not in self._ignored_fields
-                and getattr(v, 'extension_type', None) == HYBRID_PROPERTY)
+                and getattr(v, 'extension_type', None) == HYBRID_PROPERTY]
 
     def _render_schema(self, field_configs, related_resource_configs):
         schema = {k: v.render(related_resource_configs)
