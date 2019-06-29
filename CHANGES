@@ -4,6 +4,7 @@ Changelog
 0.7.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
+- Updated Tutorial to use werkzeug.security module (#196) [Mandar Vaze]
 - Add Python 3.7 and PyPy3 to supported (and tested) versions [Dominik Kellner]
 - Pin SQLAlchemy version due to warnings in Flask-SQLAlchemy [Dominik Kellner]
 - Improve documentation (#187, #189) [Marc Vila]
