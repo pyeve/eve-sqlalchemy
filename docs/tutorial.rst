@@ -96,9 +96,9 @@ Next step is the `User` SQLAlchemy model:
     from itsdangerous import TimedJSONWebSignatureSerializer \
         as Serializer
     from itsdangerous import SignatureExpired, BadSignature
-    
+
     from werkzeug.security import generate_password_hash, \
-     check_password_hash
+        check_password_hash
 
     from sqlalchemy.orm import validates
     from sqlalchemy.ext.declarative import declarative_base
@@ -142,7 +142,7 @@ Next step is the `User` SQLAlchemy model:
             return len(allowed_roles) > 0
 
         def encrypt(self, password):
-            """Encrypt password using werkzeug security module
+            """Encrypt password using werkzeug security module.
             """
             return generate_password_hash(password)
 
