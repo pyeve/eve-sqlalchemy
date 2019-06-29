@@ -4,6 +4,7 @@ Changelog
 0.7.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
+- Updated Tutorial to use werkzeug.security module (#196) [Mandar Vaze]
 - Require Flask-SQLAlchemy >= 2.4 and SQLAlchemy >= 1.3 due to security issues
   [Dominik Kellner]
 - Support filtering on embedded document fields / across relations (#186)
