@@ -4,6 +4,8 @@ Changelog
 0.7.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
+- Require Flask-SQLAlchemy >= 2.4 and SQLAlchemy >= 1.3 due to security issues
+  [Dominik Kellner]
 - Support filtering on embedded document fields / across relations (#186)
   [Dominik Kellner]
 - Fix sorting across relations [Dominik Kellner]
