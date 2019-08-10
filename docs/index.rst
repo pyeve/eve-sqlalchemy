@@ -10,6 +10,7 @@ Developer's Guide
 .. toctree::
     :maxdepth: 2
 
+    install
     tutorial
     trivial
     upgrading
