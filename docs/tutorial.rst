@@ -30,6 +30,24 @@ dictionary if you need to!
 
 .. literalinclude:: ../eve_sqlalchemy/examples/simple/settings.py
 
+A note about using ``update``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A common mistake is to use ``update`` to try to update values in a nested
+dictionary. This will overwrite the entire dictionary and probably cause
+``KeyError``\s.
+
+.. code-block:: python
+
+    # Instead of this...
+    DOMAIN['foo'].update({
+      'datasource': {  # 'datasource' will only contain 'default_sort'!
+        'default_sort': [('id', -1)]
+      }
+    })
+    # ... do this:
+    DOMAIN['foo']['datasource']['default_sort'] = [('id', -1)]
+
 
 Authentication example
 ----------------------
