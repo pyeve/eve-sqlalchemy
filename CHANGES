@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.7.1 (unreleased)
+0.7.1 (2019-08-10)
 ~~~~~~~~~~~~~~~~~~
 
 - Updated Tutorial to use werkzeug.security module (#196) [Mandar Vaze]
