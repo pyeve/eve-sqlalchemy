@@ -39,7 +39,7 @@ setup(
     tests_require=test_dependencies,
     extras_require={
         # This little hack allows us to reference our test dependencies within
-        # tox.ini. For details see http://stackoverflow.com/a/41398850 .
+        # tox.ini. For details see https://stackoverflow.com/a/41398850 .
         'test': test_dependencies,
     },
     zip_safe=True,

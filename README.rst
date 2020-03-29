@@ -13,7 +13,7 @@ Eve-SQLAlchemy is simple
 
 The following code blocks are excerpts of ``examples/one_to_many`` and should
 give you an idea of how Eve-SQLAlchemy is used. A complete working example can
-be found there. If you are not familiar with `Eve <http://python-eve.org/>`_
+be found there. If you are not familiar with `Eve <https://python-eve.org/>`_
 and `SQLAlchemy <https://www.sqlalchemy.org/>`_, it is recommended to read up
 on them first.
 

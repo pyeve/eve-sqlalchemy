@@ -22,7 +22,7 @@ class TestColumnProperty(ResourceConfigTestCase):
     """Test a basic column property in SQLAlchemy.
 
     The model definition is taken from the official documentation:
-    http://docs.sqlalchemy.org/en/rel_1_1/orm/mapping_columns.html#using-column-property-for-column-level-options
+    https://docs.sqlalchemy.org/en/rel_1_1/orm/mapping_columns.html#using-column-property-for-column-level-options
     """
 
     def test_appears_in_projection(self):

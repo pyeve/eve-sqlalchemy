@@ -36,7 +36,7 @@ class TestManyToManyRelationship(ResourceConfigTestCase):
     """Test a basic Many-To-Many relationship in SQLAlchemy.
 
     The model definitions are taken from the official documentation:
-    http://docs.sqlalchemy.org/en/rel_1_1/orm/basic_relationships.html#many-to-many
+    https://docs.sqlalchemy.org/en/rel_1_1/orm/basic_relationships.html#many-to-many
     """
 
     def setUp(self):

@@ -1,12 +1,11 @@
 Eve-SQLAlchemy
 ==============
 
-This tutorial will show how to use Eve with the `SQLAlchemy`_ support. Using
-`SQLAlchemy`_ instead MongoDB means that you can re-use your existing SQL data
-model and expose it via REST thanks to Eve with no hassle.
+Use `Eve`_ with `SQLAlchemy`_ instead of MongoDB. Re-use your existing SQL data
+model and expose it via a RESTful Web Service with no hassle.
 
-Developer's Guide
------------------
+Documentation
+-------------
 .. toctree::
     :maxdepth: 2
 
@@ -18,4 +17,5 @@ Developer's Guide
 
 .. include:: ../CHANGES
 
-.. _SQLAlchemy: http://www.sqlalchemy.org/
+.. _Eve: https://python-eve.org
+.. _SQLAlchemy: https://www.sqlalchemy.org

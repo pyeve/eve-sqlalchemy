@@ -134,7 +134,7 @@ Changelog
 
 - various bugfixing [Arie Brosztein, toxsick]
 - refactor sorting parser, add sql order by expresssions; please check
-  http://eve-sqlalchemy.readthedocs.org/#sqlalchemy-sorting for more details
+  https://eve-sqlalchemy.readthedocs.org/#sqlalchemy-sorting for more details
   [amleczko]
 
 

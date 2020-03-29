@@ -481,11 +481,11 @@ necessary to avoid endless loops when relationship between resources were
 referring each other.
 
 
-.. _SQLAlchemy: http://www.sqlalchemy.org/
-.. _Flask-SQLAlchemy: http://flask-sqlalchemy.pocoo.org/
-.. _SQLAlchemy internals: http://docs.sqlalchemy.org/en/latest/orm/internals.html
-.. _SQLAlchemy filtering: http://docs.python-eve.org/en/latest/features.html#filtering
-.. _SQLAlchemy ORDER BY: http://docs.sqlalchemy.org/en/latest/core/sqlelement.html#sqlalchemy.sql.expression.nullsfirst
-.. _`Eve Authentication`: http://python-eve.org/authentication.html#token-based-authentication
-.. _`Eve Embedded Resource Serialization`: http://python-eve.org/features.html#embedded-resource-serialization
-.. _`Eve Projections`: http://python-eve.org/features.html#projections
+.. _SQLAlchemy: https://www.sqlalchemy.org/
+.. _Flask-SQLAlchemy: https://flask-sqlalchemy.palletsprojects.com/
+.. _SQLAlchemy internals: https://docs.sqlalchemy.org/en/latest/orm/internals.html
+.. _SQLAlchemy filtering: https://docs.python-eve.org/en/latest/features.html#filtering
+.. _SQLAlchemy ORDER BY: https://docs.sqlalchemy.org/en/latest/core/sqlelement.html#sqlalchemy.sql.expression.nullsfirst
+.. _`Eve Authentication`: https://python-eve.org/authentication.html#token-based-authentication
+.. _`Eve Embedded Resource Serialization`: https://python-eve.org/features.html#embedded-resource-serialization
+.. _`Eve Projections`: https://python-eve.org/features.html#projections

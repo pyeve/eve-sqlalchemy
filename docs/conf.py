@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = metadata['__title__']
-copyright = u'%s. A <a href="http://www.redturtle.it">RedTurtle</a> Project' % datetime.datetime.now().year
+copyright = u'%s Dominik Kellner' % datetime.datetime.now().year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -282,9 +282,9 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-# intersphinx_mapping = {'http://docs.python.org/': None}
-# cerberus = 'http://cerberus.readthedocs.org/en/latest/'
-# intersphinx_mapping = {'cerberus': ('http://cerberus.readthedocs.org/en/latest/', None)}
+# intersphinx_mapping = {'https://docs.python.org/': None}
+# cerberus = 'https://cerberus.readthedocs.org/en/latest/'
+# intersphinx_mapping = {'cerberus': ('https://cerberus.readthedocs.org/en/latest/', None)}
 
 pygments_style = 'flask_theme_support.FlaskyStyle'
 

@@ -1,7 +1,7 @@
 """Basic Many-To-Many relationship configuration in SQLAlchemy.
 
 This is taken from the official SQLAlchemy documentation:
-http://docs.sqlalchemy.org/en/rel_1_1/orm/basic_relationships.html#many-to-many
+https://docs.sqlalchemy.org/en/rel_1_1/orm/basic_relationships.html#many-to-many
 """
 
 from sqlalchemy import (

@@ -46,7 +46,7 @@ class TestAssociationProxy(ResourceConfigTestCase):
     """Test an Association Proxy in SQLAlchemy.
 
     The model definitions are taken from the official documentation:
-    http://docs.sqlalchemy.org/en/rel_1_1/orm/extensions/associationproxy.html#simplifying-scalar-collections
+    https://docs.sqlalchemy.org/en/rel_1_1/orm/extensions/associationproxy.html#simplifying-scalar-collections
     """
 
     def setUp(self):

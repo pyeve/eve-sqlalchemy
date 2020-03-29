@@ -28,7 +28,7 @@ class TestOneToManyRelationship(ResourceConfigTestCase):
     """Test a basic One-To-Many relationship in SQLAlchemy.
 
     The model definitions are taken from the official documentation:
-    http://docs.sqlalchemy.org/en/rel_1_1/orm/basic_relationships.html#one-to-many
+    https://docs.sqlalchemy.org/en/rel_1_1/orm/basic_relationships.html#one-to-many
     """
 
     def setUp(self):

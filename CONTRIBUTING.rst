@@ -74,11 +74,11 @@ Requests`_
 .. _`new issue`: https://github.com/pyeve/eve-sqlalchemy/issues/new
 .. _GitHub: https://github.com/
 .. _Fork: https://help.github.com/articles/fork-a-repo
-.. _`proper format`: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
-.. _PEP8: http://www.python.org/dev/peps/pep-0008/
-.. _flake8: http://flake8.readthedocs.org/en/latest/
-.. _tox: http://tox.readthedocs.org/en/latest/
+.. _`proper format`: https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+.. _PEP8: https://www.python.org/dev/peps/pep-0008/
+.. _flake8: https://flake8.readthedocs.io/
+.. _tox: https://tox.readthedocs.org/
 .. _help: https://help.github.com/
-.. _`Effective Guide to Pull Requests`: http://codeinthehole.com/writing/pull-requests-and-other-good-practices-for-teams-using-github/
+.. _`Effective Guide to Pull Requests`: https://codeinthehole.com/tips/pull-requests-and-other-good-practices-for-teams-using-github/
 .. _`fork and edit`: https://github.com/blog/844-forking-with-the-edit-button
 .. _`Pull Request`: https://help.github.com/articles/creating-a-pull-request
