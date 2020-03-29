@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = metadata['__title__']
-copyright = u'%s. A <a href="http://www.redturtle.it">RedTurtle</a> Project' % datetime.datetime.now().year
+copyright = u'%s Dominik Kellner' % datetime.datetime.now().year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
