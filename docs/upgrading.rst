@@ -15,7 +15,7 @@ changes:
 
 For a comprehensive list of changes refer to the `official changelog`_.
 
-.. _official changelog: http://python-eve.org/changelog.html#version-0-7
+.. _official changelog: https://docs.python-eve.org/changelog.html#version-0-7
 
 Upgrading from 0.5.0 to 0.6.0
 =============================

@@ -25,7 +25,7 @@ class TestHybridProperty(ResourceConfigTestCase):
     """Test a basic hybrid property in SQLAlchemy.
 
     The model definition is taken from the official documentation:
-    http://docs.sqlalchemy.org/en/rel_1_1/orm/extensions/hybrid.html
+    https://docs.sqlalchemy.org/en/rel_1_1/orm/extensions/hybrid.html
     """
 
     def test_appears_in_projection(self):

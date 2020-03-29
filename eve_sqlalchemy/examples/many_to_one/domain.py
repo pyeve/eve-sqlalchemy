@@ -1,7 +1,7 @@
 """Basic Many-To-One relationship configuration in SQLAlchemy.
 
 This is taken from the official SQLAlchemy documentation:
-http://docs.sqlalchemy.org/en/rel_1_1/orm/basic_relationships.html#many-to-one
+https://docs.sqlalchemy.org/en/rel_1_1/orm/basic_relationships.html#many-to-one
 """
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
