@@ -20,6 +20,7 @@ from eve.versioning import (
     get_data_version_relation_document, missing_version_field,
 )
 from flask import current_app as app
+from werkzeug.datastructures import FileStorage
 
 from eve_sqlalchemy.utils import dict_update, remove_none_values
 
@@ -117,6 +118,15 @@ class ValidatorSQL(Validator):
         :param value: field value.
         """
         pass
+
+    def _validate_type_media(self, field, value):
+        """Enable validation for `media` type schema.
+
+        :param field: field name.
+        :param value: field value.
+        """
+        if not isinstance(value, FileStorage):
+            self._error(field, "File was expected, got '%s' instead." % value)
 
     def _validate_readonly(self, read_only, field, value):
         # Copied from eve/io/mongo/validation.py.

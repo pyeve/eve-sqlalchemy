@@ -15,6 +15,9 @@ class TestValidator(unittest.TestCase):
             'a_objectid': {
                 'type': 'objectid',
             },
+            'a_media': {
+                'type': 'media',
+            }
         }
         self.validator = eve_sqlalchemy.validation.ValidatorSQL(schemas)
 
@@ -25,3 +28,13 @@ class TestValidator(unittest.TestCase):
     def test_type_objectid(self):
         self.validator.validate_update(
             {'a_objectid': ''}, None)
+
+    def test_type_media(self):
+        from werkzeug.datastructures import FileStorage
+
+        self.assertFalse(self.validator.validate(
+            {'a_media': 100}    # check if integer type data passes through
+        ))
+        self.assertTrue(self.validator.validate(
+            {'a_media': FileStorage(filename=__file__)}
+        ))
