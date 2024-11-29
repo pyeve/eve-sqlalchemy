@@ -19,7 +19,7 @@ import eve.tests
 from eve import ISSUES
 
 from eve_sqlalchemy import SQL
-from eve_sqlalchemy.tests.test_sql_tables import Base
+from eve_sqlalchemy.declarative import BaseModel
 from eve_sqlalchemy.validation import ValidatorSQL
 
 
@@ -47,7 +47,7 @@ class TestMinimal(eve.tests.TestMinimal):
         if declarative_base is not None:
             SQL.driver.Model = declarative_base
         else:
-            SQL.driver.Model = Base
+            SQL.driver.Model = BaseModel
 
         self.app = eve.Eve(settings=self.settings_file,
                            url_converters=url_converters, data=SQL,

@@ -44,7 +44,7 @@ directory):
 
 .. code-block:: python
 
-    class People(CommonColumns):
+    class People(BaseModel):
         __tablename__ = 'people'
         id = Column(Integer, primary_key=True, autoincrement=True)
         firstname = Column(String(80))
@@ -52,7 +52,7 @@ directory):
         fullname = column_property(firstname + " " + lastname)
 
 
-    class Invoices(CommonColumns):
+    class Invoices(BaseModel):
         __tablename__ = 'invoices'
         id = Column(Integer, primary_key=True, autoincrement=True)
         number = Column(Integer)
